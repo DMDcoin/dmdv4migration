@@ -9,6 +9,17 @@ contract ClaimContract {
   }
 
 
+  function getBitcoinAddressFromSignature(string memory signatureBase58, string memory valueToSign)
+  public
+  pure
+  returns(string memory)
+  {
+    //#1: decode bitcoin signature.
+    //# get R, S, V and Hash of Signature.
+    //# do ecrecover on it.
+    return "todo: implement this magic!";
+  }
+
   function r()
   internal
   pure

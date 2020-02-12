@@ -20,8 +20,23 @@ contract('ClaimContract', (accounts) => {
   })
 
   it('Verify address', async () => {
-    let address = await claimContract.testECRecover.call(callParams);
-    console.log('address: ' + address);
+    let isValid = await claimContract.isValid.call(callParams);
+    assert.isOk(isValid, "ERC Recover failed");
+
+    //console.log('address: ' + address);
   })
+
+
+  it('Retrieve Bitcoin address from signature', async() => {
+
+    let addressToSign = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
+    let dmdAddress = 'dR9uN3GXDikmiipy3p8L9fJ4pzCiHYfcrz';
+    let dmdSignature = 'IIJrgH2LVfla214fObfGHMvEVxmEMtZjXK9fCT/3PWpnYSzGS0AZWzXDhGKt9wjX6Z6V0qS1gFNE7RZeUSD61CU=';
+    let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
+    console.log('recoveredAddress: ' + recoveredAddress);
+    assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
+  })
+
+
   
 })
