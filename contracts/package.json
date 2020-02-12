@@ -1,0 +1,21 @@
+{
+  "name": "dmdv4claimcontracts",
+  "version": "0.0.1",
+  "description": "Contract for claiming DMD Native coins on the new V4 Network",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.0.30"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ganache": "ganache-cli -m \"$(cat testmnemonic)\"",
+    "deploy-local": "truffle deploy --network=local",
+    "compile": "truffle compile"
+  },
+  "author": "thomas.haller@lab10.coop",
+  "license": "GPLv3"
+}
