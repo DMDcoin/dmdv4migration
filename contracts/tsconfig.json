@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "api/js",
+    "sourceMap": true
+  },
+  "files": [
+    "api/tests/testFunctions.ts"
+  ]
+}

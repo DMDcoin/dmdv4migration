@@ -1,9 +1,9 @@
 
 
+var TestFunctions = require('../api/js/testFunctions');
+
 
 const ClaimContract = artifacts.require('ClaimContract');
-
-
 
 contract('ClaimContract', (accounts) => {
   console.log(`Accounts: ${accounts}`);
@@ -15,8 +15,11 @@ contract('ClaimContract', (accounts) => {
 
   const callParams = {from: accounts[0]};
 
+  let testFunctions;
+
   it('deploying a new claim contract', async () => {
     claimContract = await ClaimContract.new(callParams);
+    testFunctions = new TestFunctions.TestFunctions(web3, claimContract);
   })
 
   it('Verify address', async () => {
@@ -26,17 +29,13 @@ contract('ClaimContract', (accounts) => {
     //console.log('address: ' + address);
   })
 
-
   it('Retrieve Bitcoin address from signature', async() => {
 
-    let addressToSign = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
-    let dmdAddress = 'dR9uN3GXDikmiipy3p8L9fJ4pzCiHYfcrz';
-    let dmdSignature = 'IIJrgH2LVfla214fObfGHMvEVxmEMtZjXK9fCT/3PWpnYSzGS0AZWzXDhGKt9wjX6Z6V0qS1gFNE7RZeUSD61CU=';
-    let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
-    console.log('recoveredAddress: ' + recoveredAddress);
-    assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
+    console.log(testFunctions);
+    testFunctions.testValidateSignature();
+    //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
+    //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
+    //console.log('recoveredAddress: ' + recoveredAddress);
+    //assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
   })
-
-
-  
 })

@@ -8,16 +8,21 @@
   },
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.0.30",
+    "bignumber.js": "^9.0.0",
     "typechain": "^1.0.5",
-    "typechain-target-truffle": "^1.0.2"
+    "typechain-target-truffle": "^1.0.2",
+    "typechain-target-web3-v1": "^1.0.4",
+    "typescript": "^3.7.5",
+    "web3-core": "^1.2.6"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "typechain": "typechain --target truffle --outDir api/contracts './build/contracts/*.json'",
+    "typechain": "typechain --target web3-v1 --outDir api/contracts './build/contracts/*.json'",
     "ganache": "ganache-cli -m \"$(cat testmnemonic)\"",
     "deploy-local": "truffle deploy --network=local",
-    "compile": "truffle compile"
+    "compile": "truffle compile",
+    "tsc": "tsc"
   },
   "author": "thomas.haller@lab10.coop",
   "license": "GPLv3"
