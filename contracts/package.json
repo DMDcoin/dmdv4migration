@@ -7,11 +7,14 @@
     "test": "test"
   },
   "dependencies": {
-    "@truffle/hdwallet-provider": "^1.0.30"
+    "@truffle/hdwallet-provider": "^1.0.30",
+    "typechain": "^1.0.5",
+    "typechain-target-truffle": "^1.0.2"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "typechain": "typechain --target truffle --outDir api/contracts './build/contracts/*.json'",
     "ganache": "ganache-cli -m \"$(cat testmnemonic)\"",
     "deploy-local": "truffle deploy --network=local",
     "compile": "truffle compile"

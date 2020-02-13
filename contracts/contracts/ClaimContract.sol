@@ -9,16 +9,37 @@ contract ClaimContract {
   }
 
 
-  function getBitcoinAddressFromSignature(string memory signatureBase58, string memory valueToSign)
+  function getPublicKeyFromBitcoinSignature(bytes32 hashValue, bytes32 r, bytes32 s, uint8 v)
   public
   pure
-  returns(string memory)
+  returns(address)
   {
+
+    require(v >= 4, 'Bitcoin adds a constant 4 to the v value. this signature seems to be invalid.');
     //#1: decode bitcoin signature.
     //# get R, S, V and Hash of Signature.
     //# do ecrecover on it.
-    return "todo: implement this magic!";
+    //return "todo: implement this magic!";
+
+    return ecrecover(
+        hashValue,
+        v - 4, //bitcoin signature use v that is +4 see reddit comment https://www.reddit.com/r/ethereum/comments/3gmbkx/how_do_i_verify_a_bitcoinsigned_message_in_an/ctzopoz
+        r,
+        s
+    );
   }
+
+
+//  function getPublicKeyFromSignature(bytes65 memory signatureBytes)
+//  public
+//  pure
+//  returns(string memory)
+//  {
+    //#1: decode bitcoin signature.
+    //# get R, S, V and Hash of Signature.
+    //# do ecrecover on it.
+    //return "todo: implement this magic!";
+//  }
 
   function r()
   internal
