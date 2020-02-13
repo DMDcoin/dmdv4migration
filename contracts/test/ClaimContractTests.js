@@ -19,7 +19,7 @@ contract('ClaimContract', (accounts) => {
 
   it('deploying a new claim contract', async () => {
     claimContract = await ClaimContract.new(callParams);
-    testFunctions = new TestFunctions.TestFunctions(web3, claimContract);
+    testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
   })
 
   it('Verify address', async () => {
@@ -32,7 +32,7 @@ contract('ClaimContract', (accounts) => {
   it('Retrieve Bitcoin address from signature', async() => {
 
     console.log(testFunctions);
-    testFunctions.testValidateSignature();
+    await testFunctions.testValidateSignature();
     //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
     //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
     //console.log('recoveredAddress: ' + recoveredAddress);

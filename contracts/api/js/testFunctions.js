@@ -43,26 +43,33 @@ var TestFunctions = /** @class */ (function () {
     }
     TestFunctions.prototype.testValidateSignature = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var addressToSign, dmdAddress, dmdSignature, dmdSignatureHex2, hashOfSignedInfo, sig, r, s, v;
+            var addressToSign, dmdAddress, dmdSignature, dmdSignatureHex2, hashOfSignedInfo, sig, v, r, s, pubKeyResult;
             return __generator(this, function (_a) {
-                addressToSign = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
-                dmdAddress = 'dR9uN3GXDikmiipy3p8L9fJ4pzCiHYfcrz';
-                dmdSignature = 'IIJrgH2LVfla214fObfGHMvEVxmEMtZjXK9fCT/3PWpnYSzGS0AZWzXDhGKt9wjX6Z6V0qS1gFNE7RZeUSD61CU=';
-                dmdSignatureHex2 = '0x20826b807d8b55f95adb5e1f39b7c61ccbc457198432d6635caf5f093ff73d6a67612cc64b40195b35c38462adf708d7e99e95d2a4b5805344ed165e5120fad425';
-                hashOfSignedInfo = "";
-                sig = Buffer.from(dmdSignatureHex2, 'hex');
-                if (sig.byteLength != 65) {
-                    throw Error("Expected length of 65");
+                switch (_a.label) {
+                    case 0:
+                        addressToSign = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
+                        dmdAddress = 'dR9uN3GXDikmiipy3p8L9fJ4pzCiHYfcrz';
+                        dmdSignature = 'IIJrgH2LVfla214fObfGHMvEVxmEMtZjXK9fCT/3PWpnYSzGS0AZWzXDhGKt9wjX6Z6V0qS1gFNE7RZeUSD61CU=';
+                        dmdSignatureHex2 = '20826b807d8b55f95adb5e1f39b7c61ccbc457198432d6635caf5f093ff73d6a67612cc64b40195b35c38462adf708d7e99e95d2a4b5805344ed165e5120fad425';
+                        hashOfSignedInfo = "0x123456";
+                        sig = Buffer.from(dmdSignatureHex2, 'hex');
+                        if (sig.byteLength != 65) {
+                            throw Error("Expected length of 65. got: " + sig.byteLength);
+                        }
+                        console.log(sig);
+                        v = Array.from(sig.slice(0, 1));
+                        r = Array.from(sig.slice(1, 33));
+                        s = Array.from(sig.slice(33, 65));
+                        console.log('r', r);
+                        console.log('s', s);
+                        console.log('v', v);
+                        console.log('Func ? ', typeof this.instance.methods.getPublicKeyFromBitcoinSignature);
+                        return [4 /*yield*/, this.instance.methods.getPublicKeyFromBitcoinSignature(hashOfSignedInfo, r, s, v[0]).call()];
+                    case 1:
+                        pubKeyResult = _a.sent();
+                        console.log('PublicKey:' + pubKeyResult);
+                        return [2 /*return*/, "scheisse"];
                 }
-                console.log(sig);
-                r = Uint8Array.from(sig.slice(0, 32));
-                s = Uint8Array.from(sig.slice(32, 64));
-                v = Uint8Array.from(sig.slice(64, 65));
-                console.log('r', r);
-                console.log('s', s);
-                console.log('v', v);
-                //this.instance.methods.getPublicKeyFromBitcoinSignature(hashOfSignedInfo,  );
-                return [2 /*return*/, "scheisse"];
             });
         });
     };
