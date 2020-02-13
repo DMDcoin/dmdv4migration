@@ -51,6 +51,6 @@ export class TestFunctions {
     const pubKeyResult = await this.instance.methods.getPublicKeyFromBitcoinSignature(hashOfSignedInfo, r, s, v[0]).call();
     console.log('PublicKey:' + pubKeyResult);
 
-    return "scheisse";
+    return pubKeyResult;
   };
 }
