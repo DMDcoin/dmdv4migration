@@ -12,8 +12,8 @@ There will be no "Autotransfer" of the Coins from V3 to V4, since those are fund
 This means, that all your funds on the new chain(V4) will be transferred to a new account, chosen by the owner of the private key of the address with a coin balance on snapshot date on old chain (V3).
 
 The way it works is that on a defined point in time, there will be a Snapshot of V3 created, and the balance 
-of the accounts during that snapshot will be stored on the V4 chain in a Smart Contract.
-The Smart Contracts also holds a corresponding amount of coins in the V4 Network.
+of the accounts during that snapshot will be stored on the V4 chain in a Smart Contract, called the Claim Contract.
+The Claim Contract also holds a corresponding amount of coins in the V4 Network.
 An owner of an V3 address still has his private key available, and is still able to sign messages using his private key.
 
 For that reason of sign messages to claim coins on V4 chain people must keep their old DMD Diamond V3 Wallet and the wallet.dat that hald the keys for their addresses with balance.
@@ -31,14 +31,13 @@ The smaller addresses are considered "Dust" addresses, not worth the effort to c
 We suggest to transfer smaller amounts to one address, so you do not lose this money.
 This has to be done before the network upgrade happens.
 
-be aware of the bitcoin type of wallet behavior of "change addresses" which means any change of a transaction is placed on a new address. this means even if u think u only created and use 1 address ur funds could be spread over multiple addresses if u had some outgoing transactions with a change ammount send back to a new address. your wallet.dat hold the keys for that change addresses too so as long as u have a backup of ur wallet.dat u will be able to claim them BUT a simple backup of a private key will only be able claim coins on that one address
+Be aware of the bitcoin type of wallet behavior of "change addresses" which means any change of a transaction is placed on a new address. This means even if u think u only created and use 1 address your funds could be spread over multiple addresses if u had some outgoing transactions with a change amount send back to a new address. Your wallet.dat hold the keys for that change addresses too so as long as u have a backup of your wallet.dat. You will be able to claim them BUT a simple backup of a private key will only be able claim coins on that one address.
 
 # Step by Step (Network perspective)
 
-##
-
-first of all we strong suggest u move ur coins into a DMD Diamond v3 wallet pre snapshot date so u dont deepend on any 3rd party to be able claim ur coins
-
+First of all we strong suggest you move your coins into a DMD Diamond v3 wallet pre snapshot date so you don't depend on any 3rd party to be able claim your coins.
+Only P2PKH addresses will be supported. Meaning there will be no support for multistig wallets (P2SH) and compressed addresses (Bech32).
+ 
 exchanges
 coinmarketcap
 community
@@ -80,7 +79,7 @@ This will take a while. During that preparation time, no Node is online.
 After that, the Genesis Block and the Chain Specification is ready and DMDv4 can be started with a initial validator set of 12 nodes
 this 12 nodes are well knows foundation and high trusted community members which are the only onces who get their funds distributed direct at genesis block and not via claiming tool later on
 
-the reason is that the network need validators to create blocks from start on
+the reason is that the network needs validators to create blocks from start on
 
 and the claiming tool need a running chain to be deployed and used by people
 
@@ -100,6 +99,39 @@ Fund owners now can claim their belongings by using the provided DApp or  for th
 After claiming their funds, now everyone with enough stake is eligible to start running their own node.
 
 
+# Claim Contract Design
+
+The Claim Contract is the core  contract of the migration.
+It holds the balances of the old V3 System and allows to claim this balance on the V4 network by sending in a message that was be signed with a V3 wallet.
+The contract verifies that signature and sends out the funds to the chosen V4 account.
 
 
-@thomas im missing some explaination of the smart contract layout the gui components of the dapp and so on for didi to review
+## Initial funding
+
+The initial funding will be part of the [chainspec in the accounts section](https://wiki.parity.io/Chain-specification), 
+therefore the balance of the initial funding of the account will be part of the genesis block.
+The balance will be the total DMDv3 Balance minus the balance of the 12-Guardians.
+The balance of the 12 Guardians will be handled the same way.
+
+## Ownership
+
+The Contract has no concept of ownership, and there is no possible way to move funds out of it again, unless the owner of the DMDv3 private key signs the message for retrieving the funds.
+
+## Deployment
+
+The Deployment of the Claim Contract will happen within the Genesis block.
+
+## Initialization
+
+If possible, the contract will be initialized within the constructor.
+In the time of writing, it is not clear if this is possible due technical restrictions.
+Ethereum introduced a [24kb size limit for contracts](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-170.md)
+what is currently [in discussion to get removed again](https://github.com/ethereum/EIPs/issues/1662)
+
+It is also questionable if this even applies to constructor, because the constructor should not be part of the contract.
+
+### Alternative: address by address integration
+
+An alternative solution is to push this limits into the contracts using alternative methods.
+This could involve a JS pushing in the message 1-by-1, or as bigger batches.
+This might also be possible to include within the smart contract.
