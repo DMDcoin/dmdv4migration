@@ -24,19 +24,21 @@ Therefore, it needs to know the following:
 - Address on the V3 Network.
 - Balance for that address.
 
+as defined on actual whitepaper v3 that lost coins should be burned its planed that after a 10 year claim phase leftover coins will be burned
+
 ## Dust Accounts
 
 Note: only addresses with a balance bigger than a certain threshold (planned: 1 DMD) will get picked up during this V4 network upgrade.
 The smaller addresses are considered "Dust" addresses, not worth the effort to claim it on the new chain.
 We suggest to transfer smaller amounts to one address, so you do not lose this money.
-This has to be done before the network upgrade happens.
+This has to be done before the snapshot.
 
 Be aware of the bitcoin type of wallet behavior of "change addresses" which means any change of a transaction is placed on a new address. This means even if u think u only created and use 1 address your funds could be spread over multiple addresses if u had some outgoing transactions with a change amount send back to a new address. Your wallet.dat hold the keys for that change addresses too so as long as u have a backup of your wallet.dat. You will be able to claim them BUT a simple backup of a private key will only be able claim coins on that one address.
 
 # Step by Step (Network perspective)
 
 First of all we strong suggest you move your coins into a DMD Diamond v3 wallet pre snapshot date so you don't depend on any 3rd party to be able claim your coins.
-Only P2PKH addresses will be supported. Meaning there will be no support for multistig wallets (P2SH) and compressed addresses (Bech32).
+Only P2PKH addresses will be supported (starting with a "d"). Meaning there will be no support for multistig wallets (P2SH) and compressed addresses (Bech32).
  
 exchanges
 coinmarketcap
