@@ -2,7 +2,7 @@
 
 # DMD Coin Migration from V3 to V4.
 
-This project is about migrating from an DMD from a Bitcoin Based Version (v3) to an Ethereum Based Version (v4).
+This project is about migrating from an DMD from a Bitcoin Based Version (DMDv3) to an Ethereum Based Version (DMDv4).
 
 https://bit.diamonds
 https://github.com/DMDcoin
@@ -100,40 +100,88 @@ DMDv4 is now public, online, and available for operation and ready to pick up fu
 Fund owners now can claim their belongings by using the provided DApp or  for the purists - directly interact with the smart contract.
 After claiming their funds, now everyone with enough stake is eligible to start running their own node.
 
-
 # Claim Contract Design
 
-The Claim Contract is the core  contract of the migration.
+The Claim Contract is the core contract of the migration.
 It holds the balances of the old V3 System and allows to claim this balance on the V4 network by sending in a message that was be signed with a V3 wallet.
 The contract verifies that signature and sends out the funds to the chosen V4 account.
 
+## Data Storage
 
-## Initial funding
+The Claim contract stores one KeyValue-Pair for every entitlement.
+This is implemented as byte20 to uint256 mapping.
 
-The initial funding will be part of the [chainspec in the accounts section](https://wiki.parity.io/Chain-specification), 
-therefore the balance of the initial funding of the account will be part of the genesis block.
-The balance will be the total DMDv3 Balance minus the balance of the 12-Guardians.
-The balance of the 12 Guardians will be handled the same way.
+Where byte20 is P2PKH address (the RIPEMD-160 Hash of the Public Key),
+and the value is the amount (DMD coins) of entitlement with a precision of 10^18.
 
 ## Ownership
 
 The Contract has no concept of ownership, and there is no possible way to move funds out of it again, unless the owner of the DMDv3 private key signs the message for retrieving the funds.
 
+## Claim Functionality
+
+The Claim Functionality is the Core functionality of the ClaimContract.
+Claiming means that someone sends in the following Information:
+
+- DMDv3 Address: The old address in the DMDv3 wallet that holds the funds.
+- DMDv4 Address: The new address in the DMDv4 Network that should receive the funds.
+- ClaimSignature: Signature made with DMDv3 wallet that proves the payout transfer to the specified DMDv4 address.
+
+The ClaimContract validates the claim inquiry, and looks up it's validity in the Data Storage. If the inquiry is valid, 
+the ClaimContract sends all coins connected to this entitlement to the given address.
+
+### Who ?
+
+Every address is allowed to send this claim-messages to the DMDv4 Blockchain.
+The Sender address of the claim-message does not affect the payout transaction in any way.
+This allows the setup of a service that covers the upfront transaction costs,
+this eliminates the hassle of distributing coins to people in order to make them able to retrieve their own coins.
+
+### Signature Check
+
+Since DMDv3 and DMDv4 both uses the secp256k1 elliptic curve cryptography,
+DMDv4 supports the secp256k1 algorithm within solidity smart contracts out of the box.
+DMDv4 is also capable of calculating the RIPEMD160 hash, that is used in DMDv3 for calculating the address out of a public key.
+
+### Double Claim Protection
+
+The ClaimContract invalidates the entitelment during the claim process.
+This ensures no one is able to claim the same entitlement twice.
+It is done by setting the Balance of the DMDv3 address to zero.
+
 ## Deployment
 
-The Deployment of the Claim Contract will happen within the Genesis block.
+The Deployment of the Claim Contract will happen after the launch of V4, before going public.
+This will be done by the bootstrapping user that holds all initial coins.
 
-## Initialization
+## Initialization and Funding
 
-If possible, the contract will be initialized within the constructor.
-In the time of writing, it is not clear if this is possible due technical restrictions.
+The Contract needs to know the old balances of the V3 Network in order to be able to validate claim inquiries.
+It is expected to handle about 3000 addresses with a balance above the dust threshold.
+
+The most efficient strategy seems to be to provide this information already in the constructor as hardcoded values.
+
+At the time of writing, it is not clear if this is possible due technical restrictions.
 Ethereum introduced a [24kb size limit for contracts](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-170.md)
 what is currently [in discussion to get removed again](https://github.com/ethereum/EIPs/issues/1662)
 
-It is also questionable if this even applies to constructor, because the constructor should not be part of the contract.
+But it is also questionable if this limitation even applies to constructor, because the constructor should not be part of the contract.
+Implementation and Test will show if this is possible or we need an alternative.
 
 ### Alternative: address by address integration
 
-An alternative solution is to push this limits into the contracts using alternative methods.
-This could involve a JS pushing in the message 1-by-1, or as bigger batches.
-This might also be possible to include within the smart contract.
+An alternative, but slow and bytesize heavy, solution is to write the balances using one transaction per entitlement.
+This would take #numberOfAddresses Blocks time.
+Assuming a 5 Seconds blocktime this would take up to 5 Hours of time.
+Further improvements are possible to shorten this delay:
+- packing: Packing more balances to together into one transaction. (Up to the allowed Blockgas limit and variable count limitations)
+- parallelization: This would allow processing more than one transaction within the same block
+
+
+
+# Appendix
+
+
+Entitlement:
+Entitlement for funds in the DMDv4 Network. An Entitlement is created when the snapshot for the DMDv3 Network is taken, 
+is transferred into the DMDv4 Network and is valid until it is claimed.
