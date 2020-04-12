@@ -16,7 +16,7 @@ of the accounts during that snapshot will be stored on the V4 chain in a Smart C
 The Claim Contract also holds a corresponding amount of coins in the V4 Network.
 An owner of an V3 address still has his private key available, and is still able to sign messages using his private key.
 
-For that reason of sign messages to claim coins on V4 chain people must keep their old DMD Diamond V3 Wallet and the wallet.dat that hald the keys for their addresses with balance.
+For that reason of sign messages to claim coins on V4 chain people must keep their old DMD Diamond V3 Wallet and the wallet.dat that hold the keys for their addresses with balance.
 
 The Smart contract on the V4 side is able to verify this signed message, and is therefore able to send out the funds to the specified contract.
 Therefore, it needs to know the following:
@@ -75,10 +75,12 @@ only snapshot balance is relevant
 
 Snapshot is used as information source for creating the genesis block in V4.
 This will take a while. During that preparation time, no Node is online.
+During this timeframe, the snaphot data is processed into a data format,
+that can later be used for the `Initialization and Funding` step.
 
 ## Bootstraping
 
-After that, the Genesis Block and the Chain Specification is ready and DMDv4 can be started with a initial validator set of 12 nodes
+After that, the Genesis Block and the Chain Specification is ready and DMDv4 can be started with a initial validator set of 12 nodes.
 this 12 nodes are well knows foundation and high trusted community members which are the only onces who get their funds distributed direct at genesis block and not via claiming tool later on
 
 the reason is that the network needs validators to create blocks from start on
@@ -147,7 +149,7 @@ DMDv4 is also capable of calculating the RIPEMD160 hash, that is used in DMDv3 f
 
 The ClaimContract invalidates the entitelment during the claim process.
 This ensures no one is able to claim the same entitlement twice.
-It is done by setting the Balance of the DMDv3 address to zero.
+It is done by setting the balance of the entitlement for the DMDv3 address to zero.
 
 ## Deployment
 
@@ -174,9 +176,8 @@ An alternative, but slow and bytesize heavy, solution is to write the balances u
 This would take #numberOfAddresses Blocks time.
 Assuming a 5 Seconds blocktime this would take up to 5 Hours of time.
 Further improvements are possible to shorten this delay:
-- packing: Packing more balances to together into one transaction. (Up to the allowed Blockgas limit and variable count limitations)
+- packing: Packing more balances to together into one transaction. (Up to the allowed transaction gas limit and variable count limitations)
 - parallelization: This would allow processing more than one transaction within the same block
-
 
 
 # Appendix
