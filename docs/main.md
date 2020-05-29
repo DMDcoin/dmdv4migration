@@ -178,11 +178,3 @@ Assuming a 5 Seconds blocktime this would take up to 5 Hours of time.
 Further improvements are possible to shorten this delay:
 - packing: Packing more balances to together into one transaction. (Up to the allowed transaction gas limit and variable count limitations)
 - parallelization: This would allow processing more than one transaction within the same block
-
-
-# Appendix
-
-
-Entitlement:
-Entitlement for funds in the DMDv4 Network. An Entitlement is created when the snapshot for the DMDv3 Network is taken, 
-is transferred into the DMDv4 Network and is valid until it is claimed.
