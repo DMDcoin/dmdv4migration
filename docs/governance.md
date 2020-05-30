@@ -1,5 +1,5 @@
 
-DRAFT
+# DRAFT
 
 # DMD DAO Governance Design
 
@@ -15,21 +15,21 @@ the consensus of the operators has the highest democratic, but most brutal force
 The goal of this governance system is, that this option will never be required.
 But this possibility is still good as an emergency fallback.
 
-## DMD Democracy
-The DMD Democratic System is a [weighted voting](https://en.wikipedia.org/wiki/Weighted_voting) System that 
+## DMD Governance
+The DMD Governance System is a [weighted voting](https://en.wikipedia.org/wiki/Weighted_voting) System that 
 allows validators to vote for system changes and for maintenance pool payouts.
-Stakers will support the decisions of the validators by staking on them.
+Delegators will support the decisions of the validators by staking on them.
 
-### Staker Voting
-Stakers influence the voting by staking on a validator that decides in their sense.
-Staker might change their Validator based on the likeness of their voting decisions.
+### Delegator Voting
+Delegators influence the voting by staking on a validator that decides in their sense.
+A Delegator might change their Validator based on the likeness of their voting decisions.
 
 ### Voting Weight
 The governance voting is a weighted voting process done by all validators.
 Their voting weight is valued by the stake of their nodes.
-This is an incentive for validators to attract more stakers on their nodes,
+This is an incentive for validators to attract more delegators on their nodes,
 while being active in voting processes, and doing good and reasonable decisions in the voting process
-is an incentive for stakers to give their voting power into the hands of validators,
+is an incentive for delegators to give their voting power into the hands of validators,
 that are active contributors driving the ecosystem forward.
 The weight of the voting is determined at the end of the voting period.
 TODO TECH: Figure out what is required withing the HBBFT smart contracts to enable this calculation.
@@ -40,8 +40,8 @@ All votings are public visible, transparent and comprehensible.
 
 ### Lock In
 Validators are able to vote once, but they are not able to change their decision.
-This enables stakers to switch to a validator that represent their opinion in time.
-It also encourages validators to do their decision early, in order to attract further stakers.
+This enables delegators to switch to a validator that represent their opinion in time.
+It also encourages validators to do their decision early, in order to attract further delegator.
 
 ### Ballots creation
 Voting Ballots are stored on the blockchain and contain a text,
