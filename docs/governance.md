@@ -83,6 +83,12 @@ need to get more insights in the POSDAO contracts.
 There are already some existing solutions out there that might suit our needs.
 The Goal is to minimize the efforts to find a solution.
 
+The requirements in a nutshell
+- binding voting and non-binding voting (non-binding voting could be done as zero amount voting)
+- weighted voting (easy injection on the stake)
+- weights require to be calculated at the execution of the vote.
+- voters are not allowed to change their opinion once theiy have voted.
+
 
 ### POA Governance App
 
@@ -123,6 +129,15 @@ Fork of MolochDAO
 The quatratic voting extension is optional.
 Need to analyse what are the differences to MolochDAO
 
+### OracleDAO
+
+Another MolochDAO fork (pretty new)
+Seems to use Weighted Voting as well.
+But is a "Pay Tribute to enter" DAO.
+
+Planning Paper: https://hackmd.io/@oracle-dao/Sk-uHkX78
+Link: https://pokemol.com/dao/0x67b67c5b7384d6c1cdad1ed988b49183f4c59740/
+
 ### Aragon
 
 Complex and flexible solution for Blockchain Governance.
@@ -131,4 +146,13 @@ it might take severel days, just to answer the question if suits or not.
 
 a good hint could be the Repution Template: 
 https://github.com/aragon/dao-templates/blob/master/templates/reputation/contracts/ReputationTemplate.sol
+
+### dao.care
+
+small project, not that fancy UI - currently lacking a lot of informations.
+also cross-connected with 3Box to avoid anonymity.
+However, it is in Beta - and under active development. 
+this judgement was based on the published version on https://dao.care/
+is this based on aave ??
+
 
