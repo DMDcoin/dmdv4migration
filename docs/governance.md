@@ -99,7 +99,8 @@ and ARTIS also used this Governance Framework.
 
 ### POSDAO
 
-Further check the POSDAO Contracts for Governance Content.
+after a first check of the POSDAO Contracts for Governance,
+i could not find Voting related content.
 
 ### Colony.io
 
@@ -107,6 +108,27 @@ Colony IO Supports up and down voting and funds management.
 It is also interconnected with a offchain centralized chat service to discuss the proposals.
 Further investigations are needed to check the compatibility with the DMD requirements.
 
+
+### Moloch DAO
+
+had the concept of being very minimalistict in V1,
+and became more complex in V2. 
+It is still one of the smallest DAO Frameworks available.
+https://medium.com/metacartel/molochdao-a-primitive-solution-d11cc522b18e
+
+
 ### democracy.earth
 
-Looks promising, need to take a deeper look.
+Fork of MolochDAO
+The quatratic voting extension is optional.
+Need to analyse what are the differences to MolochDAO
+
+### Aragon
+
+Complex and flexible solution for Blockchain Governance.
+Since it's huge compelexity with modular design,
+it might take severel days, just to answer the question if suits or not.
+
+a good hint could be the Repution Template: 
+https://github.com/aragon/dao-templates/blob/master/templates/reputation/contracts/ReputationTemplate.sol
+
