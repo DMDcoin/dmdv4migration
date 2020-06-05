@@ -160,12 +160,31 @@ is this based on aave ??
 
 ### aragon
 
-created testinstance for aragon  with the company template on rinkeby at https://rinkeby.aragon.org/#/dmdcompany/home/.
-For this Installation i used Treshold 66%. 
+created testinstance for aragon on rinkeby with 
+
+* company template  https://rinkeby.aragon.org/#/dmdcompany/ (Token DMDVote: 0x8c39006b8d349a28fba0f6555b048232b3a4722b)
+* reputation template https://rinkeby.aragon.org/#/dmdreputation/ (Token DMD Reputation: 0xdfeae13f6d72889ea2dd7e067c20e33aa0c009c1)
+* enterprise template https://rinkeby.aragon.org/#/dmdenterprise
+
+For the Company Installation i used Treshold 66%. 
 I was curious if there is a possibility to change that treshold. There is a Permission, but i could not find UI Support.
 Maybe that's only doable using the API direct ?!
 
+
+#### aragon adoption
+
 A possible way would to adapt it would the to create a customized Voting.sol Logic: 
 https://github.com/aragon/aragon-apps/blob/master/apps/voting/contracts/Voting.sol
-
 There are not many references to the minime token.
+
+On the other hand, those requirements are not solved:
+- Voting must not be changeable
+- Voting must be calculated at the end-time (currently voting seems to be calculated at the "begin-time" snapshot when the voting is created)
+- Voting end time is HBBFT Epoch Switch
+
+FAQ:
+Q: Can i give away my REP during i have a Vote Open ? can the other one vote twice ?!
+N: No, the status during the 
+
+
+
