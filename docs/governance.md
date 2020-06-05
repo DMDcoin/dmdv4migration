@@ -129,7 +129,7 @@ Fork of MolochDAO
 The quatratic voting extension is optional.
 Need to analyse what are the differences to MolochDAO
 
-### OracleDAO
+### OracleDAO (Augur)
 
 Another MolochDAO fork (pretty new)
 Seems to use Weighted Voting as well.
@@ -147,6 +147,8 @@ it might take severel days, just to answer the question if suits or not.
 a good hint could be the Repution Template: 
 https://github.com/aragon/dao-templates/blob/master/templates/reputation/contracts/ReputationTemplate.sol
 
+dependency to ENS
+
 ### dao.care
 
 small project, not that fancy UI - currently lacking a lot of informations.
@@ -156,3 +158,14 @@ this judgement was based on the published version on https://dao.care/
 is this based on aave ??
 
 
+### aragon
+
+created testinstance for aragon  with the company template on rinkeby at https://rinkeby.aragon.org/#/dmdcompany/home/.
+For this Installation i used Treshold 66%. 
+I was curious if there is a possibility to change that treshold. There is a Permission, but i could not find UI Support.
+Maybe that's only doable using the API direct ?!
+
+A possible way would to adapt it would the to create a customized Voting.sol Logic: 
+https://github.com/aragon/aragon-apps/blob/master/apps/voting/contracts/Voting.sol
+
+There are not many references to the minime token.
