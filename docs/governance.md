@@ -88,7 +88,8 @@ The requirements in a nutshell
 - weighted voting (easy injection on the stake)
 - weights require to be calculated at the execution of the vote.
 - voters are not allowed to change their opinion once theiy have voted.
-
+- upgrading of the HBBFT-POSDAO Contracts (or is this a hardfork ?)
+- upgrading of the Governance DAO Contracts.
 
 ### POA Governance App
 
@@ -170,8 +171,11 @@ For the Company Installation i used Treshold 66%.
 I was curious if there is a possibility to change that treshold. There is a Permission, but i could not find UI Support.
 Maybe that's only doable using the API direct ?!
 
+Decentraland is also a great example for a big project using aragon with a custom modules:
 
-#### aragon adoption
+https://mainnet.aragon.org/#/dcl.eth/0x41e83d829459f99bf4ee2e26d0d79748fb16b94f/vote/3/
+
+#### aragon adaption of Voting.sol (Option 1)
 
 A possible way would to adapt it would the to create a customized Voting.sol Logic: 
 https://github.com/aragon/aragon-apps/blob/master/apps/voting/contracts/Voting.sol
@@ -182,9 +186,48 @@ On the other hand, those requirements are not solved:
 - Voting must be calculated at the end-time (currently voting seems to be calculated at the "begin-time" snapshot when the voting is created)
 - Voting end time is HBBFT Epoch Switch
 
+
+#### aragon voting connectors (Option 2)
+
+This adaption would require keeping history of the balance of the voting power of a
+staker and/or delegator.
+
+```
+// See shared/contract-utils/contracts/interfaces/IERC20WithCheckpointing.sol
+contract IERC20WithCheckpointing {
+    function balanceOf(address _owner) public view returns (uint256);
+    function balanceOfAt(address _owner, uint256 _blockNumber) public view returns (uint256);
+
+    function totalSupply() public view returns (uint256);
+    function totalSupplyAt(uint256 _blockNumber) public view returns (uint256);
+}
+```
+https://github.com/aragonone/voting-connectors
+
+####  aragon stakin app ERC900: Simple Staking Interface (Option 3)
+
+ERC900 is a standard for Staking Contract interfaces as well.
+There is a Pull Request to support that.
+https://github.com/aragon/aragon-apps/pull/101
+
+What happened with it ?
+
+Implement this interface?
+https://github.com/aragonone/voting-connectors/blob/master/apps/voting-aggregator/contracts/interfaces/IERC900History.sol
+
+
+
+#### aragon FAQ
+
 FAQ:
 Q: Can i give away my REP during i have a Vote Open ? can the other one vote twice ?!
-N: No, the status during the 
+A: No, the status during the 
+
+FAQ:
+Q: Can this suppot the upgrade of HBBFT-POSDAO ?
+A: Looks not like this is the case out of the box.
+However, since other modules are hooking in modules for supporting 
+
 
 
 
