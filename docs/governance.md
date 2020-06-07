@@ -159,6 +159,10 @@ this judgement was based on the published version on https://dao.care/
 is this based on aave ??
 
 
+### Decret Politeia
+
+Based on Bitcoin-tech. Too far away to get ported.
+
 ### aragon
 
 created testinstance for aragon on rinkeby with 
@@ -187,6 +191,49 @@ On the other hand, those requirements are not solved:
 - Voting end time is HBBFT Epoch Switch
 
 
+Concept of making the voting end-time-based, 
+one option would be to remove the execute part of Voting.Sol
+
+This could be achieved, doing the following changes:
+
+- _executesIfDecided needs always to be set to false. (do a revert if it is "true" OR hardcode it to true -> hardcoding is more confusing, but other modules that do not offer an option to specify that, would be supported without additional changes.)
+- _canExecute requires to check, if the vote has been updated to the end-time-based weights.
+
+To update the Voting weights, there are several Implemtation strategies available:
+
+##### Strategy A: HBBFT-POSDAO Staking changes update the Vote.
+
+This strategy would have the benefit that the UI displays always the current state in the YES/NO voting.
+
+- Voting contract needs to know, what votings for this delegator/staker are open, and require to update them.
+- HBBFT-POSDAO contracts need to update the voting result, if someone is moving the stake. , that would make things easier, since then we do not need to develop a snapshot history (TODO: check maybe Snapshot-History already exists ?)
+- HBBFT-POSDAO could also Trigger an update of all Votings for a staker
+
+##### Strategy B: HBBFT-POSDAO Epoch changes updates and executes the Vote
+
+This would lead to a solution where the Users see the yes/no Voting result, 
+with the voting weights that has existed during the creation of the vote.
+
+TODO: further analyse required changes.
+
+##### Strategy C: HBBFT-POSDAO Contracts support checkpointing.
+
+TODO: Maybe already supported ?
+
+most of all 2 functions:
+```
+function balanceOfAt(address _owner, uint256 _blockNumber) public view returns (uint256)
+function totalSupplyAt(uint256 _blockNumber) public view returns (uint256);
+```
+
+This would allow the the Voting.sol to have an additonal function,
+that retrieves the balance at the given block.
+
+TODO: Figure out, how the Voting.sol can know, when the specific Epoch Ended. (TODO: Define Epoch End Time Calculation model)
+
+The Voting requires then to be "finalized".
+This finalisation step then updates the voting-weights and executes the vote if successfull.
+
 #### aragon voting connectors (Option 2)
 
 This adaption would require keeping history of the balance of the voting power of a
@@ -202,6 +249,7 @@ contract IERC20WithCheckpointing {
     function totalSupplyAt(uint256 _blockNumber) public view returns (uint256);
 }
 ```
+
 https://github.com/aragonone/voting-connectors
 
 ####  aragon stakin app ERC900: Simple Staking Interface (Option 3)
@@ -219,15 +267,11 @@ https://github.com/aragonone/voting-connectors/blob/master/apps/voting-aggregato
 
 #### aragon FAQ
 
-FAQ:
 Q: Can i give away my REP during i have a Vote Open ? can the other one vote twice ?!
-A: No, the status during the 
+A: No problem there, the status is determined at the block when the vote is happening.
 
-FAQ:
 Q: Can this suppot the upgrade of HBBFT-POSDAO ?
-A: Looks not like this is the case out of the box.
-However, since other modules are hooking in modules for supporting 
-
+A: Yes, a Vote can have an execution script, therefore it should be able to make an Update (POC would be nice)
 
 
 
