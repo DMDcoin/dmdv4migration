@@ -10,9 +10,6 @@ export class TestFunctions {
     
   }
 
-  
-
-
   public async testValidateSignature() {
 
     
@@ -22,6 +19,10 @@ export class TestFunctions {
 
     //signature seems to be encoded base64 instead of base58.
     let dmdSignature = 'IIJrgH2LVfla214fObfGHMvEVxmEMtZjXK9fCT/3PWpnYSzGS0AZWzXDhGKt9wjX6Z6V0qS1gFNE7RZeUSD61CU=';
+
+    var dmdSignatureBuffer = new Buffer(dmdSignature, 'base64');
+
+    //console.log('Length: ' + dmdSignatureBuffer.length);
 
     //130 chars = 65 bytes => R, S, V.
     let dmdSignatureHex2 = '20826b807d8b55f95adb5e1f39b7c61ccbc457198432d6635caf5f093ff73d6a67612cc64b40195b35c38462adf708d7e99e95d2a4b5805344ed165e5120fad425';
@@ -54,3 +55,6 @@ export class TestFunctions {
     return pubKeyResult;
   };
 }
+
+// const test = new TestFunctions(null, null);
+// test.testValidateSignature();
