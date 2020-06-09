@@ -9,6 +9,8 @@
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.0.30",
     "bignumber.js": "^9.0.0",
+    "ganache-cli": "^6.9.1",
+    "ts-node": "^8.10.2",
     "typechain": "^1.0.5",
     "typechain-target-truffle": "^1.0.2",
     "typechain-target-web3-v1": "^1.0.4",
