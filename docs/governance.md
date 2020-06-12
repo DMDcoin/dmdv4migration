@@ -275,3 +275,8 @@ A: Yes, a Vote can have an execution script, therefore it should be able to make
 
 
 
+### compound governance
+
+
+github: https://github.com/compound-finance/compound-protocol
+medium: https://medium.com/compound-finance/compound-governance-5531f524cf68
