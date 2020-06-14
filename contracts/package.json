@@ -24,7 +24,8 @@
     "ganache": "ganache-cli -m \"$(cat testmnemonic)\"",
     "deploy-local": "truffle deploy --network=local",
     "compile": "truffle compile",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "testApi": "ts-node ./api/tests/testFunctions.ts"
   },
   "author": "thomas.haller@lab10.coop",
   "license": "GPLv3"
