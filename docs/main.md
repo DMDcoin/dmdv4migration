@@ -144,6 +144,8 @@ this eliminates the hassle of distributing coins to people in order to make them
 Since DMDv3 and DMDv4 both uses the secp256k1 elliptic curve cryptography,
 DMDv4 supports the secp256k1 algorithm within solidity smart contracts out of the box.
 DMDv4 is also capable of calculating the RIPEMD160 hash, that is used in DMDv3 for calculating the address out of a public key.
+More About: https://learnmeabitcoin.com/guide/p2pkh
+
 
 ### Double Claim Protection
 

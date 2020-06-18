@@ -109,4 +109,37 @@ contract ClaimContract {
         );
   }
 
+//   function extract(bytes memory data, uint pos)
+//   public
+//   pure
+//   returns (bytes32)
+//   {
+//     bytes32 result;
+
+//     for (uint32 i = 0; i < 32; i++)
+//     {
+//         result[i] = data[i+pos];
+//     }
+
+//     return result;
+//   }
+
+
+  function checkSignature(string memory _message, bytes32 _r, bytes32 _s, bytes32 _v, bytes memory _btcAddress)
+  public
+  pure
+  returns(address)
+  {
+    //P2PKH
+    //the _btcAddress is incomming here, it is the hash of the public key.
+    //ecrecover returns the public key.
+    //to calculate the BTCAddress:
+    //The Public Key is duplicated and the RIPEMD is calculated out of it.
+
+    // 40 hex: 12ab8dc588ca9d5787dde7eb29569da63c3a238c
+    // 20 bytes
+    // public key size ?!
+
+
+  }
 }

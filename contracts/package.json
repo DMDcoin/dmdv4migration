@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.0.30",
+    "@types/ripemd160": "^2.0.0",
     "bignumber.js": "^9.0.0",
     "ganache-cli": "^6.9.1",
+    "ripemd160": "^2.0.2",
     "ts-node": "^8.10.2",
     "typechain": "^1.0.5",
     "typechain-target-truffle": "^1.0.2",
@@ -25,7 +27,8 @@
     "deploy-local": "truffle deploy --network=local",
     "compile": "truffle compile",
     "tsc": "tsc",
-    "testApi": "ts-node ./api/tests/testFunctions.ts"
+    "testApi": "ts-node ./api/tests/testFunctions.ts",
+    "testVerify": "ts-node ./api/tests/testVerify.ts"
   },
   "author": "thomas.haller@lab10.coop",
   "license": "GPLv3"

@@ -14,11 +14,16 @@ export class TestFunctions {
 
     
 
-    let addressToSign = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
-    let dmdAddress = 'dR9uN3GXDikmiipy3p8L9fJ4pzCiHYfcrz';
+    //let addressToSign = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
+    //let dmdAddress = 'dR9uN3GXDikmiipy3p8L9fJ4pzCiHYfcrz';
 
     //signature seems to be encoded base64 instead of base58.
-    let dmdSignature = 'IIJrgH2LVfla214fObfGHMvEVxmEMtZjXK9fCT/3PWpnYSzGS0AZWzXDhGKt9wjX6Z6V0qS1gFNE7RZeUSD61CU=';
+    //let dmdSignature = 'IIJrgH2LVfla214fObfGHMvEVxmEMtZjXK9fCT/3PWpnYSzGS0AZWzXDhGKt9wjX6Z6V0qS1gFNE7RZeUSD61CU=';
+
+
+    const addressToSign = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+    const dmdSignature = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
+    const dmdAddress = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
 
     let sig = new Buffer(dmdSignature, 'base64');
 
@@ -30,9 +35,7 @@ export class TestFunctions {
 
 
 
-    const hashOfSignedInfo = "0x123456";
-
-    
+    const hashOfSignedInfo = "";
 
     
     if (sig.byteLength != 65) {
@@ -52,6 +55,7 @@ export class TestFunctions {
 
     
 
+    
     //console.log(bitcore.fromString);
     // const pubKeyResult = await this.instance.methods.getPublicKeyFromBitcoinSignature(hashOfSignedInfo, r, s, v[0]).call();
     // console.log('PublicKey:' + pubKeyResult);
