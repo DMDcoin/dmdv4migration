@@ -125,7 +125,7 @@ contract ClaimContract {
 //   }
 
 
-  function checkSignature(string memory _message, bytes32 _r, bytes32 _s, bytes32 _v, bytes memory _btcAddress)
+  function checkSignature(bytes32 _hash, bytes32 _r, bytes32 _s, uint8 _v)
   public
   pure
   returns(address)
@@ -140,6 +140,12 @@ contract ClaimContract {
     // 20 bytes
     // public key size ?!
 
+    return ecrecover(
+      _hash,
+      _v + 4,
+      _r,
+      _s
+      );
 
   }
 }

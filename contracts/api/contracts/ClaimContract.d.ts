@@ -33,6 +33,13 @@ export class ClaimContract extends Contract {
     isValid(): TransactionObject<boolean>;
 
     testECRecover(): TransactionObject<string>;
+
+    checkSignature(
+      _hash: string | number[],
+      _r: string | number[],
+      _s: string | number[],
+      _v: number | string
+    ): TransactionObject<string>;
   };
   events: {
     allEvents: (

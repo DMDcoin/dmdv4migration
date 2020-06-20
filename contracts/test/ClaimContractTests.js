@@ -22,16 +22,16 @@ contract('ClaimContract', (accounts) => {
     testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
   })
 
-  it('Verify address', async () => {
-    let isValid = await claimContract.isValid.call(callParams);
-    assert.isOk(isValid, "ERC Recover failed");
+  // it('Verify address', async () => {
+  //   let isValid = await claimContract.isValid.call(callParams);
+  //   assert.isOk(isValid, "ERC Recover failed");
 
-    //console.log('address: ' + address);
-  })
+  //   //console.log('address: ' + address);
+  // })
 
   it('Retrieve Bitcoin address from signature', async() => {
 
-    console.log(testFunctions);
+    //console.log(testFunctions);
     await testFunctions.testValidateSignature();
     //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
     //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
