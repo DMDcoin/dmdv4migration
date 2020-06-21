@@ -2,8 +2,6 @@
 
 import ClaimContract from '../contracts/ClaimContract.d';
 import web3 from 'web3';
-
-import RIPEMD160 from 'ripemd160'
 import sha256 from 'js-sha256'
 
 export class TestFunctions {
@@ -87,21 +85,7 @@ export class TestFunctions {
 
   public messageToHashToSign(message: string) : Buffer {
 
-    // var buf = Buffer.from(message, 'utf8');
-    // console.log(buf);
-    // const ripe = new RIPEMD160();
-    // ripe.end(buf);
-
-    
-    // //console.log(ripe.read().toString('hex'));
-
-    // const readResult =  ripe.read() as Buffer;
-    // console.log(readResult.toString('hex'));
-    //console.log(readResult.length);
-
-    // https://bitcoin.stackexchange.com/questions/36838/why-does-the-standard-bitcoin-message-signature-include-a-magic-prefix
-
-    
+  // https://bitcoin.stackexchange.com/questions/36838/why-does-the-standard-bitcoin-message-signature-include-a-magic-prefix
 
     const bitcoinPrefixString = '\x18Bitcoin Signed Message:\n';
     const bitcoinPrefixBuffer = Buffer.from(bitcoinPrefixString, 'utf8');
