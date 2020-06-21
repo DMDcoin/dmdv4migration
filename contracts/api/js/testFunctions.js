@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var js_sha256_1 = __importDefault(require("js-sha256"));
+var ethereumjs_util_1 = require("ethereumjs-util");
 var TestFunctions = /** @class */ (function () {
     function TestFunctions(web3Instance, instance) {
         this.web3Instance = web3Instance;
@@ -83,6 +84,9 @@ var TestFunctions = /** @class */ (function () {
         //r: 2077b616f680b086c812f6f8ee9ad2160deb5cd1e513dd69d9662da712293c0d
         //s: f45bace0bf3c1cdf043dd279c0d762db2f668aa376b48e381b37ac4cec43aefe
         //v: 17
+        console.log('sigBuffer:');
+        console.log(sig);
+        console.log(sig.toString('hex'));
         var r = sig.subarray(0, 32);
         var s = sig.subarray(32, 64);
         var v = sig[64];
@@ -92,14 +96,6 @@ var TestFunctions = /** @class */ (function () {
         return { r: r, s: s, v: v };
     };
     TestFunctions.prototype.messageToHashToSign = function (message) {
-        // var buf = Buffer.from(message, 'utf8');
-        // console.log(buf);
-        // const ripe = new RIPEMD160();
-        // ripe.end(buf);
-        // //console.log(ripe.read().toString('hex'));
-        // const readResult =  ripe.read() as Buffer;
-        // console.log(readResult.toString('hex'));
-        //console.log(readResult.length);
         // https://bitcoin.stackexchange.com/questions/36838/why-does-the-standard-bitcoin-message-signature-include-a-magic-prefix
         var bitcoinPrefixString = '\x18Bitcoin Signed Message:\n';
         var bitcoinPrefixBuffer = Buffer.from(bitcoinPrefixString, 'utf8');
@@ -133,7 +129,7 @@ var TestFunctions = /** @class */ (function () {
     };
     TestFunctions.prototype.testAddressRecovery = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var message, signatureBase64, btcAddressBase64, hash, sig, hashHex, rHex, sHex, checkSignatureResult;
+            var message, signatureBase64, btcAddressBase64, hash, sig, hashHex, rHex, sHex, ercRecoverResult27, ercRecoverResult28, checkSignatureResult;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -147,7 +143,11 @@ var TestFunctions = /** @class */ (function () {
                         hashHex = '0x' + hash.toString('hex');
                         rHex = '0x' + sig.r.toString('hex');
                         sHex = '0x' + sig.s.toString('hex');
-                        return [4 /*yield*/, this.instance.methods.checkSignature(hashHex, rHex, sHex, sig.v)
+                        ercRecoverResult27 = ethereumjs_util_1.ecrecover(hash, 27, sig.r, sig.s);
+                        console.log('ercRecoverResult27: ' + ercRecoverResult27.toString('hex'));
+                        ercRecoverResult28 = ethereumjs_util_1.ecrecover(hash, 28, sig.r, sig.s);
+                        console.log('ercRecoverResult28: ' + ercRecoverResult28.toString('hex'));
+                        return [4 /*yield*/, this.instance.methods.checkSignature(hashHex, rHex, sHex, 27)
                                 .call()];
                     case 1:
                         checkSignatureResult = _a.sent();

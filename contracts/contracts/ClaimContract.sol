@@ -1,5 +1,10 @@
 pragma solidity >=0.6.2 <0.7.0;
 
+
+
+import {EC} from  './EC.sol';
+
+
 contract ClaimContract {
 
   mapping (string => uint256)  public balances;
@@ -14,6 +19,7 @@ contract ClaimContract {
   pure
   returns(address)
   {
+
 
     require(v >= 4, 'Bitcoin adds a constant 4 to the v value. this signature seems to be invalid.');
     //#1: decode bitcoin signature.
@@ -149,12 +155,13 @@ contract ClaimContract {
     // 20 bytes
     // public key size ?!
 
+    //
+
     return ecrecover(
       _hash,
-      _v + 4,
+      _v,
       _r,
       _s
       );
-
   }
 }

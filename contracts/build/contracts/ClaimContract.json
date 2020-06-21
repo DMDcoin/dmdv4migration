@@ -120,21 +120,21 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"balances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_s\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"_v\",\"type\":\"uint8\"}],\"name\":\"checkSignature\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"hashValue\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"}],\"name\":\"getPublicKeyFromBitcoinSignature\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"isValid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"testECRecover\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/sn/github/dmdv4migration/contracts/contracts/ClaimContract.sol\":\"ClaimContract\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/sn/github/dmdv4migration/contracts/contracts/ClaimContract.sol\":{\"keccak256\":\"0x70a03d7d1aaf26e8999f8a7f3f067c270a52c4750e24cbfb4695281fdb1ceb51\",\"urls\":[\"bzz-raw://2470bf16fa3fcf11feed7337cd2a4af4cf96d077101e75df04fb985d83382181\",\"dweb:/ipfs/QmZvUU5vkDRQ933ppVkv7SU5HcdbdxvKSHie1XCUCd77V3\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50610513806100206000396000f3fe608060405234801561001057600080fd5b5060043610610073577c010000000000000000000000000000000000000000000000000000000060003504632221688481146100785780632afd97a4146100a9578063433cc269146101615780637138220914610193578063bb5d40eb146101c5575b600080fd5b6100806101e1565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b61014f600480360360208110156100bf57600080fd5b8101906020810181356401000000008111156100da57600080fd5b8201836020820111156100ec57600080fd5b8035906020019184600183028401116401000000008311171561010e57600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955061026b945050505050565b60408051918252519081900360200190f35b6100806004803603608081101561017757600080fd5b508035906020810135906040810135906060013560ff16610288565b610080600480360360808110156101a957600080fd5b508035906020810135906040810135906060013560ff166102f7565b6101cd6103b1565b604080519115158252519081900360200190f35b600060016101ed6103f5565b6101f5610419565b6101fd61042b565b61020561044f565b60405160008152602001604052604051808581526020018460ff1660ff1681526020018381526020018281526020019450505050506020604051602081039080840390855afa15801561025c573d6000803e3d6000fd5b50505060206040510351905090565b805160208183018101805160008252928201919093012091525481565b604080516000808252602080830180855288905260ff60048601168385015260608301879052608083018690529251909260019260a080820193601f1981019281900390910190855afa1580156102e3573d6000803e3d6000fd5b5050604051601f1901519695505050505050565b600060048260ff161015610356576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252604d815260200180610491604d913960600191505060405180910390fd5b6040805160008152602080820180845288905260ff600319860116828401526060820187905260808201869052915160019260a0808401939192601f1981019281900390910190855afa1580156102e3573d6000803e3d6000fd5b60006103bb6101e1565b73ffffffffffffffffffffffffffffffffffffffff166103d9610473565b73ffffffffffffffffffffffffffffffffffffffff1614905090565b7f58e2f335bbd6f2b0da93eae19342e7309654fbfeed9a214a1e5d835ac09cc22690565b6000600461042561048b565b03905090565b7f0b7effb7704f726bc64139753dc2d0a3929af2309dd2930ad7a722f5b214cf6e90565b7f73a461ce418e9e483f13a98c0cba5cddf07f647ea1d6ba2e88d494dfcd411c9c90565b7331031df1d95a84fc21e80922ccdf83971f3e755b90565b60209056fe426974636f696e2061646473206120636f6e7374616e74203420746f2074686520762076616c75652e2074686973207369676e6174757265207365656d7320746f20626520696e76616c69642ea2646970667358221220824073755729fabb2d81fb65732ee245917258da39193cf2d68d8855efe12e6664736f6c63430006020033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b5060043610610073577c010000000000000000000000000000000000000000000000000000000060003504632221688481146100785780632afd97a4146100a9578063433cc269146101615780637138220914610193578063bb5d40eb146101c5575b600080fd5b6100806101e1565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b61014f600480360360208110156100bf57600080fd5b8101906020810181356401000000008111156100da57600080fd5b8201836020820111156100ec57600080fd5b8035906020019184600183028401116401000000008311171561010e57600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955061026b945050505050565b60408051918252519081900360200190f35b6100806004803603608081101561017757600080fd5b508035906020810135906040810135906060013560ff16610288565b610080600480360360808110156101a957600080fd5b508035906020810135906040810135906060013560ff166102f7565b6101cd6103b1565b604080519115158252519081900360200190f35b600060016101ed6103f5565b6101f5610419565b6101fd61042b565b61020561044f565b60405160008152602001604052604051808581526020018460ff1660ff1681526020018381526020018281526020019450505050506020604051602081039080840390855afa15801561025c573d6000803e3d6000fd5b50505060206040510351905090565b805160208183018101805160008252928201919093012091525481565b604080516000808252602080830180855288905260ff60048601168385015260608301879052608083018690529251909260019260a080820193601f1981019281900390910190855afa1580156102e3573d6000803e3d6000fd5b5050604051601f1901519695505050505050565b600060048260ff161015610356576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252604d815260200180610491604d913960600191505060405180910390fd5b6040805160008152602080820180845288905260ff600319860116828401526060820187905260808201869052915160019260a0808401939192601f1981019281900390910190855afa1580156102e3573d6000803e3d6000fd5b60006103bb6101e1565b73ffffffffffffffffffffffffffffffffffffffff166103d9610473565b73ffffffffffffffffffffffffffffffffffffffff1614905090565b7f58e2f335bbd6f2b0da93eae19342e7309654fbfeed9a214a1e5d835ac09cc22690565b6000600461042561048b565b03905090565b7f0b7effb7704f726bc64139753dc2d0a3929af2309dd2930ad7a722f5b214cf6e90565b7f73a461ce418e9e483f13a98c0cba5cddf07f647ea1d6ba2e88d494dfcd411c9c90565b7331031df1d95a84fc21e80922ccdf83971f3e755b90565b60209056fe426974636f696e2061646473206120636f6e7374616e74203420746f2074686520762076616c75652e2074686973207369676e6174757265207365656d7320746f20626520696e76616c69642ea2646970667358221220824073755729fabb2d81fb65732ee245917258da39193cf2d68d8855efe12e6664736f6c63430006020033",
-  "sourceMap": "33:3048:0:-:0;;;110:62;8:9:-1;5:2;;;30:1;27;20:12;5:2;110:62:0;33:3048;;;;;;",
-  "deployedSourceMap": "33:3048:0:-:0;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;33:3048:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2132:161;;;:::i;:::-;;;;;;;;;;;;;;;;;;;61:44;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;61:44:0;;;;;;;;21:11:-1;5:28;;2:2;;;46:1;43;36:12;2:2;61:44:0;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;61:44:0;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;61:44:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;81:16;;74:27;;;;-1:-1;61:44:0;;-1:-1:-1;61:44:0;;-1:-1:-1;;;;;61:44:0:i;:::-;;;;;;;;;;;;;;;;2549:530;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;-1:-1;2549:530:0;;;;;;;;;;;;;;;;;;;:::i;177:633::-;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;-1:-1;177:633:0;;;;;;;;;;;;;;;;;;;:::i;1996:132::-;;;:::i;:::-;;;;;;;;;;;;;;;;;;2132:161;2183:7;2207:81;2226:12;:10;:12::i;:::-;2248:4;:2;:4::i;:::-;2262:3;:1;:3::i;:::-;2275;:1;:3::i;:::-;2207:81;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2207:81:0;;;;;;;;2200:88;;2132:161;:::o;61:44::-;22:14:-1;;169:4;143:32;;;;;198:20;;61:44:0;224:31:-1;;156:18;;;283;;;;273:49;328:32;;61:44:0;;:::o;2549:530::-;3009:64;;;2648:7;3009:64;;;;;;;;;;;;;;3044:1;3039:6;;3009:64;;;;;;;;;;;;;;;;;;;2648:7;;3009:64;;;;;;;-1:-1:-1;;3009:64:0;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;-1:-1;;3009:64:0;;-1:-1:-1;;3009:64:0;;;2549:530;-1:-1:-1;;;;;;2549:530:0:o;177:633::-;295:7;326:1;321;:6;;;;313:96;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;574:231;;;;;;;;;;;;;;;;;-1:-1:-1;;612:5:0;;574:231;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;574:231:0;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;1996:132:0;2041:4;2108:15;:13;:15::i;:::-;2089:34;;:17;:15;:17::i;:::-;:34;;;2082:41;;1996:132;:::o;1713:147::-;1789:66;1713:147;:::o;1471:238::-;1513:5;1541:1;1537:3;:1;:3::i;:::-;:5;1530:12;;1471:238;:::o;1096:138::-;1163:66;1096:138;:::o;1238:::-;1305:66;1238:138;:::o;1864:128::-;1945:42;1864:128;:::o;1380:87::-;1443:2;1380:87;:::o",
-  "source": "pragma solidity >=0.6.2 <0.7.0;\n\ncontract ClaimContract {\n\n  mapping (string => uint256)  public balances;\n\n  constructor() public {\n    //balances[\"\"] = 1000000000000;\n  }\n\n\n  function getPublicKeyFromBitcoinSignature(bytes32 hashValue, bytes32 r, bytes32 s, uint8 v)\n  public\n  pure\n  returns(address)\n  {\n\n    require(v >= 4, 'Bitcoin adds a constant 4 to the v value. this signature seems to be invalid.');\n    //#1: decode bitcoin signature.\n    //# get R, S, V and Hash of Signature.\n    //# do ecrecover on it.\n    //return \"todo: implement this magic!\";\n\n    return ecrecover(\n        hashValue,\n        v - 4, //bitcoin signature use v that is +4 see reddit comment https://www.reddit.com/r/ethereum/comments/3gmbkx/how_do_i_verify_a_bitcoinsigned_message_in_an/ctzopoz\n        r,\n        s\n    );\n  }\n\n\n//  function getPublicKeyFromSignature(bytes65 memory signatureBytes)\n//  public\n//  pure\n//  returns(string memory)\n//  {\n    //#1: decode bitcoin signature.\n    //# get R, S, V and Hash of Signature.\n    //# do ecrecover on it.\n    //return \"todo: implement this magic!\";\n//  }\n\n  function r()\n  internal\n  pure\n  returns(bytes32)\n  {\n      return 0x0b7effb7704f726bc64139753dc2d0a3929af2309dd2930ad7a722f5b214cf6e;\n  }\n\n  function s()\n  internal\n  pure\n  returns(bytes32)\n  {\n      return 0x73a461ce418e9e483f13a98c0cba5cddf07f647ea1d6ba2e88d494dfcd411c9c;\n  }\n\n  function v()\n  internal\n  pure\n  returns(uint8) {\n      return 32;  //equal to 0x20\n  }\n\n  function v2()\n  internal\n  pure\n  returns(uint8)\n  {\n      return v()-4;   //bitcoin signature use v that is +4 see reddit comment https://www.reddit.com/r/ethereum/comments/3gmbkx/how_do_i_verify_a_bitcoinsigned_message_in_an/ctzopoz\n  }\n\n  function hashToSign()\n  internal\n  pure\n  returns(bytes32)\n  {\n      return 0x58e2f335bbd6f2b0da93eae19342e7309654fbfeed9a214a1e5d835ac09cc226;\n  }\n\n  function expectedAddress()\n  internal\n  pure\n  returns(address)\n  {\n      return 0x31031dF1d95a84fC21E80922CcdF83971F3e755b;\n  }\n\n  function isValid()\n  public\n  pure\n  returns(bool)\n  {   //this returns true!!!\n      return expectedAddress()==testECRecover();\n  }\n\n  function testECRecover()\n  public\n  pure\n  returns(address)\n  {\n    return ecrecover(\n        hashToSign(),\n        v2(),\n        r(),\n        s()\n        );\n  }\n\n//   function extract(bytes memory data, uint pos)\n//   public\n//   pure\n//   returns (bytes32)\n//   {\n//     bytes32 result;\n\n//     for (uint32 i = 0; i < 32; i++)\n//     {\n//         result[i] = data[i+pos];\n//     }\n\n//     return result;\n//   }\n\n\n  function checkSignature(bytes32 _hash, bytes32 _r, bytes32 _s, uint8 _v)\n  public\n  pure\n  returns(address)\n  {\n    //P2PKH\n    //the _btcAddress is incomming here, it is the hash of the public key.\n    //ecrecover returns the public key.\n    //to calculate the BTCAddress:\n    //The Public Key is duplicated and the RIPEMD is calculated out of it.\n\n    // 40 hex: 12ab8dc588ca9d5787dde7eb29569da63c3a238c\n    // 20 bytes\n    // public key size ?!\n\n    return ecrecover(\n      _hash,\n      _v + 4,\n      _r,\n      _s\n      );\n\n  }\n}\n",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"balances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_hash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_s\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"_v\",\"type\":\"uint8\"}],\"name\":\"checkSignature\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"hashValue\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"}],\"name\":\"getPublicKeyFromBitcoinSignature\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"isValid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"testECRecover\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/sn/github/dmdv4migration/contracts/contracts/ClaimContract.sol\":\"ClaimContract\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/sn/github/dmdv4migration/contracts/contracts/ClaimContract.sol\":{\"keccak256\":\"0xc73b9407aff5815a96adfcfdad0012e5b070f7295f84af52ccbc17de93359e95\",\"urls\":[\"bzz-raw://54107d949524be43ddc7bed2c7f4f8cea7d08c9c66a812054510c0afb9f32ffe\",\"dweb:/ipfs/QmfCZWAVBY9MMS5rAvfvh5VvuLm2Bm2KSs7TssTWiEZJ4x\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610510806100206000396000f3fe608060405234801561001057600080fd5b5060043610610073577c010000000000000000000000000000000000000000000000000000000060003504632221688481146100785780632afd97a4146100a9578063433cc269146101615780637138220914610193578063bb5d40eb146101c5575b600080fd5b6100806101e1565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b61014f600480360360208110156100bf57600080fd5b8101906020810181356401000000008111156100da57600080fd5b8201836020820111156100ec57600080fd5b8035906020019184600183028401116401000000008311171561010e57600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955061026b945050505050565b60408051918252519081900360200190f35b6100806004803603608081101561017757600080fd5b508035906020810135906040810135906060013560ff16610288565b610080600480360360808110156101a957600080fd5b508035906020810135906040810135906060013560ff166102f4565b6101cd6103ae565b604080519115158252519081900360200190f35b600060016101ed6103f2565b6101f5610416565b6101fd610428565b61020561044c565b60405160008152602001604052604051808581526020018460ff1660ff1681526020018381526020018281526020019450505050506020604051602081039080840390855afa15801561025c573d6000803e3d6000fd5b50505060206040510351905090565b805160208183018101805160008252928201919093012091525481565b604080516000808252602080830180855288905260ff85168385015260608301879052608083018690529251909260019260a080820193601f1981019281900390910190855afa1580156102e0573d6000803e3d6000fd5b5050604051601f1901519695505050505050565b600060048260ff161015610353576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252604d81526020018061048e604d913960600191505060405180910390fd5b6040805160008152602080820180845288905260ff600319860116828401526060820187905260808201869052915160019260a0808401939192601f1981019281900390910190855afa1580156102e0573d6000803e3d6000fd5b60006103b86101e1565b73ffffffffffffffffffffffffffffffffffffffff166103d6610470565b73ffffffffffffffffffffffffffffffffffffffff1614905090565b7f58e2f335bbd6f2b0da93eae19342e7309654fbfeed9a214a1e5d835ac09cc22690565b60006004610422610488565b03905090565b7f0b7effb7704f726bc64139753dc2d0a3929af2309dd2930ad7a722f5b214cf6e90565b7f73a461ce418e9e483f13a98c0cba5cddf07f647ea1d6ba2e88d494dfcd411c9c90565b7331031df1d95a84fc21e80922ccdf83971f3e755b90565b60209056fe426974636f696e2061646473206120636f6e7374616e74203420746f2074686520762076616c75652e2074686973207369676e6174757265207365656d7320746f20626520696e76616c69642ea264697066735822122094f0d75990ebb7d0ba57a14acb6a9eb15c316836d7efe7d9ce1c23a0ffa6e1b364736f6c63430006020033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b5060043610610073577c010000000000000000000000000000000000000000000000000000000060003504632221688481146100785780632afd97a4146100a9578063433cc269146101615780637138220914610193578063bb5d40eb146101c5575b600080fd5b6100806101e1565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b61014f600480360360208110156100bf57600080fd5b8101906020810181356401000000008111156100da57600080fd5b8201836020820111156100ec57600080fd5b8035906020019184600183028401116401000000008311171561010e57600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955061026b945050505050565b60408051918252519081900360200190f35b6100806004803603608081101561017757600080fd5b508035906020810135906040810135906060013560ff16610288565b610080600480360360808110156101a957600080fd5b508035906020810135906040810135906060013560ff166102f4565b6101cd6103ae565b604080519115158252519081900360200190f35b600060016101ed6103f2565b6101f5610416565b6101fd610428565b61020561044c565b60405160008152602001604052604051808581526020018460ff1660ff1681526020018381526020018281526020019450505050506020604051602081039080840390855afa15801561025c573d6000803e3d6000fd5b50505060206040510351905090565b805160208183018101805160008252928201919093012091525481565b604080516000808252602080830180855288905260ff85168385015260608301879052608083018690529251909260019260a080820193601f1981019281900390910190855afa1580156102e0573d6000803e3d6000fd5b5050604051601f1901519695505050505050565b600060048260ff161015610353576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252604d81526020018061048e604d913960600191505060405180910390fd5b6040805160008152602080820180845288905260ff600319860116828401526060820187905260808201869052915160019260a0808401939192601f1981019281900390910190855afa1580156102e0573d6000803e3d6000fd5b60006103b86101e1565b73ffffffffffffffffffffffffffffffffffffffff166103d6610470565b73ffffffffffffffffffffffffffffffffffffffff1614905090565b7f58e2f335bbd6f2b0da93eae19342e7309654fbfeed9a214a1e5d835ac09cc22690565b60006004610422610488565b03905090565b7f0b7effb7704f726bc64139753dc2d0a3929af2309dd2930ad7a722f5b214cf6e90565b7f73a461ce418e9e483f13a98c0cba5cddf07f647ea1d6ba2e88d494dfcd411c9c90565b7331031df1d95a84fc21e80922ccdf83971f3e755b90565b60209056fe426974636f696e2061646473206120636f6e7374616e74203420746f2074686520762076616c75652e2074686973207369676e6174757265207365656d7320746f20626520696e76616c69642ea264697066735822122094f0d75990ebb7d0ba57a14acb6a9eb15c316836d7efe7d9ce1c23a0ffa6e1b364736f6c63430006020033",
+  "sourceMap": "33:3375:0:-:0;;;110:62;8:9:-1;5:2;;;30:1;27;20:12;5:2;110:62:0;33:3375;;;;;;",
+  "deployedSourceMap": "33:3375:0:-:0;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;33:3375:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2132:161;;;:::i;:::-;;;;;;;;;;;;;;;;;;;61:44;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;61:44:0;;;;;;;;21:11:-1;5:28;;2:2;;;46:1;43;36:12;2:2;61:44:0;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;61:44:0;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;61:44:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;81:16;;74:27;;;;-1:-1;61:44:0;;-1:-1:-1;61:44:0;;-1:-1:-1;;;;;61:44:0:i;:::-;;;;;;;;;;;;;;;;2873:533;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;-1:-1;2873:533:0;;;;;;;;;;;;;;;;;;;:::i;177:633::-;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;-1:-1;177:633:0;;;;;;;;;;;;;;;;;;;:::i;1996:132::-;;;:::i;:::-;;;;;;;;;;;;;;;;;;2132:161;2183:7;2207:81;2226:12;:10;:12::i;:::-;2248:4;:2;:4::i;:::-;2262:3;:1;:3::i;:::-;2275;:1;:3::i;:::-;2207:81;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2207:81:0;;;;;;;;2200:88;;2132:161;:::o;61:44::-;22:14:-1;;169:4;143:32;;;;;198:20;;61:44:0;224:31:-1;;156:18;;;283;;;;273:49;328:32;;61:44:0;;:::o;2873:533::-;3341:60;;;2972:7;3341:60;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2972:7;;3341:60;;;;;;;-1:-1:-1;;3341:60:0;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;-1:-1;;3341:60:0;;-1:-1:-1;;3341:60:0;;;2873:533;-1:-1:-1;;;;;;2873:533:0:o;177:633::-;295:7;326:1;321;:6;;;;313:96;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;574:231;;;;;;;;;;;;;;;;;-1:-1:-1;;612:5:0;;574:231;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;574:231:0;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;1996:132:0;2041:4;2108:15;:13;:15::i;:::-;2089:34;;:17;:15;:17::i;:::-;:34;;;2082:41;;1996:132;:::o;1713:147::-;1789:66;1713:147;:::o;1471:238::-;1513:5;1541:1;1537:3;:1;:3::i;:::-;:5;1530:12;;1471:238;:::o;1096:138::-;1163:66;1096:138;:::o;1238:::-;1305:66;1238:138;:::o;1864:128::-;1945:42;1864:128;:::o;1380:87::-;1443:2;1380:87;:::o",
+  "source": "pragma solidity >=0.6.2 <0.7.0;\n\ncontract ClaimContract {\n\n  mapping (string => uint256)  public balances;\n\n  constructor() public {\n    //balances[\"\"] = 1000000000000;\n  }\n\n\n  function getPublicKeyFromBitcoinSignature(bytes32 hashValue, bytes32 r, bytes32 s, uint8 v)\n  public\n  pure\n  returns(address)\n  {\n\n    require(v >= 4, 'Bitcoin adds a constant 4 to the v value. this signature seems to be invalid.');\n    //#1: decode bitcoin signature.\n    //# get R, S, V and Hash of Signature.\n    //# do ecrecover on it.\n    //return \"todo: implement this magic!\";\n\n    return ecrecover(\n        hashValue,\n        v - 4, //bitcoin signature use v that is +4 see reddit comment https://www.reddit.com/r/ethereum/comments/3gmbkx/how_do_i_verify_a_bitcoinsigned_message_in_an/ctzopoz\n        r,\n        s\n    );\n  }\n\n\n//  function getPublicKeyFromSignature(bytes65 memory signatureBytes)\n//  public\n//  pure\n//  returns(string memory)\n//  {\n    //#1: decode bitcoin signature.\n    //# get R, S, V and Hash of Signature.\n    //# do ecrecover on it.\n    //return \"todo: implement this magic!\";\n//  }\n\n  function r()\n  internal\n  pure\n  returns(bytes32)\n  {\n      return 0x0b7effb7704f726bc64139753dc2d0a3929af2309dd2930ad7a722f5b214cf6e;\n  }\n\n  function s()\n  internal\n  pure\n  returns(bytes32)\n  {\n      return 0x73a461ce418e9e483f13a98c0cba5cddf07f647ea1d6ba2e88d494dfcd411c9c;\n  }\n\n  function v()\n  internal\n  pure\n  returns(uint8) {\n      return 32;  //equal to 0x20\n  }\n\n  function v2()\n  internal\n  pure\n  returns(uint8)\n  {\n      return v()-4;   //bitcoin signature use v that is +4 see reddit comment https://www.reddit.com/r/ethereum/comments/3gmbkx/how_do_i_verify_a_bitcoinsigned_message_in_an/ctzopoz\n  }\n\n  function hashToSign()\n  internal\n  pure\n  returns(bytes32)\n  {\n      return 0x58e2f335bbd6f2b0da93eae19342e7309654fbfeed9a214a1e5d835ac09cc226;\n  }\n\n  function expectedAddress()\n  internal\n  pure\n  returns(address)\n  {\n      return 0x31031dF1d95a84fC21E80922CcdF83971F3e755b;\n  }\n\n  function isValid()\n  public\n  pure\n  returns(bool)\n  {   //this returns true!!!\n      return expectedAddress()==testECRecover();\n  }\n\n  function testECRecover()\n  public\n  pure\n  returns(address)\n  {\n    return ecrecover(\n        hashToSign(),\n        v2(),\n        r(),\n        s()\n        );\n  }\n\n//   function extract(bytes memory data, uint pos)\n//   public\n//   pure\n//   returns (bytes32)\n//   {\n//     bytes32 result;\n\n//     for (uint32 i = 0; i < 32; i++)\n//     {\n//         result[i] = data[i+pos];\n//     }\n\n//     return result;\n//   }\n\n  // function checkSignature(bytes32 h, uint8 v, bytes32 r, bytes32 s)\n  // public\n  // pure\n  // returns (address signer)\n  // {\n  //   bytes memory prefix = \"\\x19Ethereum Signed Message:\\n32\";\n  //   bytes32 prefixedHash = keccak256(abi.encodePacked(prefix,h));  \n  //   signer = ecrecover(prefixedHash, v, r, s); \n  // }\n\n  function checkSignature(bytes32 _hash, bytes32 _r, bytes32 _s, uint8 _v)\n  public\n  pure\n  returns(address)\n  {\n    //P2PKH\n    //the _btcAddress is incomming here, it is the hash of the public key.\n    //ecrecover returns the public key.\n    //to calculate the BTCAddress:\n    //The Public Key is duplicated and the RIPEMD is calculated out of it.\n\n    // 40 hex: 12ab8dc588ca9d5787dde7eb29569da63c3a238c\n    // 20 bytes\n    // public key size ?!\n\n    //\n\n    return ecrecover(\n      _hash,\n      _v,\n      _r,\n      _s\n      );\n  }\n}\n",
   "sourcePath": "/home/sn/github/dmdv4migration/contracts/contracts/ClaimContract.sol",
   "ast": {
     "absolutePath": "/home/sn/github/dmdv4migration/contracts/contracts/ClaimContract.sol",
     "exportedSymbols": {
       "ClaimContract": [
-        143
+        141
       ]
     },
-    "id": 144,
+    "id": 142,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -158,9 +158,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 143,
+        "id": 141,
         "linearizedBaseContracts": [
-          143
+          141
         ],
         "name": "ClaimContract",
         "nodeType": "ContractDefinition",
@@ -172,7 +172,7 @@
             "name": "balances",
             "nodeType": "VariableDeclaration",
             "overrides": null,
-            "scope": 143,
+            "scope": 141,
             "src": "61:44:0",
             "stateVariable": true,
             "storageLocation": "default",
@@ -239,7 +239,7 @@
               "parameters": [],
               "src": "131:0:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "110:62:0",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -673,7 +673,7 @@
               ],
               "src": "294:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "177:633:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -759,7 +759,7 @@
               ],
               "src": "1136:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1096:138:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -845,7 +845,7 @@
               ],
               "src": "1278:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1238:138:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -931,7 +931,7 @@
               ],
               "src": "1420:7:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1380:87:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -1067,7 +1067,7 @@
               ],
               "src": "1512:7:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1471:238:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -1153,7 +1153,7 @@
               ],
               "src": "1762:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1713:147:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -1240,7 +1240,7 @@
               ],
               "src": "1918:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1864:128:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -1390,7 +1390,7 @@
               ],
               "src": "2040:6:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1996:132:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -1633,7 +1633,7 @@
               ],
               "src": "2182:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "2132:161:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -1641,9 +1641,9 @@
           },
           {
             "body": {
-              "id": 141,
+              "id": 139,
               "nodeType": "Block",
-              "src": "2659:420:0",
+              "src": "2983:423:0",
               "statements": [
                 {
                   "expression": {
@@ -1656,7 +1656,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 121,
-                        "src": "3026:5:0",
+                        "src": "3358:5:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -1664,49 +1664,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "commonType": {
-                          "typeIdentifier": "t_uint8",
-                          "typeString": "uint8"
-                        },
-                        "id": 136,
-                        "isConstant": false,
-                        "isLValue": false,
-                        "isPure": false,
-                        "lValueRequested": false,
-                        "leftExpression": {
-                          "argumentTypes": null,
-                          "id": 134,
-                          "name": "_v",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 127,
-                          "src": "3039:2:0",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_uint8",
-                            "typeString": "uint8"
-                          }
-                        },
-                        "nodeType": "BinaryOperation",
-                        "operator": "+",
-                        "rightExpression": {
-                          "argumentTypes": null,
-                          "hexValue": "34",
-                          "id": 135,
-                          "isConstant": false,
-                          "isLValue": false,
-                          "isPure": true,
-                          "kind": "number",
-                          "lValueRequested": false,
-                          "nodeType": "Literal",
-                          "src": "3044:1:0",
-                          "subdenomination": null,
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_rational_4_by_1",
-                            "typeString": "int_const 4"
-                          },
-                          "value": "4"
-                        },
-                        "src": "3039:6:0",
+                        "id": 134,
+                        "name": "_v",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 127,
+                        "src": "3371:2:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint8",
                           "typeString": "uint8"
@@ -1714,12 +1677,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 137,
+                        "id": 135,
                         "name": "_r",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 123,
-                        "src": "3053:2:0",
+                        "src": "3381:2:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -1727,12 +1690,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 138,
+                        "id": 136,
                         "name": "_s",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 125,
-                        "src": "3063:2:0",
+                        "src": "3391:2:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -1763,13 +1726,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": -6,
-                      "src": "3009:9:0",
+                      "src": "3341:9:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_ecrecover_pure$_t_bytes32_$_t_uint8_$_t_bytes32_$_t_bytes32_$returns$_t_address_$",
                         "typeString": "function (bytes32,uint8,bytes32,bytes32) pure returns (address)"
                       }
                     },
-                    "id": 139,
+                    "id": 137,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1777,7 +1740,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "3009:64:0",
+                    "src": "3341:60:0",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1785,15 +1748,15 @@
                     }
                   },
                   "functionReturnParameters": 131,
-                  "id": 140,
+                  "id": 138,
                   "nodeType": "Return",
-                  "src": "3002:71:0"
+                  "src": "3334:67:0"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "433cc269",
-            "id": 142,
+            "id": 140,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -1810,8 +1773,8 @@
                   "name": "_hash",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2573:13:0",
+                  "scope": 140,
+                  "src": "2897:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1822,7 +1785,7 @@
                     "id": 120,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2573:7:0",
+                    "src": "2897:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1837,8 +1800,8 @@
                   "name": "_r",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2588:10:0",
+                  "scope": 140,
+                  "src": "2912:10:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1849,7 +1812,7 @@
                     "id": 122,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2588:7:0",
+                    "src": "2912:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1864,8 +1827,8 @@
                   "name": "_s",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2600:10:0",
+                  "scope": 140,
+                  "src": "2924:10:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1876,7 +1839,7 @@
                     "id": 124,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2600:7:0",
+                    "src": "2924:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1891,8 +1854,8 @@
                   "name": "_v",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2612:8:0",
+                  "scope": 140,
+                  "src": "2936:8:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1903,7 +1866,7 @@
                     "id": 126,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2612:5:0",
+                    "src": "2936:5:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -1913,7 +1876,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2572:49:0"
+              "src": "2896:49:0"
             },
             "returnParameters": {
               "id": 131,
@@ -1925,8 +1888,8 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2648:7:0",
+                  "scope": 140,
+                  "src": "2972:7:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1937,7 +1900,7 @@
                     "id": 129,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2648:7:0",
+                    "src": "2972:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1948,29 +1911,29 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2647:9:0"
+              "src": "2971:9:0"
             },
-            "scope": 143,
-            "src": "2549:530:0",
+            "scope": 141,
+            "src": "2873:533:0",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 144,
-        "src": "33:3048:0"
+        "scope": 142,
+        "src": "33:3375:0"
       }
     ],
-    "src": "0:3082:0"
+    "src": "0:3409:0"
   },
   "legacyAST": {
     "absolutePath": "/home/sn/github/dmdv4migration/contracts/contracts/ClaimContract.sol",
     "exportedSymbols": {
       "ClaimContract": [
-        143
+        141
       ]
     },
-    "id": 144,
+    "id": 142,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -1994,9 +1957,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 143,
+        "id": 141,
         "linearizedBaseContracts": [
-          143
+          141
         ],
         "name": "ClaimContract",
         "nodeType": "ContractDefinition",
@@ -2008,7 +1971,7 @@
             "name": "balances",
             "nodeType": "VariableDeclaration",
             "overrides": null,
-            "scope": 143,
+            "scope": 141,
             "src": "61:44:0",
             "stateVariable": true,
             "storageLocation": "default",
@@ -2075,7 +2038,7 @@
               "parameters": [],
               "src": "131:0:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "110:62:0",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -2509,7 +2472,7 @@
               ],
               "src": "294:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "177:633:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -2595,7 +2558,7 @@
               ],
               "src": "1136:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1096:138:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -2681,7 +2644,7 @@
               ],
               "src": "1278:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1238:138:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -2767,7 +2730,7 @@
               ],
               "src": "1420:7:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1380:87:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -2903,7 +2866,7 @@
               ],
               "src": "1512:7:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1471:238:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -2989,7 +2952,7 @@
               ],
               "src": "1762:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1713:147:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -3076,7 +3039,7 @@
               ],
               "src": "1918:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1864:128:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -3226,7 +3189,7 @@
               ],
               "src": "2040:6:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "1996:132:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -3469,7 +3432,7 @@
               ],
               "src": "2182:9:0"
             },
-            "scope": 143,
+            "scope": 141,
             "src": "2132:161:0",
             "stateMutability": "pure",
             "virtual": false,
@@ -3477,9 +3440,9 @@
           },
           {
             "body": {
-              "id": 141,
+              "id": 139,
               "nodeType": "Block",
-              "src": "2659:420:0",
+              "src": "2983:423:0",
               "statements": [
                 {
                   "expression": {
@@ -3492,7 +3455,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 121,
-                        "src": "3026:5:0",
+                        "src": "3358:5:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -3500,49 +3463,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "commonType": {
-                          "typeIdentifier": "t_uint8",
-                          "typeString": "uint8"
-                        },
-                        "id": 136,
-                        "isConstant": false,
-                        "isLValue": false,
-                        "isPure": false,
-                        "lValueRequested": false,
-                        "leftExpression": {
-                          "argumentTypes": null,
-                          "id": 134,
-                          "name": "_v",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 127,
-                          "src": "3039:2:0",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_uint8",
-                            "typeString": "uint8"
-                          }
-                        },
-                        "nodeType": "BinaryOperation",
-                        "operator": "+",
-                        "rightExpression": {
-                          "argumentTypes": null,
-                          "hexValue": "34",
-                          "id": 135,
-                          "isConstant": false,
-                          "isLValue": false,
-                          "isPure": true,
-                          "kind": "number",
-                          "lValueRequested": false,
-                          "nodeType": "Literal",
-                          "src": "3044:1:0",
-                          "subdenomination": null,
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_rational_4_by_1",
-                            "typeString": "int_const 4"
-                          },
-                          "value": "4"
-                        },
-                        "src": "3039:6:0",
+                        "id": 134,
+                        "name": "_v",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 127,
+                        "src": "3371:2:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint8",
                           "typeString": "uint8"
@@ -3550,12 +3476,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 137,
+                        "id": 135,
                         "name": "_r",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 123,
-                        "src": "3053:2:0",
+                        "src": "3381:2:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -3563,12 +3489,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 138,
+                        "id": 136,
                         "name": "_s",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 125,
-                        "src": "3063:2:0",
+                        "src": "3391:2:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -3599,13 +3525,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": -6,
-                      "src": "3009:9:0",
+                      "src": "3341:9:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_ecrecover_pure$_t_bytes32_$_t_uint8_$_t_bytes32_$_t_bytes32_$returns$_t_address_$",
                         "typeString": "function (bytes32,uint8,bytes32,bytes32) pure returns (address)"
                       }
                     },
-                    "id": 139,
+                    "id": 137,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3613,7 +3539,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "3009:64:0",
+                    "src": "3341:60:0",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -3621,15 +3547,15 @@
                     }
                   },
                   "functionReturnParameters": 131,
-                  "id": 140,
+                  "id": 138,
                   "nodeType": "Return",
-                  "src": "3002:71:0"
+                  "src": "3334:67:0"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "433cc269",
-            "id": 142,
+            "id": 140,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -3646,8 +3572,8 @@
                   "name": "_hash",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2573:13:0",
+                  "scope": 140,
+                  "src": "2897:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3658,7 +3584,7 @@
                     "id": 120,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2573:7:0",
+                    "src": "2897:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -3673,8 +3599,8 @@
                   "name": "_r",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2588:10:0",
+                  "scope": 140,
+                  "src": "2912:10:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3685,7 +3611,7 @@
                     "id": 122,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2588:7:0",
+                    "src": "2912:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -3700,8 +3626,8 @@
                   "name": "_s",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2600:10:0",
+                  "scope": 140,
+                  "src": "2924:10:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3712,7 +3638,7 @@
                     "id": 124,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2600:7:0",
+                    "src": "2924:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -3727,8 +3653,8 @@
                   "name": "_v",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2612:8:0",
+                  "scope": 140,
+                  "src": "2936:8:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3739,7 +3665,7 @@
                     "id": 126,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2612:5:0",
+                    "src": "2936:5:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -3749,7 +3675,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2572:49:0"
+              "src": "2896:49:0"
             },
             "returnParameters": {
               "id": 131,
@@ -3761,8 +3687,8 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 142,
-                  "src": "2648:7:0",
+                  "scope": 140,
+                  "src": "2972:7:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3773,7 +3699,7 @@
                     "id": 129,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2648:7:0",
+                    "src": "2972:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -3784,20 +3710,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2647:9:0"
+              "src": "2971:9:0"
             },
-            "scope": 143,
-            "src": "2549:530:0",
+            "scope": 141,
+            "src": "2873:533:0",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 144,
-        "src": "33:3048:0"
+        "scope": 142,
+        "src": "33:3375:0"
       }
     ],
-    "src": "0:3082:0"
+    "src": "0:3409:0"
   },
   "compiler": {
     "name": "solc",
@@ -3812,7 +3738,7 @@
     }
   },
   "schemaVersion": "3.0.23",
-  "updatedAt": "2020-06-19T14:44:40.548Z",
+  "updatedAt": "2020-06-21T16:49:23.687Z",
   "devdoc": {
     "methods": {}
   },

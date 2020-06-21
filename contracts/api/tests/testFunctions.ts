@@ -1,16 +1,21 @@
 
 
-import ClaimContract from '../contracts/ClaimContract.d';
-import web3 from 'web3';
+import ClaimContract from '../contracts/ClaimContract.d'
+import Web3 from 'web3';
 import sha256 from 'js-sha256'
+
+
+import { ecrecover } from 'ethereumjs-util'
 
 export class TestFunctions {
 
-  public constructor(public web3Instance: web3, public instance : ClaimContract.ClaimContract) {
+  public constructor(public web3Instance: Web3, public instance : ClaimContract.ClaimContract) {
     
     if (instance === undefined || instance === null) {
       throw Error("Claim contract must be defined!!");
     }
+
+    
   }
 
   // public async testValidateSignature() {
@@ -69,6 +74,10 @@ export class TestFunctions {
     //r: 2077b616f680b086c812f6f8ee9ad2160deb5cd1e513dd69d9662da712293c0d
     //s: f45bace0bf3c1cdf043dd279c0d762db2f668aa376b48e381b37ac4cec43aefe
     //v: 17
+
+    console.log('sigBuffer:');
+    console.log(sig);
+    console.log(sig.toString('hex'));
 
     const r = sig.subarray(0, 32);
     const s = sig.subarray(32,64);
@@ -146,12 +155,20 @@ export class TestFunctions {
     const rHex  = '0x' + sig.r.toString('hex');
     const sHex =  '0x' + sig.s.toString('hex');
 
+    //this.web3Instance.eth.ercRe
+    const ercRecoverResult27 = ecrecover(hash, 27, sig.r, sig.s);
+    console.log('ercRecoverResult27: ' + ercRecoverResult27.toString('hex'));
+
+    const ercRecoverResult28 = ecrecover(hash, 28, sig.r, sig.s);
+    console.log('ercRecoverResult28: ' + ercRecoverResult28.toString('hex'));
+
+    
 
     const checkSignatureResult = await this.instance.methods.checkSignature(
       hashHex,
       rHex,
       sHex,
-      sig.v)
+      27)
     .call();
 
     console.log('Recovered Address:');
