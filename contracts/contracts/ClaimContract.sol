@@ -124,6 +124,15 @@ contract ClaimContract {
 //     return result;
 //   }
 
+  // function checkSignature(bytes32 h, uint8 v, bytes32 r, bytes32 s)
+  // public
+  // pure
+  // returns (address signer)
+  // {
+  //   bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+  //   bytes32 prefixedHash = keccak256(abi.encodePacked(prefix,h));  
+  //   signer = ecrecover(prefixedHash, v, r, s); 
+  // }
 
   function checkSignature(bytes32 _hash, bytes32 _r, bytes32 _s, uint8 _v)
   public

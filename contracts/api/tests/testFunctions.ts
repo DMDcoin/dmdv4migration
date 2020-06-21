@@ -87,16 +87,16 @@ export class TestFunctions {
 
   public messageToHashToSign(message: string) : Buffer {
 
-    var buf = Buffer.from(message, 'utf8');
-    console.log(buf);
-    const ripe = new RIPEMD160();
-    ripe.end(buf);
+    // var buf = Buffer.from(message, 'utf8');
+    // console.log(buf);
+    // const ripe = new RIPEMD160();
+    // ripe.end(buf);
 
     
-    //console.log(ripe.read().toString('hex'));
+    // //console.log(ripe.read().toString('hex'));
 
-    const readResult =  ripe.read() as Buffer;
-    console.log(readResult.toString('hex'));
+    // const readResult =  ripe.read() as Buffer;
+    // console.log(readResult.toString('hex'));
     //console.log(readResult.length);
 
     // https://bitcoin.stackexchange.com/questions/36838/why-does-the-standard-bitcoin-message-signature-include-a-magic-prefix
@@ -147,6 +147,8 @@ export class TestFunctions {
 
   public async testAddressRecovery() {
 
+    //console.log('running test on instance: ', this.instance);
+
     const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
     const signatureBase64 = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
     const btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
@@ -156,8 +158,17 @@ export class TestFunctions {
     console.log(`type: ${hash.toString('hex')}`);
 
     const sig = this.signatureBase64ToRSV(signatureBase64);
-    const checkSignatureResult = await this.instance.methods.checkSignature(hash.toString('hex'), sig.r.toString('hex'), sig.s.toString('hex'), sig.v)
-      .call();
+    const hashHex = '0x' + hash.toString('hex');
+    const rHex  = '0x' + sig.r.toString('hex');
+    const sHex =  '0x' + sig.s.toString('hex');
+
+
+    const checkSignatureResult = await this.instance.methods.checkSignature(
+      hashHex,
+      rHex,
+      sHex,
+      sig.v)
+    .call();
 
     console.log('Recovered Address:');
     console.log(checkSignatureResult);
