@@ -2,13 +2,9 @@
 
 //example address from bitcoin.
 // Private: L4FkVsvM6FLuwJJHzpHJM6fUdG9acX5QqbvtvTSZRtG3Nsa7J8tv
-// Public: +
+// Public : 02bee3163c5ba877f4205ab447fb42373bb1f77e898d0d649dc7c691a483551a37
+// PublicU: 04bee3163c5ba877f4205ab447fb42373bb1f77e898d0d649dc7c691a483551a378036be868fa5ec97c61b08073630c793ec550b77b28d96561ef9e89914b1e3a4
 // Address: 1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX
-
-
-
-  
-
 
 
 const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";

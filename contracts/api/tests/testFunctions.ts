@@ -144,7 +144,13 @@ export class TestFunctions {
 
     const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
     const signatureBase64 = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
-    const btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
+    const btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX"; //is maybe not base64 - it might be base58 ?
+
+    // Private: L4FkVsvM6FLuwJJHzpHJM6fUdG9acX5QqbvtvTSZRtG3Nsa7J8tv
+    // Public : 02bee3163c5ba877f4205ab447fb42373bb1f77e898d0d649dc7c691a483551a37
+    // PublicU: 04bee3163c5ba877f4205ab447fb42373bb1f77e898d0d649dc7c691a483551a378036be868fa5ec97c61b08073630c793ec550b77b28d96561ef9e89914b1e3a4
+
+
     const hash = this.messageToHashToSign(message);
 
     console.log(`type: ${typeof hash}`);
@@ -157,12 +163,10 @@ export class TestFunctions {
 
     //this.web3Instance.eth.ercRe
     const ercRecoverResult27 = ecrecover(hash, 27, sig.r, sig.s);
-    console.log('ercRecoverResult27: ' + ercRecoverResult27.toString('hex'));
+    console.log('ercRecoverResult27: (public key) ' + ercRecoverResult27.toString('hex'));
 
     const ercRecoverResult28 = ecrecover(hash, 28, sig.r, sig.s);
-    console.log('ercRecoverResult28: ' + ercRecoverResult28.toString('hex'));
-
-    
+    console.log('ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
 
     const checkSignatureResult = await this.instance.methods.checkSignature(
       hashHex,
