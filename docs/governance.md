@@ -265,6 +265,14 @@ https://github.com/aragonone/voting-connectors/blob/master/apps/voting-aggregato
 
 
 
+#### aragon Voting: single delegation
+
+There is a Issue about that topic and a Pull request available: 
+https://github.com/aragon/aragon-apps/issues/623
+https://github.com/aragon/aragon-apps/pull/881
+
+Todo: Further investigation.
+
 #### aragon FAQ
 
 Q: Can i give away my REP during i have a Vote Open ? can the other one vote twice ?!
