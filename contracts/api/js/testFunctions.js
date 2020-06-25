@@ -99,7 +99,7 @@ var TestFunctions = /** @class */ (function () {
         // https://bitcoin.stackexchange.com/questions/36838/why-does-the-standard-bitcoin-message-signature-include-a-magic-prefix
         var bitcoinPrefixString = '\x18Bitcoin Signed Message:\n';
         var bitcoinPrefixBuffer = Buffer.from(bitcoinPrefixString, 'utf8');
-        var messageBuffer = Buffer.from(message, 'utf8');
+        var messageBuffer = Buffer.from(message.length.toString() + message, 'utf8');
         var messageSize = message.length;
         // source code from 
         // https://github.com/bitcoinjs/bitcoinjs-lib/blob/1079bf95c1095f7fb018f6e4757277d83b7b9d07/src/message.js#L13
@@ -116,7 +116,7 @@ var TestFunctions = /** @class */ (function () {
         messageBuffer.copy(buffer, bitcoinPrefixBuffer.length);
         console.log("Buffer to sign:");
         console.log(buffer.toString('hex'));
-        var hashResult = js_sha256_1["default"].sha256(messageBuffer);
+        var hashResult = js_sha256_1["default"].sha256(js_sha256_1["default"].sha256(messageBuffer));
         console.log('HashResult: ' + hashResult);
         // 6b4539ed373c9977a4b66f9abdece0884bb9e546ed4a76855297edb703d05486
         var hashResultString = hashResult;
@@ -129,7 +129,7 @@ var TestFunctions = /** @class */ (function () {
     };
     TestFunctions.prototype.testAddressRecovery = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var message, signatureBase64, btcAddressBase64, hash, sig, hashHex, rHex, sHex, ercRecoverResult27, ercRecoverResult28, checkSignatureResult;
+            var message, signatureBase64, btcAddressBase64, hash, sig, hashHex, rHex, sHex, ercRecoverResult27, ercRecoverResult28, checkSignatureResult27, checkSignatureResult28;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -137,22 +137,26 @@ var TestFunctions = /** @class */ (function () {
                         signatureBase64 = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
                         btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
                         hash = this.messageToHashToSign(message);
-                        console.log("type: " + typeof hash);
-                        console.log("type: " + hash.toString('hex'));
+                        console.log("hash: " + hash.toString('hex'));
                         sig = this.signatureBase64ToRSV(signatureBase64);
                         hashHex = '0x' + hash.toString('hex');
                         rHex = '0x' + sig.r.toString('hex');
                         sHex = '0x' + sig.s.toString('hex');
                         ercRecoverResult27 = ethereumjs_util_1.ecrecover(hash, 27, sig.r, sig.s);
-                        console.log('ercRecoverResult27: ' + ercRecoverResult27.toString('hex'));
+                        console.log('js ercRecoverResult27: (public key) ' + ercRecoverResult27.toString('hex'));
                         ercRecoverResult28 = ethereumjs_util_1.ecrecover(hash, 28, sig.r, sig.s);
-                        console.log('ercRecoverResult28: ' + ercRecoverResult28.toString('hex'));
+                        console.log('js ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
                         return [4 /*yield*/, this.instance.methods.checkSignature(hashHex, rHex, sHex, 27)
                                 .call()];
                     case 1:
-                        checkSignatureResult = _a.sent();
-                        console.log('Recovered Address:');
-                        console.log(checkSignatureResult);
+                        checkSignatureResult27 = _a.sent();
+                        return [4 /*yield*/, this.instance.methods.checkSignature(hashHex, rHex, sHex, 28)
+                                .call()];
+                    case 2:
+                        checkSignatureResult28 = _a.sent();
+                        console.log('Recovered Address from solidity:');
+                        console.log('27: ' + checkSignatureResult27);
+                        console.log('28: ' + checkSignatureResult28);
                         return [2 /*return*/];
                 }
             });

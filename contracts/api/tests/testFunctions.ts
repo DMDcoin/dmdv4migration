@@ -3,9 +3,10 @@
 import ClaimContract from '../contracts/ClaimContract.d'
 import Web3 from 'web3';
 import sha256 from 'js-sha256'
-
-
 import { ecrecover } from 'ethereumjs-util'
+
+import bitcoinMessage from 'bitcoinjs-message'
+import bitcoin from 'bitcoinjs-lib'
 
 export class TestFunctions {
 
@@ -67,6 +68,18 @@ export class TestFunctions {
     
   // };
 
+  //Ethereum Address to string with checksum
+
+  public runTestEthereumAddressToStringWithChecksum() {
+
+    const address = '0xfec7b00dc0192319dda0c777a9f04e47dc49bd18';
+    const addressWithChecksum = '0xfEc7B00DC0192319DdA0c777A9F04E47Dc49bD18';
+
+    
+
+
+  }
+
   public signatureBase64ToRSV(signatureBase64: string) : { r: Buffer, s: Buffer, v: number }
   {
     const sig = Buffer.from(signatureBase64, 'base64');
@@ -98,7 +111,7 @@ export class TestFunctions {
 
     const bitcoinPrefixString = '\x18Bitcoin Signed Message:\n';
     const bitcoinPrefixBuffer = Buffer.from(bitcoinPrefixString, 'utf8');
-    const messageBuffer = Buffer.from(message, 'utf8');
+    const messageBuffer = Buffer.from(message.length.toString() + message, 'utf8');
 
     const messageSize = message.length;
 
@@ -122,7 +135,7 @@ export class TestFunctions {
     console.log("Buffer to sign:");
     console.log(buffer.toString('hex'));
 
-    const hashResult = sha256.sha256(messageBuffer);
+    const hashResult = sha256.sha256(sha256.sha256(messageBuffer));
     console.log('HashResult: ' + hashResult);
 
     // 6b4539ed373c9977a4b66f9abdece0884bb9e546ed4a76855297edb703d05486
@@ -153,8 +166,7 @@ export class TestFunctions {
 
     const hash = this.messageToHashToSign(message);
 
-    console.log(`type: ${typeof hash}`);
-    console.log(`type: ${hash.toString('hex')}`);
+    console.log(`hash: ${hash.toString('hex')}`);
 
     const sig = this.signatureBase64ToRSV(signatureBase64);
     const hashHex = '0x' + hash.toString('hex');
@@ -163,20 +175,42 @@ export class TestFunctions {
 
     //this.web3Instance.eth.ercRe
     const ercRecoverResult27 = ecrecover(hash, 27, sig.r, sig.s);
-    console.log('ercRecoverResult27: (public key) ' + ercRecoverResult27.toString('hex'));
+    console.log('js ercRecoverResult27: (public key) ' + ercRecoverResult27.toString('hex'));
 
     const ercRecoverResult28 = ecrecover(hash, 28, sig.r, sig.s);
-    console.log('ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
+    console.log('js ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
 
-    const checkSignatureResult = await this.instance.methods.checkSignature(
+    const checkSignatureResult27 = await this.instance.methods.checkSignature(
       hashHex,
       rHex,
       sHex,
       27)
     .call();
 
-    console.log('Recovered Address:');
-    console.log(checkSignatureResult);
+    const checkSignatureResult28 = await this.instance.methods.checkSignature(
+      hashHex,
+      rHex,
+      sHex,
+      28)
+    .call();
+
+    console.log('Recovered Address from solidity:');
+    console.log('27: ' + checkSignatureResult27);
+    console.log('28: ' + checkSignatureResult28);
+  }
+
+  public testBitcoinSignAndRecovery() {
+
+    var keyPair = bitcoin.ECPair.fromWIF('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss')
+    var privateKey = keyPair.privateKey
+    var message = 'This is an example of a signed message.'
+ 
+    var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed)
+    console.log(signature.toString('base64'))
+
+    var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' })
+    console.log(signature.toString('base64'))
+
   }
 
 }

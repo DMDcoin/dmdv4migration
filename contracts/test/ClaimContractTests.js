@@ -5,6 +5,12 @@ var TestFunctions = require('../api/js/testFunctions');
 
 const ClaimContract = artifacts.require('ClaimContract');
 
+function remove0x(input) {
+  if (input.startsWith('0x')) {
+    return input.substring(2);
+  }
+}
+
 contract('ClaimContract', (accounts) => {
   console.log(`Accounts: ${accounts}`);
 
@@ -30,6 +36,28 @@ contract('ClaimContract', (accounts) => {
   //   //console.log('address: ' + address);
   // })
 
+
+
+  it('correct Address checksum.', async() => {
+
+    const address = '0xfec7b00dc0192319dda0c777a9f04e47dc49bd18';
+    const addressWithChecksum = '0xfEc7B00DC0192319DdA0c777A9F04E47Dc49bD18';
+
+    //claimContract.contract.functions
+
+    //function calculateAddressString(address addr, bool includeAddrChecksum)
+    const calcAddressResult = await claimContract.contract.methods.calculateAddressString(address, true).call();
+    //0x66456337423030444330313932333139446441306337373741394630344534374463343962443138
+    console.log('calcAddressResult' + calcAddressResult);
+
+    const buffer = Buffer.from(remove0x(calcAddressResult), 'hex');
+    console.log('buffer:' + buffer);
+    const calcResult = '0x' + buffer.toString('utf8');
+
+    console.log('calcResult:', calcResult);
+    assert.equal(calcResult, addressWithChecksum, 'checksum must be calculated in a correct ways.');
+  })
+
   it('Retrieve Bitcoin address from signature', async() => {
     //console.log('testFunctions: ', testFunctions);
     //console.log(testFunctions);
@@ -39,4 +67,6 @@ contract('ClaimContract', (accounts) => {
     //console.log('recoveredAddress: ' + recoveredAddress);
     //assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
   })
+
+
 })

@@ -7,6 +7,16 @@ import {EC} from  './EC.sol';
 
 contract ClaimContract {
 
+  bytes16 internal constant HEX_DIGITS = "0123456789abcdef";
+
+  /* Constants for preparing the claim message text */
+  uint8 internal constant ETH_ADDRESS_BYTE_LEN = 20;
+  uint8 internal constant ETH_ADDRESS_HEX_LEN = ETH_ADDRESS_BYTE_LEN * 2;
+  uint8 internal constant CLAIM_PARAM_HASH_BYTE_LEN = 12;
+  uint8 internal constant CLAIM_PARAM_HASH_HEX_LEN = CLAIM_PARAM_HASH_BYTE_LEN * 2;
+  uint8 internal constant BITCOIN_SIG_PREFIX_LEN = 24;
+  bytes24 internal constant BITCOIN_SIG_PREFIX_STR = "Bitcoin Signed Message:\n";
+
   mapping (string => uint256)  public balances;
 
   constructor() public {
@@ -163,5 +173,159 @@ contract ClaimContract {
       _r,
       _s
       );
+  }
+
+
+  /**
+    * @dev PUBLIC FACING: Derive an Ethereum address from an ECDSA public key
+    * @param pubKeyX First  half of uncompressed ECDSA public key
+    * @param pubKeyY Second half of uncompressed ECDSA public key
+    * @return Derived Eth address
+    */
+  function pubKeyToEthAddress(bytes32 pubKeyX, bytes32 pubKeyY)
+      public
+      pure
+      returns (address)
+  {
+      return address(uint160(uint256(keccak256(abi.encodePacked(pubKeyX, pubKeyY)))));
+  }
+
+  /**
+  * @dev sha256(sha256(data))
+  * @param data Data to be hashed
+  * @return 32-byte hash
+  */
+  function _hash256(bytes memory data)
+      private
+      pure
+      returns (bytes32)
+  {
+      return sha256(abi.encodePacked(sha256(data)));
+  }
+
+      function _hexStringFromData(bytes memory hexStr, bytes32 data, uint256 dataLen)
+        private
+        pure
+    {
+        uint256 offset = 0;
+
+        for (uint256 i = 0; i < dataLen; i++) {
+            uint8 b = uint8(data[i]);
+
+            hexStr[offset++] = HEX_DIGITS[b >> 4];
+            hexStr[offset++] = HEX_DIGITS[b & 0x0f];
+        }
+    }
+
+    function _addressStringChecksumChar(bytes memory addrStr, uint256 offset, uint8 hashNybble)
+    private
+    pure
+    {
+        bytes1 ch = addrStr[offset];
+
+        if (ch >= "a" && hashNybble >= 8) {
+            addrStr[offset] = ch ^ 0x20;
+        }
+    }
+
+  /**
+  * @dev calculates the address string representation of the signed address.
+  * @param addr address
+  * @param includeAddrChecksum bool. should the addressChecksum be used for this caluclation.
+  * @return addrStr ethereum address(24 byte)
+  */
+  function calculateAddressString(address addr, bool includeAddrChecksum)
+    public
+    pure
+    returns (bytes memory addrStr)
+  {
+      addrStr = new bytes(ETH_ADDRESS_HEX_LEN);
+      _hexStringFromData(addrStr, bytes32(bytes20(addr)), ETH_ADDRESS_BYTE_LEN);
+
+      if (includeAddrChecksum) {
+          bytes32 addrStrHash = keccak256(addrStr);
+
+          uint256 offset = 0;
+
+          for (uint256 i = 0; i < ETH_ADDRESS_BYTE_LEN; i++) {
+              uint8 b = uint8(addrStrHash[i]);
+
+              _addressStringChecksumChar(addrStr, offset++, b >> 4);
+              _addressStringChecksumChar(addrStr, offset++, b & 0x0f);
+          }
+      }
+
+      return addrStr;
+  }
+
+
+    function _claimMessageCreate(address claimToAddr, bytes32 claimParamHash, bool claimToAddrChecksum)
+        private
+        pure
+        returns (bytes memory)
+    {
+        bytes memory prefixStr = "";
+
+        //TODO: pass this as an argument. evaluate in JS before includeAddrChecksum is used or not.
+        //now for testing, we assume Yes.
+
+        bytes memory addrStr = calculateAddressString(claimToAddr, claimToAddrChecksum);
+
+        if (claimParamHash == 0) {
+            return abi.encodePacked(
+                BITCOIN_SIG_PREFIX_LEN,
+                BITCOIN_SIG_PREFIX_STR,
+                uint8(prefixStr.length) + ETH_ADDRESS_HEX_LEN,
+                prefixStr,
+                addrStr
+            );
+        }
+
+        bytes memory claimParamHashStr = new bytes(CLAIM_PARAM_HASH_HEX_LEN);
+
+        _hexStringFromData(claimParamHashStr, claimParamHash, CLAIM_PARAM_HASH_BYTE_LEN);
+
+        return abi.encodePacked(
+            BITCOIN_SIG_PREFIX_LEN,
+            BITCOIN_SIG_PREFIX_STR,
+            uint8(prefixStr.length) + ETH_ADDRESS_HEX_LEN + 1 + CLAIM_PARAM_HASH_HEX_LEN,
+            prefixStr,
+            addrStr,
+            "_",
+            claimParamHashStr
+        );
+    }
+
+
+
+  function claimMessageMatchesSignature(
+    address _claimToAddr,
+    bool    _claimAddrChecksum,
+    bytes32 _claimParamHash,
+    bytes32 _pubKeyX,
+    bytes32 _pubKeyY,
+    uint8 _v,
+    bytes32 _r,
+    bytes32 _s
+  )
+    public
+    pure
+    returns (bool)
+  {
+      require(_v >= 27 && _v <= 30, "v invalid");
+
+      /*
+          ecrecover() returns an Eth address rather than a public key, so
+          we must do the same to compare.
+      */
+      address pubKeyEthAddr = pubKeyToEthAddress(_pubKeyX, _pubKeyY);
+
+      /* Create and hash the claim message text */
+      bytes32 messageHash = _hash256(
+          _claimMessageCreate(_claimToAddr, _claimParamHash, _claimAddrChecksum)
+      );
+
+      /* Verify the public key */
+      return ecrecover(messageHash, _v, _r, _s) == pubKeyEthAddr;
   }
 }

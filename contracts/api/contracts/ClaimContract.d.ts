@@ -40,6 +40,27 @@ export class ClaimContract extends Contract {
       _s: string | number[],
       _v: number | string
     ): TransactionObject<string>;
+
+    pubKeyToEthAddress(
+      pubKeyX: string | number[],
+      pubKeyY: string | number[]
+    ): TransactionObject<string>;
+
+    calculateAddressString(
+      addr: string,
+      includeAddrChecksum: boolean
+    ): TransactionObject<string>;
+
+    claimMessageMatchesSignature(
+      _claimToAddr: string,
+      _claimAddrChecksum: boolean,
+      _claimParamHash: string | number[],
+      _pubKeyX: string | number[],
+      _pubKeyY: string | number[],
+      _v: number | string,
+      _r: string | number[],
+      _s: string | number[]
+    ): TransactionObject<boolean>;
   };
   events: {
     allEvents: (

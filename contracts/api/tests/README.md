@@ -4,6 +4,7 @@
 
 ## Basic Functions 
 
+* Ethereum Address to string with checksum.
 * Message to Hash JS implementation
 * Message to Hash Solidity implementation
 * Get Public Key of Signed Message (SOL)
