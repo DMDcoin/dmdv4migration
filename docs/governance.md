@@ -1,4 +1,3 @@
-
 # DRAFT
 
 # DMD DAO Governance Design
@@ -43,15 +42,26 @@ Validators are able to vote once, but they are not able to change their decision
 This enables delegators to switch to a validator that represent their opinion in time.
 It also encourages validators to do their decision early, in order to attract further delegator.
 
+### Timing
+
+The system alternates between 2 phases:
+* proposal
+* voting
+
+Both take 14 days.  
+During the proposal phase, new ballots can be created.  
+During the voting phase, validators can vote for or against open proposals.  
+At the end of the voting phase, binding votes are executed in the order of their creation. All proposals are then considered as done, regardless of the voting outcome and of the the outcome of payout transactions.  
+The new proposal phase always starts with 0 open proposals.
+
 ### Ballots creation
 Voting Ballots are stored on the blockchain and contain a text,
 an optional payout address and an optional payout amount.
 Ballots with a zero amount, and a payout address can be used to trigger a smart contract function.
 
-If more than 50% of the voters accept a proposal, 
-the proposal will be accepted.
-There is no minimum amount of voters required to accept a proposal
-There is a minimum timeframe for a ballot when it can get executed.
+There is no minimum amount of voters required to accept a proposal.
+Binding votes (those coming with a payout) require a majority of 2/3 in order to trigger the payment.
+In the case of non-binding votes, no concept of majority exists (the UI should just show the result).
 
 The Communication about the proposal will happen off-chain.
 
@@ -87,7 +97,7 @@ The requirements in a nutshell
 - binding voting and non-binding voting (non-binding voting could be done as zero amount voting)
 - weighted voting (easy injection on the stake)
 - weights require to be calculated at the execution of the vote.
-- voters are not allowed to change their opinion once theiy have voted.
+- voters are allowed to change their vote
 - upgrading of the HBBFT-POSDAO Contracts (or is this a hardfork ?)
 - upgrading of the Governance DAO Contracts.
 
