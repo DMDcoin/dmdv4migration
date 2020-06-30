@@ -41,6 +41,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var js_sha256_1 = __importDefault(require("js-sha256"));
 var ethereumjs_util_1 = require("ethereumjs-util");
+var bitcoinjs_message_1 = __importDefault(require("bitcoinjs-message"));
+var bitcoinjs_lib_1 = __importDefault(require("bitcoinjs-lib"));
+var elliptic_1 = __importDefault(require("elliptic"));
+//var ec = new EC('secp256k1');
 var TestFunctions = /** @class */ (function () {
     function TestFunctions(web3Instance, instance) {
         this.web3Instance = web3Instance;
@@ -79,6 +83,11 @@ var TestFunctions = /** @class */ (function () {
     //   // return pubKeyResult;
     //   const hashOfSignedInfo = "";
     // };
+    //Ethereum Address to string with checksum
+    TestFunctions.prototype.runTestEthereumAddressToStringWithChecksum = function () {
+        var address = '0xfec7b00dc0192319dda0c777a9f04e47dc49bd18';
+        var addressWithChecksum = '0xfEc7B00DC0192319DdA0c777A9F04E47Dc49bD18';
+    };
     TestFunctions.prototype.signatureBase64ToRSV = function (signatureBase64) {
         var sig = Buffer.from(signatureBase64, 'base64');
         //r: 2077b616f680b086c812f6f8ee9ad2160deb5cd1e513dd69d9662da712293c0d
@@ -127,44 +136,75 @@ var TestFunctions = /** @class */ (function () {
         //20 byte result
         //return crypto.hash256(buffer)
     };
+    // public publicKeyToXY(buf: Buffer) : {x: string ,y: string} {
+    //   //var EC = require('elliptic').ec;
+    //   // Create and initialize EC context
+    //   // (better do it once and reuse it)
+    //   var ec = new EC.ec('secp256k1');
+    //   const key = ec.keyFromPublic(buf);
+    //   const publicKey = key.getPublic();
+    //   return { 
+    //     x: publicKey.getX().toString(), 
+    //     y: publicKey.getX().toString() 
+    //   }
+    // }
+    // public xyFromRS(buf: Buffer) : {x: string ,y: string} {
+    //   //var EC = require('elliptic').ec;
+    //   // Create and initialize EC context
+    //   // (better do it once and reuse it)
+    //   var ec = new EC.ec('secp256k1');
+    //   const recoverResult = ec.recoverPubKey(msg, signature, 27);
+    //   const key = ec.keyFromPublic(buf);
+    //   const publicKey = key.getPublic();
+    //   return { 
+    //     x: publicKey.getX().toString(), 
+    //     y: publicKey.getX().toString() 
+    //   }
+    // }
     TestFunctions.prototype.testAddressRecovery = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var message, signatureBase64, btcAddressBase64, hash, sig, hashHex, rHex, sHex, ercRecoverResult27, ercRecoverResult28, checkSignatureResult27, checkSignatureResult28;
+            var message, signatureBase64, btcAddressBase64, hash, sig, hashHex, rHex, sHex, ercRecoverResult27, ercRecoverResult28, ec, sig27, sig28, recoverResult27, recoverResult28;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-                        signatureBase64 = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
-                        btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
-                        hash = this.messageToHashToSign(message);
-                        console.log("hash: " + hash.toString('hex'));
-                        sig = this.signatureBase64ToRSV(signatureBase64);
-                        hashHex = '0x' + hash.toString('hex');
-                        rHex = '0x' + sig.r.toString('hex');
-                        sHex = '0x' + sig.s.toString('hex');
-                        ercRecoverResult27 = ethereumjs_util_1.ecrecover(hash, 27, sig.r, sig.s);
-                        console.log('js ercRecoverResult27: (public key) ' + ercRecoverResult27.toString('hex'));
-                        ercRecoverResult28 = ethereumjs_util_1.ecrecover(hash, 28, sig.r, sig.s);
-                        console.log('js ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
-                        return [4 /*yield*/, this.instance.methods.checkSignature(hashHex, rHex, sHex, 27)
-                                .call()];
-                    case 1:
-                        checkSignatureResult27 = _a.sent();
-                        return [4 /*yield*/, this.instance.methods.checkSignature(hashHex, rHex, sHex, 28)
-                                .call()];
-                    case 2:
-                        checkSignatureResult28 = _a.sent();
-                        console.log('Recovered Address from solidity:');
-                        console.log('27: ' + checkSignatureResult27);
-                        console.log('28: ' + checkSignatureResult28);
-                        return [2 /*return*/];
-                }
+                message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+                signatureBase64 = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
+                btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
+                hash = this.messageToHashToSign(message);
+                console.log("hash: " + hash.toString('hex'));
+                sig = this.signatureBase64ToRSV(signatureBase64);
+                hashHex = '0x' + hash.toString('hex');
+                rHex = '0x' + sig.r.toString('hex');
+                sHex = '0x' + sig.s.toString('hex');
+                ercRecoverResult27 = ethereumjs_util_1.ecrecover(hash, 27, sig.r, sig.s);
+                console.log('js ercRecoverResult27: (public key) ' + ercRecoverResult27.toString('hex'));
+                ercRecoverResult28 = ethereumjs_util_1.ecrecover(hash, 28, sig.r, sig.s);
+                console.log('js ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
+                ec = new elliptic_1["default"].ec('secp256k1');
+                sig27 = { r: sig.r.toString('hex'), s: sig.s.toString('hex'), recoveryParam: 0 };
+                sig28 = { r: sig.r.toString('hex'), s: sig.s.toString('hex'), recoveryParam: 1 };
+                recoverResult27 = ec.recoverPubKey(hash, sig27, 0);
+                recoverResult28 = ec.recoverPubKey(hash, sig28, 1);
+                //const key = ec.keyFromPublic(buf);
+                console.log('type of result: ', typeof recoverResult27);
+                console.log('elliptic recover result 27:', recoverResult27);
+                console.log('elliptic recover result 28:', recoverResult28);
+                console.log(recoverResult28);
+                return [2 /*return*/];
             });
         });
+    };
+    TestFunctions.prototype.testBitcoinSignAndRecovery = function () {
+        var keyPair = bitcoinjs_lib_1["default"].ECPair.fromWIF('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss');
+        var privateKey = keyPair.privateKey;
+        var message = 'This is an example of a signed message.';
+        var signature = bitcoinjs_message_1["default"].sign(message, privateKey, keyPair.compressed);
+        console.log(signature.toString('base64'));
+        var signature = bitcoinjs_message_1["default"].sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' });
+        console.log(signature.toString('base64'));
     };
     return TestFunctions;
 }());
 exports.TestFunctions = TestFunctions;
+//
 //const test = new TestFunctions(null, null);
 //test.testAddressRecovery();
 //# sourceMappingURL=testFunctions.js.map

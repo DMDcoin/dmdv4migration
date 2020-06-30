@@ -8,6 +8,12 @@ import { ecrecover } from 'ethereumjs-util'
 import bitcoinMessage from 'bitcoinjs-message'
 import bitcoin from 'bitcoinjs-lib'
 
+
+import EC from 'elliptic'
+
+//var ec = new EC('secp256k1');
+
+
 export class TestFunctions {
 
   public constructor(public web3Instance: Web3, public instance : ClaimContract.ClaimContract) {
@@ -151,6 +157,45 @@ export class TestFunctions {
     //return crypto.hash256(buffer)
   }
 
+  // public publicKeyToXY(buf: Buffer) : {x: string ,y: string} {
+
+  //   //var EC = require('elliptic').ec;
+ 
+  //   // Create and initialize EC context
+  //   // (better do it once and reuse it)
+  //   var ec = new EC.ec('secp256k1');
+
+    
+  //   const key = ec.keyFromPublic(buf);
+    
+  //   const publicKey = key.getPublic();
+
+  //   return { 
+  //     x: publicKey.getX().toString(), 
+  //     y: publicKey.getX().toString() 
+  //   }
+  // }
+
+
+  // public xyFromRS(buf: Buffer) : {x: string ,y: string} {
+
+  //   //var EC = require('elliptic').ec;
+ 
+  //   // Create and initialize EC context
+  //   // (better do it once and reuse it)
+  //   var ec = new EC.ec('secp256k1');
+
+  //   const recoverResult = ec.recoverPubKey(msg, signature, 27);
+  //   const key = ec.keyFromPublic(buf);
+    
+  //   const publicKey = key.getPublic();
+
+  //   return { 
+  //     x: publicKey.getX().toString(), 
+  //     y: publicKey.getX().toString() 
+  //   }
+  // }
+
   public async testAddressRecovery() {
 
     //console.log('running test on instance: ', this.instance);
@@ -180,23 +225,58 @@ export class TestFunctions {
     const ercRecoverResult28 = ecrecover(hash, 28, sig.r, sig.s);
     console.log('js ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
 
-    const checkSignatureResult27 = await this.instance.methods.checkSignature(
-      hashHex,
-      rHex,
-      sHex,
-      27)
-    .call();
+    // const checkSignatureResult27 = await this.instance.methods.checkSignature(
+    //   hashHex,
+    //   rHex,
+    //   sHex,
+    //   27)
+    // .call();
 
-    const checkSignatureResult28 = await this.instance.methods.checkSignature(
-      hashHex,
-      rHex,
-      sHex,
-      28)
-    .call();
+    // const checkSignatureResult28 = await this.instance.methods.checkSignature(
+    //   hashHex,
+    //   rHex,
+    //   sHex,
+    //   28)
+    // .call();
 
-    console.log('Recovered Address from solidity:');
-    console.log('27: ' + checkSignatureResult27);
-    console.log('28: ' + checkSignatureResult28);
+
+    // console.log('Recovered Address from solidity:');
+    // console.log('27: ' + checkSignatureResult27);
+    // console.log('28: ' + checkSignatureResult28);
+
+    
+    var ec = new EC.ec('secp256k1');
+
+    //const sig27 = new EC.ec.Signature({ r: rHex, s: sHex, recoveryParam: 27});
+    //const sig28 = new EC.ec.Signature({ r: rHex, s: sHex, recoveryParam: 28});
+
+
+    const sig27 = { r: sig.r.toString('hex'), s: sig.s.toString('hex'), recoveryParam: 0};
+    const sig28 = { r: sig.r.toString('hex'), s: sig.s.toString('hex'), recoveryParam: 1};
+
+    //EthECDSASignature signatureNew = EthECDSASignature.FromDER(derSign);
+
+    const recoverResult27 = ec.recoverPubKey(hash, sig27, 0);
+    const recoverResult28 = ec.recoverPubKey(hash, sig28, 1);
+    //const key = ec.keyFromPublic(buf);
+
+
+    console.log('type of result: ', typeof recoverResult27);
+    console.log('elliptic recover result 27:', recoverResult27);
+    console.log('elliptic recover result 28:', recoverResult28);
+
+    console.log(recoverResult28);
+
+    //const xy27 = this.publicKeyToXY(ercRecoverResult27);
+    //const xy28 = this.publicKeyToXY(ercRecoverResult28);
+
+    //const result27 = await this.instance.methods.claimMessageMatchesSignature(message,true, hashHex, xy27.x, xy27.y, 27, rHex, sHex);
+    //const result28 = await this.instance.methods.claimMessageMatchesSignature(message,true, hashHex, xy28.x, xy28.y, 28, rHex, sHex);
+
+    // console.log('result27: ', result27);
+    // console.log('result28: ', result28);
+
+
   }
 
   public testBitcoinSignAndRecovery() {
@@ -215,5 +295,6 @@ export class TestFunctions {
 
 }
 
+//
 //const test = new TestFunctions(null, null);
 //test.testAddressRecovery();

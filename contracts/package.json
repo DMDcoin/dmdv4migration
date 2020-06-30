@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.0.30",
+    "@types/elliptic": "^6.4.12",
     "bignumber.js": "^9.0.0",
     "bitcoinjs-lib": "^5.1.10",
     "bitcoinjs-message": "^2.1.1",
+    "elliptic": "^6.5.3",
     "ethereumjs-util": "^7.0.2",
     "ganache-cli": "^6.9.1",
     "js-sha256": "^0.9.0",
