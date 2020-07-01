@@ -157,24 +157,25 @@ export class TestFunctions {
     //return crypto.hash256(buffer)
   }
 
-  // public publicKeyToXY(buf: Buffer) : {x: string ,y: string} {
+  public recoveryToXY(strangeResult: any) : {x: string ,y: string} {
 
-  //   //var EC = require('elliptic').ec;
+    //var EC = require('elliptic').ec;
  
-  //   // Create and initialize EC context
-  //   // (better do it once and reuse it)
-  //   var ec = new EC.ec('secp256k1');
+    // Create and initialize EC context
+    // (better do it once and reuse it)
+    // var ec = new EC.ec('secp256k1');
 
     
-  //   const key = ec.keyFromPublic(buf);
-    
-  //   const publicKey = key.getPublic();
+    // const key = ec.keyFromPublic(buf);
+    // const publicKey = key.getPublic();
 
-  //   return { 
-  //     x: publicKey.getX().toString(), 
-  //     y: publicKey.getX().toString() 
-  //   }
-  // }
+
+    
+    return { 
+      x: this.ellipticHexStringToWeb3HexString(strangeResult.x), 
+      y: this.ellipticHexStringToWeb3HexString(strangeResult.y),
+    }
+  }
 
 
   // public xyFromRS(buf: Buffer) : {x: string ,y: string} {
@@ -196,6 +197,18 @@ export class TestFunctions {
   //   }
   // }
 
+
+  private ellipticHexStringToWeb3HexString(strangeType: any) : string {
+
+    let ellipticHexString = JSON.stringify(strangeType);
+    ellipticHexString = ellipticHexString.replace('"', '').replace('"', '');
+    return '0x' + ellipticHexString;
+  }
+
+  // public async messageToHashInContract(value: string) : Buffer {
+  //   const result27 = await this.instance.methods.claimMessageCreate(message, true, hashHex, xy27.x, xy27.y, 27, rHex, sHex).call();
+  // } 
+
   public async testAddressRecovery() {
 
     //console.log('running test on instance: ', this.instance);
@@ -209,6 +222,7 @@ export class TestFunctions {
     // PublicU: 04bee3163c5ba877f4205ab447fb42373bb1f77e898d0d649dc7c691a483551a378036be868fa5ec97c61b08073630c793ec550b77b28d96561ef9e89914b1e3a4
 
 
+    //const hash = this.messageToHashToSign(message);
     const hash = this.messageToHashToSign(message);
 
     console.log(`hash: ${hash.toString('hex')}`);
@@ -219,11 +233,11 @@ export class TestFunctions {
     const sHex =  '0x' + sig.s.toString('hex');
 
     //this.web3Instance.eth.ercRe
-    const ercRecoverResult27 = ecrecover(hash, 27, sig.r, sig.s);
-    console.log('js ercRecoverResult27: (public key) ' + ercRecoverResult27.toString('hex'));
+    //const ercRecoverResult27 = ecrecover(hash, 27, sig.r, sig.s);
+    //console.log('js ercRecoverResult27: (public key) ' + ercRecoverResult27.toString('hex'));
 
-    const ercRecoverResult28 = ecrecover(hash, 28, sig.r, sig.s);
-    console.log('js ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
+    //const ercRecoverResult28 = ecrecover(hash, 28, sig.r, sig.s);
+    //console.log('js ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
 
     // const checkSignatureResult27 = await this.instance.methods.checkSignature(
     //   hashHex,
@@ -260,20 +274,16 @@ export class TestFunctions {
     const recoverResult28 = ec.recoverPubKey(hash, sig28, 1);
     //const key = ec.keyFromPublic(buf);
 
+    const xy27 = this.recoveryToXY(recoverResult27);
+    const xy28 = this.recoveryToXY(recoverResult28);
 
-    console.log('type of result: ', typeof recoverResult27);
-    console.log('elliptic recover result 27:', recoverResult27);
-    console.log('elliptic recover result 28:', recoverResult28);
+    console.log('xy27: ', xy27);
+    console.log('xy28: ', xy28);
 
-    console.log(recoverResult28);
-
-    //const xy27 = this.publicKeyToXY(ercRecoverResult27);
-    //const xy28 = this.publicKeyToXY(ercRecoverResult28);
-
-    //const result27 = await this.instance.methods.claimMessageMatchesSignature(message,true, hashHex, xy27.x, xy27.y, 27, rHex, sHex);
+    const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, hashHex, xy27.x, xy27.y, 27, rHex, sHex).call();
     //const result28 = await this.instance.methods.claimMessageMatchesSignature(message,true, hashHex, xy28.x, xy28.y, 28, rHex, sHex);
 
-    // console.log('result27: ', result27);
+    console.log('result27: ', result27);
     // console.log('result28: ', result28);
 
 

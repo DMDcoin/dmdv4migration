@@ -26,7 +26,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsc && truffle test",
     "typechain": "typechain --target web3-v1 --outDir api/contracts './build/contracts/*.json'",
     "ganache": "ganache-cli -m \"$(cat testmnemonic)\"",
     "deploy-local": "truffle deploy --network=local",
