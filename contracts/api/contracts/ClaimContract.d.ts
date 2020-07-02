@@ -46,15 +46,21 @@ export class ClaimContract extends Contract {
       pubKeyY: string | number[]
     ): TransactionObject<string>;
 
+    calcHash256(data: string | number[]): TransactionObject<string>;
+
     calculateAddressString(
       addr: string,
       includeAddrChecksum: boolean
     ): TransactionObject<string>;
 
+    createClaimMessage(
+      claimToAddr: string,
+      claimToAddrChecksum: boolean
+    ): TransactionObject<string>;
+
     claimMessageMatchesSignature(
       _claimToAddr: string,
       _claimAddrChecksum: boolean,
-      _claimParamHash: string | number[],
       _pubKeyX: string | number[],
       _pubKeyY: string | number[],
       _v: number | string,

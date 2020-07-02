@@ -40,7 +40,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var js_sha256_1 = __importDefault(require("js-sha256"));
-var ethereumjs_util_1 = require("ethereumjs-util");
 var bitcoinjs_message_1 = __importDefault(require("bitcoinjs-message"));
 var bitcoinjs_lib_1 = __importDefault(require("bitcoinjs-lib"));
 var elliptic_1 = __importDefault(require("elliptic"));
@@ -136,18 +135,18 @@ var TestFunctions = /** @class */ (function () {
         //20 byte result
         //return crypto.hash256(buffer)
     };
-    // public publicKeyToXY(buf: Buffer) : {x: string ,y: string} {
-    //   //var EC = require('elliptic').ec;
-    //   // Create and initialize EC context
-    //   // (better do it once and reuse it)
-    //   var ec = new EC.ec('secp256k1');
-    //   const key = ec.keyFromPublic(buf);
-    //   const publicKey = key.getPublic();
-    //   return { 
-    //     x: publicKey.getX().toString(), 
-    //     y: publicKey.getX().toString() 
-    //   }
-    // }
+    TestFunctions.prototype.recoveryToXY = function (strangeResult) {
+        //var EC = require('elliptic').ec;
+        // Create and initialize EC context
+        // (better do it once and reuse it)
+        // var ec = new EC.ec('secp256k1');
+        // const key = ec.keyFromPublic(buf);
+        // const publicKey = key.getPublic();
+        return {
+            x: this.ellipticHexStringToWeb3HexString(strangeResult.x),
+            y: this.ellipticHexStringToWeb3HexString(strangeResult.y)
+        };
+    };
     // public xyFromRS(buf: Buffer) : {x: string ,y: string} {
     //   //var EC = require('elliptic').ec;
     //   // Create and initialize EC context
@@ -161,34 +160,57 @@ var TestFunctions = /** @class */ (function () {
     //     y: publicKey.getX().toString() 
     //   }
     // }
+    TestFunctions.prototype.ellipticHexStringToWeb3HexString = function (strangeType) {
+        var ellipticHexString = JSON.stringify(strangeType);
+        ellipticHexString = ellipticHexString.replace('"', '').replace('"', '');
+        return '0x' + ellipticHexString;
+    };
+    // public async messageToHashInContract(value: string) : Buffer {
+    //   const result27 = await this.instance.methods.claimMessageCreate(message, true, hashHex, xy27.x, xy27.y, 27, rHex, sHex).call();
+    // } 
     TestFunctions.prototype.testAddressRecovery = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var message, signatureBase64, btcAddressBase64, hash, sig, hashHex, rHex, sHex, ercRecoverResult27, ercRecoverResult28, ec, sig27, sig28, recoverResult27, recoverResult28;
+            var message, signatureBase64, btcAddressBase64, claimMessage, hashResultSolidity, hash, sig, hashHex, rHex, sHex, ec, sig27, sig28, recoverResult27, recoverResult28, xy27, xy28, result27, result28;
             return __generator(this, function (_a) {
-                message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-                signatureBase64 = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
-                btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
-                hash = this.messageToHashToSign(message);
-                console.log("hash: " + hash.toString('hex'));
-                sig = this.signatureBase64ToRSV(signatureBase64);
-                hashHex = '0x' + hash.toString('hex');
-                rHex = '0x' + sig.r.toString('hex');
-                sHex = '0x' + sig.s.toString('hex');
-                ercRecoverResult27 = ethereumjs_util_1.ecrecover(hash, 27, sig.r, sig.s);
-                console.log('js ercRecoverResult27: (public key) ' + ercRecoverResult27.toString('hex'));
-                ercRecoverResult28 = ethereumjs_util_1.ecrecover(hash, 28, sig.r, sig.s);
-                console.log('js ercRecoverResult28: (public key) ' + ercRecoverResult28.toString('hex'));
-                ec = new elliptic_1["default"].ec('secp256k1');
-                sig27 = { r: sig.r.toString('hex'), s: sig.s.toString('hex'), recoveryParam: 0 };
-                sig28 = { r: sig.r.toString('hex'), s: sig.s.toString('hex'), recoveryParam: 1 };
-                recoverResult27 = ec.recoverPubKey(hash, sig27, 0);
-                recoverResult28 = ec.recoverPubKey(hash, sig28, 1);
-                //const key = ec.keyFromPublic(buf);
-                console.log('type of result: ', typeof recoverResult27);
-                console.log('elliptic recover result 27:', recoverResult27);
-                console.log('elliptic recover result 28:', recoverResult28);
-                console.log(recoverResult28);
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+                        signatureBase64 = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
+                        btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
+                        return [4 /*yield*/, this.instance.methods.createClaimMessage(message, true).call()];
+                    case 1:
+                        claimMessage = _a.sent();
+                        console.log('Claim Message:');
+                        console.log(claimMessage);
+                        return [4 /*yield*/, this.instance.methods.calcHash256(claimMessage).call()];
+                    case 2:
+                        hashResultSolidity = _a.sent();
+                        console.log('hash Result Solidity:', hashResultSolidity);
+                        hash = Buffer.from(hashResultSolidity, 'hex');
+                        console.log("hash: " + hash.toString('hex'));
+                        sig = this.signatureBase64ToRSV(signatureBase64);
+                        hashHex = '0x' + hash.toString('hex');
+                        rHex = '0x' + sig.r.toString('hex');
+                        sHex = '0x' + sig.s.toString('hex');
+                        ec = new elliptic_1["default"].ec('secp256k1');
+                        sig27 = { r: sig.r.toString('hex'), s: sig.s.toString('hex'), recoveryParam: 0 };
+                        sig28 = { r: sig.r.toString('hex'), s: sig.s.toString('hex'), recoveryParam: 1 };
+                        recoverResult27 = ec.recoverPubKey(hash, sig27, 0);
+                        recoverResult28 = ec.recoverPubKey(hash, sig28, 1);
+                        xy27 = this.recoveryToXY(recoverResult27);
+                        xy28 = this.recoveryToXY(recoverResult28);
+                        console.log('xy27: ', xy27);
+                        console.log('xy28: ', xy28);
+                        return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call()];
+                    case 3:
+                        result27 = _a.sent();
+                        return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy28.x, xy28.y, 28, rHex, sHex).call()];
+                    case 4:
+                        result28 = _a.sent();
+                        console.log('result27: ', result27);
+                        console.log('result28: ', result28);
+                        return [2 /*return*/];
+                }
             });
         });
     };

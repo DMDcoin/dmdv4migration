@@ -223,7 +223,16 @@ export class TestFunctions {
 
 
     //const hash = this.messageToHashToSign(message);
-    const hash = this.messageToHashToSign(message);
+    //const hash = this.messageToHashToSign(message);
+
+    const claimMessage =  await this.instance.methods.createClaimMessage(message, true).call();
+    console.log('Claim Message:');
+    console.log(claimMessage);
+
+    const hashResultSolidity = await this.instance.methods.calcHash256(claimMessage).call();
+    console.log('hash Result Solidity:', hashResultSolidity);
+
+    const hash = Buffer.from(hashResultSolidity, 'hex');
 
     console.log(`hash: ${hash.toString('hex')}`);
 
@@ -270,6 +279,7 @@ export class TestFunctions {
 
     //EthECDSASignature signatureNew = EthECDSASignature.FromDER(derSign);
 
+    
     const recoverResult27 = ec.recoverPubKey(hash, sig27, 0);
     const recoverResult28 = ec.recoverPubKey(hash, sig28, 1);
     //const key = ec.keyFromPublic(buf);
@@ -280,18 +290,21 @@ export class TestFunctions {
     console.log('xy27: ', xy27);
     console.log('xy28: ', xy28);
 
-    const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, hashHex, xy27.x, xy27.y, 27, rHex, sHex).call();
-    //const result28 = await this.instance.methods.claimMessageMatchesSignature(message,true, hashHex, xy28.x, xy28.y, 28, rHex, sHex);
+    
+
+    const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call();
+    const result28 = await this.instance.methods.claimMessageMatchesSignature(message,true, xy28.x, xy28.y, 28, rHex, sHex).call();
 
     console.log('result27: ', result27);
-    // console.log('result28: ', result28);
+    console.log('result28: ', result28);
 
 
   }
 
   public testBitcoinSignAndRecovery() {
 
-    var keyPair = bitcoin.ECPair.fromWIF('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss')
+    var keyPair = bitcoin.ECPair.fromWIF('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss');
+    
     var privateKey = keyPair.privateKey
     var message = 'This is an example of a signed message.'
  
@@ -300,7 +313,6 @@ export class TestFunctions {
 
     var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' })
     console.log(signature.toString('base64'))
-
   }
 
 }

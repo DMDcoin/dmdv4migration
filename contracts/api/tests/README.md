@@ -4,11 +4,11 @@
 
 ## Basic Functions 
 
-* Ethereum Address to string with checksum.
-* Message to Hash JS implementation
-* Message to Hash Solidity implementation
+* Create Claim Message (createClaimMessage)
+* Ethereum Address to string with checksum (1 test should fail, 1 test OK)
+* Message to Hash (JS & Solidity implementation)
 * Get Public Key of Signed Message (SOL)
-* Get X, Y Coordinate of public Key
+* + Get X, Y Coordinate of public Key
 * Get Bitcoin Adress from Signed Message
 
 

@@ -195,19 +195,21 @@ contract ClaimContract {
   * @param data Data to be hashed
   * @return 32-byte hash
   */
-  function _hash256(bytes memory data)
-      private
+  function calcHash256(bytes memory data)
+      public
       pure
       returns (bytes32)
   {
       return sha256(abi.encodePacked(sha256(data)));
   }
 
-      function _hexStringFromData(bytes memory hexStr, bytes32 data, uint256 dataLen)
+      function _hexStringFromData(bytes memory hexStr, bytes32 data, uint256 startOffset, uint256 dataLen)
         private
         pure
     {
-        uint256 offset = 0;
+        uint256 offset = startOffset;
+
+
 
         for (uint256 i = 0; i < dataLen; i++) {
             uint8 b = uint8(data[i]);
@@ -239,28 +241,40 @@ contract ClaimContract {
     pure
     returns (bytes memory addrStr)
   {
-      addrStr = new bytes(ETH_ADDRESS_HEX_LEN);
-      _hexStringFromData(addrStr, bytes32(bytes20(addr)), ETH_ADDRESS_BYTE_LEN);
+      bytes memory tmp = new bytes(ETH_ADDRESS_HEX_LEN);
+      _hexStringFromData(tmp, bytes32(bytes20(addr)), 0, ETH_ADDRESS_BYTE_LEN);
 
       if (includeAddrChecksum) {
-          bytes32 addrStrHash = keccak256(addrStr);
+          bytes32 addrStrHash = keccak256(tmp);
 
           uint256 offset = 0;
 
           for (uint256 i = 0; i < ETH_ADDRESS_BYTE_LEN; i++) {
               uint8 b = uint8(addrStrHash[i]);
 
-              _addressStringChecksumChar(addrStr, offset++, b >> 4);
-              _addressStringChecksumChar(addrStr, offset++, b & 0x0f);
+              _addressStringChecksumChar(tmp, offset++, b >> 4);
+              _addressStringChecksumChar(tmp, offset++, b & 0x0f);
           }
+      }
+
+      // the correct checksum is now in the tmp variable.
+      // we extend this by the Ethereum usual prefix 0x
+
+      addrStr = new bytes(ETH_ADDRESS_HEX_LEN + 2);
+
+      addrStr[0] = '0';
+      addrStr[1] = 'x';
+
+      for (uint256 i = 0; i < ETH_ADDRESS_HEX_LEN; i++) {
+          addrStr[i+2] = tmp[i];
       }
 
       return addrStr;
   }
 
 
-    function _claimMessageCreate(address claimToAddr, bytes32 claimParamHash, bool claimToAddrChecksum)
-        private
+    function createClaimMessage(address claimToAddr, bool claimToAddrChecksum)
+        public
         pure
         returns (bytes memory)
     {
@@ -271,29 +285,13 @@ contract ClaimContract {
 
         bytes memory addrStr = calculateAddressString(claimToAddr, claimToAddrChecksum);
 
-        if (claimParamHash == 0) {
-            return abi.encodePacked(
+        return abi.encodePacked(
                 BITCOIN_SIG_PREFIX_LEN,
                 BITCOIN_SIG_PREFIX_STR,
                 uint8(prefixStr.length) + ETH_ADDRESS_HEX_LEN,
                 prefixStr,
                 addrStr
             );
-        }
-
-        bytes memory claimParamHashStr = new bytes(CLAIM_PARAM_HASH_HEX_LEN);
-
-        _hexStringFromData(claimParamHashStr, claimParamHash, CLAIM_PARAM_HASH_BYTE_LEN);
-
-        return abi.encodePacked(
-            BITCOIN_SIG_PREFIX_LEN,
-            BITCOIN_SIG_PREFIX_STR,
-            uint8(prefixStr.length) + ETH_ADDRESS_HEX_LEN + 1 + CLAIM_PARAM_HASH_HEX_LEN,
-            prefixStr,
-            addrStr,
-            "_",
-            claimParamHashStr
-        );
     }
 
 
@@ -301,7 +299,6 @@ contract ClaimContract {
   function claimMessageMatchesSignature(
     address _claimToAddr,
     bool    _claimAddrChecksum,
-    bytes32 _claimParamHash,
     bytes32 _pubKeyX,
     bytes32 _pubKeyY,
     uint8 _v,
@@ -321,11 +318,13 @@ contract ClaimContract {
       address pubKeyEthAddr = pubKeyToEthAddress(_pubKeyX, _pubKeyY);
 
       /* Create and hash the claim message text */
-      bytes32 messageHash = _hash256(
-          _claimMessageCreate(_claimToAddr, _claimParamHash, _claimAddrChecksum)
+      bytes32 messageHash = calcHash256(
+          createClaimMessage(_claimToAddr, _claimAddrChecksum)
       );
 
       /* Verify the public key */
       return ecrecover(messageHash, _v, _r, _s) == pubKeyEthAddr;
   }
+
+  
 }

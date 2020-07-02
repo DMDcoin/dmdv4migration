@@ -52,13 +52,15 @@ contract('ClaimContract', (accounts) => {
 
     const buffer = Buffer.from(remove0x(calcAddressResult), 'hex');
     console.log('buffer:' + buffer);
-    const calcResult = '0x' + buffer.toString('utf8');
+    const calcResult = buffer.toString('utf8');
 
     console.log('calcResult:', calcResult);
     assert.equal(calcResult, addressWithChecksum, 'checksum must be calculated in a correct ways.');
   })
 
   it('Retrieve Bitcoin address from signature', async() => {
+
+    //await testFunctions.testBitcoinSignAndRecovery();
     //console.log('testFunctions: ', testFunctions);
     //console.log(testFunctions);
     await testFunctions.testAddressRecovery();
