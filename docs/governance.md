@@ -189,7 +189,7 @@ Decentraland is also a great example for a big project using aragon with a custo
 
 https://mainnet.aragon.org/#/dcl.eth/0x41e83d829459f99bf4ee2e26d0d79748fb16b94f/vote/3/
 
-#### aragon adaption of Voting.sol (Option 1)
+#### Option 1: aragon adaption of Voting.sol
 
 A possible way would to adapt it would the to create a customized Voting.sol Logic: 
 https://github.com/aragon/aragon-apps/blob/master/apps/voting/contracts/Voting.sol
@@ -211,7 +211,7 @@ This could be achieved, doing the following changes:
 
 To update the Voting weights, there are several Implemtation strategies available:
 
-##### Strategy A: HBBFT-POSDAO Staking changes update the Vote.
+##### Option 1.a: HBBFT-POSDAO Staking changes are updating the Vote.
 
 This strategy would have the benefit that the UI displays always the current state in the YES/NO voting.
 
@@ -219,14 +219,14 @@ This strategy would have the benefit that the UI displays always the current sta
 - HBBFT-POSDAO contracts need to update the voting result, if someone is moving the stake. , that would make things easier, since then we do not need to develop a snapshot history (TODO: check maybe Snapshot-History already exists ?)
 - HBBFT-POSDAO could also Trigger an update of all Votings for a staker
 
-##### Strategy B: HBBFT-POSDAO Epoch changes updates and executes the Vote
+##### Option 1.b: HBBFT-POSDAO Epoch changes updates and executes the Vote
 
 This would lead to a solution where the Users see the yes/no Voting result, 
 with the voting weights that has existed during the creation of the vote.
 
 TODO: further analyse required changes.
 
-##### Strategy C: HBBFT-POSDAO Contracts support checkpointing.
+##### Option 1.c: HBBFT-POSDAO Contracts support checkpointing.
 
 TODO: Maybe already supported ?
 
@@ -244,7 +244,7 @@ TODO: Figure out, how the Voting.sol can know, when the specific Epoch Ended. (T
 The Voting requires then to be "finalized".
 This finalisation step then updates the voting-weights and executes the vote if successfull.
 
-#### aragon voting connectors (Option 2)
+#### Option 2: aragon voting connectors
 
 This adaption would require keeping history of the balance of the voting power of a
 staker and/or delegator.
