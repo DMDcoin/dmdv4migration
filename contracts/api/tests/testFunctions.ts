@@ -8,6 +8,7 @@ import { ecrecover } from 'ethereumjs-util'
 import bitcoinMessage from 'bitcoinjs-message'
 import bitcoin from 'bitcoinjs-lib'
 
+import CryptoJS from './cryptoJS'
 
 import EC from 'elliptic'
 
@@ -15,6 +16,8 @@ import EC from 'elliptic'
 
 
 export class TestFunctions {
+
+  public cryptoJS = new CryptoJS();
 
   public constructor(public web3Instance: Web3, public instance : ClaimContract.ClaimContract) {
     
@@ -81,35 +84,7 @@ export class TestFunctions {
     const address = '0xfec7b00dc0192319dda0c777a9f04e47dc49bd18';
     const addressWithChecksum = '0xfEc7B00DC0192319DdA0c777A9F04E47Dc49bD18';
 
-    
-
-
   }
-
-  public signatureBase64ToRSV(signatureBase64: string) : { r: Buffer, s: Buffer, v: number }
-  {
-    const sig = Buffer.from(signatureBase64, 'base64');
-
-    //r: 2077b616f680b086c812f6f8ee9ad2160deb5cd1e513dd69d9662da712293c0d
-    //s: f45bace0bf3c1cdf043dd279c0d762db2f668aa376b48e381b37ac4cec43aefe
-    //v: 17
-
-    console.log('sigBuffer:');
-    console.log(sig);
-    console.log(sig.toString('hex'));
-
-    const r = sig.subarray(0, 32);
-    const s = sig.subarray(32,64);
-    const v = sig[64];
-
-    console.log(`r: ${r.toString('hex')}`);
-    console.log(`s: ${s.toString('hex')}`);
-    console.log(`v: ${v}`);
-
-    return { r, s, v };
-  }
-
-
 
   public messageToHashToSign(message: string) : Buffer {
 
@@ -236,7 +211,8 @@ export class TestFunctions {
 
     console.log(`hash: ${hash.toString('hex')}`);
 
-    const sig = this.signatureBase64ToRSV(signatureBase64);
+    const sig = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+    
     const hashHex = '0x' + hash.toString('hex');
     const rHex  = '0x' + sig.r.toString('hex');
     const sHex =  '0x' + sig.s.toString('hex');

@@ -42,12 +42,14 @@ exports.__esModule = true;
 var js_sha256_1 = __importDefault(require("js-sha256"));
 var bitcoinjs_message_1 = __importDefault(require("bitcoinjs-message"));
 var bitcoinjs_lib_1 = __importDefault(require("bitcoinjs-lib"));
+var cryptoJS_1 = __importDefault(require("./cryptoJS"));
 var elliptic_1 = __importDefault(require("elliptic"));
 //var ec = new EC('secp256k1');
 var TestFunctions = /** @class */ (function () {
     function TestFunctions(web3Instance, instance) {
         this.web3Instance = web3Instance;
         this.instance = instance;
+        this.cryptoJS = new cryptoJS_1["default"]();
         if (instance === undefined || instance === null) {
             throw Error("Claim contract must be defined!!");
         }
@@ -86,22 +88,6 @@ var TestFunctions = /** @class */ (function () {
     TestFunctions.prototype.runTestEthereumAddressToStringWithChecksum = function () {
         var address = '0xfec7b00dc0192319dda0c777a9f04e47dc49bd18';
         var addressWithChecksum = '0xfEc7B00DC0192319DdA0c777A9F04E47Dc49bD18';
-    };
-    TestFunctions.prototype.signatureBase64ToRSV = function (signatureBase64) {
-        var sig = Buffer.from(signatureBase64, 'base64');
-        //r: 2077b616f680b086c812f6f8ee9ad2160deb5cd1e513dd69d9662da712293c0d
-        //s: f45bace0bf3c1cdf043dd279c0d762db2f668aa376b48e381b37ac4cec43aefe
-        //v: 17
-        console.log('sigBuffer:');
-        console.log(sig);
-        console.log(sig.toString('hex'));
-        var r = sig.subarray(0, 32);
-        var s = sig.subarray(32, 64);
-        var v = sig[64];
-        console.log("r: " + r.toString('hex'));
-        console.log("s: " + s.toString('hex'));
-        console.log("v: " + v);
-        return { r: r, s: s, v: v };
     };
     TestFunctions.prototype.messageToHashToSign = function (message) {
         // https://bitcoin.stackexchange.com/questions/36838/why-does-the-standard-bitcoin-message-signature-include-a-magic-prefix
@@ -188,7 +174,7 @@ var TestFunctions = /** @class */ (function () {
                         console.log('hash Result Solidity:', hashResultSolidity);
                         hash = Buffer.from(hashResultSolidity, 'hex');
                         console.log("hash: " + hash.toString('hex'));
-                        sig = this.signatureBase64ToRSV(signatureBase64);
+                        sig = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
                         hashHex = '0x' + hash.toString('hex');
                         rHex = '0x' + sig.r.toString('hex');
                         sHex = '0x' + sig.s.toString('hex');

@@ -200,6 +200,8 @@ contract ClaimContract {
       pure
       returns (bytes32)
   {
+      // NOTE: https://github.com/axic/ethereum-bsm/blob/master/bsm.sol
+      // maybe encodePacked is not required ?!
       return sha256(abi.encodePacked(sha256(data)));
   }
 
@@ -325,6 +327,4 @@ contract ClaimContract {
       /* Verify the public key */
       return ecrecover(messageHash, _v, _r, _s) == pubKeyEthAddr;
   }
-
-  
 }

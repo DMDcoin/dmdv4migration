@@ -25,7 +25,6 @@ export class CryptoJS {
    */
   public async addressToClaimMessage(address: string) : Promise<string> {
 
-
     const claimMessage =  await this.instance.methods.createClaimMessage(address, true).call();
     console.log('Claim Message:');
     console.log(claimMessage);
@@ -33,10 +32,14 @@ export class CryptoJS {
 
   }
 
-  public messageToHash(message: string) {
+  public async messageToHash(messageString: string) {
 
+    const buffer = Buffer.from(messageString, 'utf-8');
+    const hash =  await this.instance.methods.calcHash256(buffer.toString('hex')).call();
+    console.log('messageToHash');
+    console.log(hash);
+    return hash;
   }
 
 
-    
 }
