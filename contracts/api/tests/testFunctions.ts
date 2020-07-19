@@ -290,7 +290,6 @@ export class TestFunctions {
     var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' })
     console.log(signature.toString('base64'))
   }
-
 }
 
 //

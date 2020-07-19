@@ -1,7 +1,7 @@
 
 
 var TestFunctions = require('../api/js/testFunctions');
-
+var CryptoSol = require('../api/js/src/cryptoSol');
 
 const ClaimContract = artifacts.require('ClaimContract');
 
@@ -22,11 +22,16 @@ contract('ClaimContract', (accounts) => {
   const callParams = {from: accounts[0]};
 
   let testFunctions;
+  let cryptoSol;
 
   it('deploying a new claim contract', async () => {
     claimContract = await ClaimContract.new(callParams);
-    console.log('');
+    
     testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
+    // console.error('Type of CryptoJS', typeof CryptoJS);
+    // console.error('Type of CryptoJS', CryptoJS);
+    // console.error('Type of CryptoJS.CryptoJS', typeof  CryptoJS.CryptoJS);
+    cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
   })
 
   // it('Verify address', async () => {
@@ -36,6 +41,7 @@ contract('ClaimContract', (accounts) => {
   //   //console.log('address: ' + address);
   // })
 
+  
 
 
   it('correct Address checksum.', async() => {
@@ -57,6 +63,17 @@ contract('ClaimContract', (accounts) => {
     console.log('calcResult:', calcResult);
     assert.equal(calcResult, addressWithChecksum, 'checksum must be calculated in a correct ways.');
   })
+
+  it('addressToClaimMessage delivers expected claimMessage.', async() => {
+
+    const address = '0xb56c4974EB4CFC2B339B441a4Ae854FeBE2B6504';
+    //todo: define the real expected result to make sure that this works.
+    const expectedResult = '0x18426974636f696e205369676e6564204d6573736167653a0a28307862353663343937344542344346433242333339423434316134416538353446654245324236353034'
+    const result = await cryptoSol.addressToClaimMessage(address);
+    assert.equal(result, expectedResult);
+    //console.log('claim Message: ', result);
+  })
+
 
   it('Retrieve Bitcoin address from signature', async() => {
 

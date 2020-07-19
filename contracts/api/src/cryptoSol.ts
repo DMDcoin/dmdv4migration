@@ -1,17 +1,19 @@
 
 import Web3 from 'web3';
-import ClaimContract from '../contracts/ClaimContract.d'
+import ClaimContract from '../contracts/ClaimContract'
 
 /**
  * Crypto functions used in this project implemented in Soldity.
  */
-export class CryptoJS {
+export class CryptoSol {
 
   public constructor(public web3Instance: Web3, public instance : ClaimContract.ClaimContract) {
     
     if (instance === undefined || instance === null) {
       throw Error("Claim contract must be defined!!");
     }
+
+    console.log('constructed!');
   }
 
   public addressToHashToSign(address: string) {
@@ -29,7 +31,6 @@ export class CryptoJS {
     console.log('Claim Message:');
     console.log(claimMessage);
     return claimMessage;
-
   }
 
   public async messageToHash(messageString: string) {

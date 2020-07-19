@@ -5,6 +5,7 @@
     "sourceMap": true
   },
   "files": [
-    "api/tests/testFunctions.ts"
+    "api/tests/testFunctions.ts",
+    "api/src/cryptoSol.ts"
   ]
 }

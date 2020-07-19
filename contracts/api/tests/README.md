@@ -4,12 +4,13 @@
 
 ## Basic Functions 
 
-* Create Claim Message (createClaimMessage)
+* Create Claim Message (createClaimMessage) (TODO: How to verify)
 * Ethereum Address to string with checksum (1 test should fail, 1 test OK)
-* Message to Hash (JS & Solidity implementation)
+* Public Key to Ethereum Address (SOL:  pubKeyToEthAddress) verifying that this translation works.
+* Message to Hash (JS & Solidity implementation) (write tests with mock values ?! most tools/tuturials i have found so far aren'Ät that deep that they show the has of the message)
 * Get Public Key of Signed Message (SOL)
 * + Get X, Y Coordinate of public Key
-* Get Bitcoin Adress from Signed Message
+* Verify Bitcoin Adress from Signed Message
 
 
 ## Real Claim Scenarios
@@ -39,3 +40,7 @@ this describes the signature as well:
 
 
 1-byte 0x30 Compound Object
+
+
+https://medium.com/@bitaps.com/exploring-bitcoin-signing-the-p2pkh-input-b8b4d5c4809c
+
