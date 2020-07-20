@@ -1,11 +1,12 @@
 pragma solidity >=0.6.2 <0.7.0;
 
 
-
 import {EC} from  './EC.sol';
 
 
 contract ClaimContract {
+
+  enum AddressType { LegacyUncompressed, LegacyCompressed, SegwitUncompressed, SegwitCompressed }
 
   bytes16 internal constant HEX_DIGITS = "0123456789abcdef";
 
@@ -56,6 +57,114 @@ contract ClaimContract {
     //# do ecrecover on it.
     //return "todo: implement this magic!";
 //  }
+
+
+
+    /// @dev Calculate the Bitcoin-style address associated with an ECDSA public key
+    /// @param a_publicKeyX First half of ECDSA public key
+    /// @param a_publicKeyY Second half of ECDSA public key
+    /// @param a_nAddressType Whether DMD is Legacy or Segwit address and if it was compressed
+    /// @return Raw DMD address
+    function PublicKeyToBitcoinAddress(
+        bytes32 a_publicKeyX,
+        bytes32 a_publicKeyY,
+        AddressType a_nAddressType
+    ) public pure returns (bytes20)
+    {
+        bytes20 publicKey;
+        uint8 initialByte;
+        if(a_nAddressType == AddressType.LegacyCompressed || a_nAddressType == AddressType.SegwitCompressed)
+	{
+            //Hash the compressed format
+            initialByte = (uint256(a_publicKeyY) & 1) == 0 ? 0x02 : 0x03;
+            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, a_publicKeyX))));
+        }
+	else
+	{
+            //Hash the uncompressed format
+            initialByte = 0x04;
+            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, a_publicKeyX, a_publicKeyY))));
+        }
+
+        if(a_nAddressType == AddressType.LegacyUncompressed || a_nAddressType == AddressType.LegacyCompressed)
+        {
+            return publicKey;
+        }
+        else if(a_nAddressType == AddressType.SegwitUncompressed || a_nAddressType == AddressType.SegwitCompressed)
+        {
+            return ripemd160(abi.encodePacked(sha256(abi.encodePacked(hex"0014", publicKey))));
+        }
+    }
+
+
+    /// @dev Convert an uncompressed ECDSA public key into an Ethereum address
+    /// @param a_publicKeyX X parameter of uncompressed ECDSA public key
+    /// @param a_publicKeyY Y parameter of uncompressed ECDSA public key
+    /// @return Ethereum address generated from the ECDSA public key
+    function PublicKeyToEthereumAddress(
+        bytes32 a_publicKeyX,
+        bytes32 a_publicKeyY
+    ) public pure returns (address)
+    {
+        bytes32 hash = keccak256(abi.encodePacked(a_publicKeyX, a_publicKeyY));
+        return address(uint160(uint256((hash))));
+    }
+
+    /// @dev Validate ECSDA signature was signed by the specified address
+    /// @param _hash Hash of signed data
+    /// @param _v v parameter of ECDSA signature
+    /// @param _r r parameter of ECDSA signature
+    /// @param _s s parameter of ECDSA signature
+    /// @param _address Ethereum address matching the signature
+    /// @return Boolean on if the signature is valid
+    function ValidateSignature(
+        bytes32 _hash,
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s,
+        address _address
+    ) public pure returns (bool)
+    {
+        return ecrecover(
+            _hash,
+            _v,
+            _r,
+            _s
+        ) == _address;
+    }
+
+
+    /// @dev Validate the ECDSA parameters of signed message
+    /// ECDSA public key associated with the specified Ethereum address
+    /// @param _addressClaiming Address within signed message
+    /// @param _publicKeyX X parameter of uncompressed ECDSA public key
+    /// @param _publicKeyY Y parameter of uncompressed ECDSA public key
+    /// @param _v v parameter of ECDSA signature
+    /// @param _r r parameter of ECDSA signature
+    /// @param _s s parameter of ECDSA signature
+    /// @return Boolean on if the signature is valid
+    function ECDSAVerify(
+        address _addressClaiming,
+        bytes32 _publicKeyX,
+        bytes32 _publicKeyY,
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s
+    ) public pure returns (bool)
+    {
+        bytes memory addressAsHex = createClaimMessage(_addressClaiming, true);
+
+        bytes32 hHash = sha256(abi.encodePacked(sha256(abi.encodePacked(addressAsHex))));
+
+        return ValidateSignature(
+            hHash,
+            _v,
+            _r,
+            _s,
+            PublicKeyToEthereumAddress(_publicKeyX, _publicKeyY)
+        );
+    }
+
 
   function r()
   internal
@@ -275,7 +384,7 @@ contract ClaimContract {
   }
 
 
-    function createClaimMessage(address claimToAddr, bool claimToAddrChecksum)
+  function createClaimMessage(address claimToAddr, bool claimToAddrChecksum)
         public
         pure
         returns (bytes memory)
@@ -295,8 +404,6 @@ contract ClaimContract {
                 addrStr
             );
     }
-
-
 
   function claimMessageMatchesSignature(
     address _claimToAddr,
@@ -318,6 +425,8 @@ contract ClaimContract {
           we must do the same to compare.
       */
       address pubKeyEthAddr = pubKeyToEthAddress(_pubKeyX, _pubKeyY);
+
+      //we need to check if X and Y corresponds to R and S.
 
       /* Create and hash the claim message text */
       bytes32 messageHash = calcHash256(

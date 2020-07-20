@@ -4,9 +4,10 @@
 
 ## Basic Functions 
 
-* Create Claim Message (createClaimMessage) (TODO: How to verify)
-* Ethereum Address to string with checksum (1 test should fail, 1 test OK)
+* x Create Claim Message (createClaimMessage) (TODO: How to verify)
+* x Ethereum Address to string with checksum
 * Public Key to Ethereum Address (SOL:  pubKeyToEthAddress) verifying that this translation works.
+* Public Key to Bitcoin Address (to figure out the balance from the stored data) => https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses#How_to_create_Bitcoin_Address
 * Message to Hash (JS & Solidity implementation) (write tests with mock values ?! most tools/tuturials i have found so far aren'Ät that deep that they show the has of the message)
 * Get Public Key of Signed Message (SOL)
 * + Get X, Y Coordinate of public Key

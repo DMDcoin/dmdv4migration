@@ -30,6 +30,34 @@ export class ClaimContract extends Contract {
       v: number | string
     ): TransactionObject<string>;
 
+    PublicKeyToBitcoinAddress(
+      a_publicKeyX: string | number[],
+      a_publicKeyY: string | number[],
+      a_nAddressType: number | string
+    ): TransactionObject<string>;
+
+    PublicKeyToEthereumAddress(
+      a_publicKeyX: string | number[],
+      a_publicKeyY: string | number[]
+    ): TransactionObject<string>;
+
+    ValidateSignature(
+      _hash: string | number[],
+      _v: number | string,
+      _r: string | number[],
+      _s: string | number[],
+      _address: string
+    ): TransactionObject<boolean>;
+
+    ECDSAVerify(
+      _addressClaiming: string,
+      _publicKeyX: string | number[],
+      _publicKeyY: string | number[],
+      _v: number | string,
+      _r: string | number[],
+      _s: string | number[]
+    ): TransactionObject<boolean>;
+
     isValid(): TransactionObject<boolean>;
 
     testECRecover(): TransactionObject<string>;

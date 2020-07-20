@@ -41,7 +41,7 @@ contract('ClaimContract', (accounts) => {
   //   //console.log('address: ' + address);
   // })
 
-  
+
 
 
   it('correct Address checksum.', async() => {
@@ -72,6 +72,35 @@ contract('ClaimContract', (accounts) => {
     const result = await cryptoSol.addressToClaimMessage(address);
     assert.equal(result, expectedResult);
     //console.log('claim Message: ', result);
+  })
+
+
+  it('PublicKey to EthereumAddress works is correct.', async() => {
+    // BIP39 Mnemonic: hello slim hope
+    // address 0: 0x7af37454aCaB6dB76c11bd33C94ED7C0b7A60B2a
+    // Public:    0x03ff2e6a372d6beec3b02556971bfc87b9fb2d7e27fe99398c11693571080310d8
+    // Private:   0xc99dd56045c449952e16388925455cc32e4eb180f2a9c3d2afd587aaf1cceda5
+
+    const expectedAddress = '0x7af37454aCaB6dB76c11bd33C94ED7C0b7A60B2a';
+    const inputPrivateKey = 'c99dd56045c449952e16388925455cc32e4eb180f2a9c3d2afd587aaf1cceda5';
+    // public key = k
+    // x, y = ?
+    var EC = require('elliptic').ec;
+    var BN = require('bn.js');
+    var ec = new EC('secp256k1');
+
+    var G = ec.g; // Generator point
+    var pk = new BN(inputPrivateKey, 'hex'); // private key as big number
+    var pubPoint=G.mul(pk); // EC multiplication to determine public point 
+
+    var x = pubPoint.getX().toBuffer(); //32 bit x co-ordinate of public point 
+    var y = pubPoint.getY().toBuffer(); //32 bit y co-ordinate of public point 
+    var publicKey =Buffer.concat([x,y])
+    console.log("pub key::"+publicKey.toString('hex'))
+  
+    const result = await claimContract.contract.methods.pubKeyToEthAddress(x, y).call();
+    console.log('pubKeyToEthAddress:', result);
+    assert.equal(expectedAddress, result);
   })
 
 
