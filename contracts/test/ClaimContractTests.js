@@ -3,12 +3,28 @@
 var TestFunctions = require('../api/js/testFunctions');
 var CryptoSol = require('../api/js/src/cryptoSol');
 
+var EC = require('elliptic').ec;
+var BN = require('bn.js');
+var ec = new EC('secp256k1');
+var bs58check = require('bs58check');
+
+
 const ClaimContract = artifacts.require('ClaimContract');
 
 function remove0x(input) {
   if (input.startsWith('0x')) {
     return input.substring(2);
   }
+}
+
+function hexToBuf(input) {
+  return Buffer.from(remove0x(input), 'hex');
+}
+
+// appends a prefix to inputBuffer. 
+function prefixBuf(inputBuffer, prefixHexString) {
+  const prefix = hexToBuf(prefixHexString);
+  return Buffer.concat([prefix, inputBuffer]);
 }
 
 contract('ClaimContract', (accounts) => {
@@ -37,12 +53,8 @@ contract('ClaimContract', (accounts) => {
   // it('Verify address', async () => {
   //   let isValid = await claimContract.isValid.call(callParams);
   //   assert.isOk(isValid, "ERC Recover failed");
-
   //   //console.log('address: ' + address);
   // })
-
-
-
 
   it('correct Address checksum.', async() => {
 
@@ -83,11 +95,7 @@ contract('ClaimContract', (accounts) => {
 
     const expectedAddress = '0x7af37454aCaB6dB76c11bd33C94ED7C0b7A60B2a';
     const inputPrivateKey = 'c99dd56045c449952e16388925455cc32e4eb180f2a9c3d2afd587aaf1cceda5';
-    // public key = k
-    // x, y = ?
-    var EC = require('elliptic').ec;
-    var BN = require('bn.js');
-    var ec = new EC('secp256k1');
+
 
     var G = ec.g; // Generator point
     var pk = new BN(inputPrivateKey, 'hex'); // private key as big number
@@ -103,6 +111,57 @@ contract('ClaimContract', (accounts) => {
     assert.equal(expectedAddress, result);
   })
 
+
+  it('PublicKey to DMDAddress works correct.', async() => {
+    // http://royalforkblog.github.io/2014/08/11/graphical-address-generator/
+    // passphrase: bit.diamonds
+    // BIP39 Mnemonic: hello slim hope
+    // address 0: 1PQufB3ymB225SjbE9VS5GdraYDWNjftCk
+    // Public:    0302600289416ed9da3d9e663c7ea07a6d4f46a0df9238235aba4da3764488834c
+    // Private:   KyiQPTyCCbZVaWHFa8AbZLF5KbJtYANAigtpgeejC72CFJ6htuRv
+    // const publicKeyHex = '0302600289416ed9da3d9e663c7ea07a6d4f46a0df9238235aba4da3764488834c';
+    // const expectedAddress = '1PQufB3ymB225SjbE9VS5GdraYDWNjftCk';
+
+    // Public Key:     035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040
+    // result address: 1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj
+    const publicKeyHex = '035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040';
+    const expectedAddress = '1PQufB3ymB225SjbE9VS5GdraYDWNjftCk';
+
+    //const inputPrivateKey = 'KyiQPTyCCbZVaWHFa8AbZLF5KbJtYANAigtpgeejC72CFJ6htuRv';
+
+    // public key = k
+    // x, y = ?
+    //var EC = require('elliptic').ec;
+    
+    var ec = new EC('secp256k1');
+
+    //var G = ec.g; // Generator point
+    //var pubPoint=G.mul(pk); // EC multiplication to determine public point 
+    
+    var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
+    var x = publicKey.getX();
+    var y = publicKey.getY();
+    console.log("pub key:" + publicKey.toString('hex'));
+    console.log("x :" + x.toString('hex'));
+    console.log("y :" + y.toString('hex'));
+
+    const legacyCompressedEnumValue = 0;
+  
+    const result = await claimContract.contract.methods.PublicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
+    console.log('PublicKeyToBitcoinAddress:', result);
+    result = prefixBuf(result, '00');
+    console.log('with prefix: ' + result.toString('hex'));
+    
+    const bs58Result = bs58check.encode(hexToBuf(result));
+    assert.equal(expectedAddress, bs58Result);
+  })
+
+  it('Retrieve Bitcoin address from signature', async() => {
+
+    await testFunctions.testAddressRecovery();
+    //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
+    //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
+  })
 
   it('Retrieve Bitcoin address from signature', async() => {
 

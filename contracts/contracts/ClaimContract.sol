@@ -74,13 +74,13 @@ contract ClaimContract {
         bytes20 publicKey;
         uint8 initialByte;
         if(a_nAddressType == AddressType.LegacyCompressed || a_nAddressType == AddressType.SegwitCompressed)
-	{
-            //Hash the compressed format
-            initialByte = (uint256(a_publicKeyY) & 1) == 0 ? 0x02 : 0x03;
-            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, a_publicKeyX))));
+        {
+                //Hash the compressed format
+                initialByte = (uint256(a_publicKeyY) & 1) == 0 ? 0x02 : 0x03;
+                publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, a_publicKeyX))));
         }
-	else
-	{
+        else
+        {
             //Hash the uncompressed format
             initialByte = 0x04;
             publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, a_publicKeyX, a_publicKeyY))));
