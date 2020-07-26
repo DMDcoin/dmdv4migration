@@ -2,12 +2,14 @@
 
 var TestFunctions = require('../api/js/testFunctions');
 var CryptoSol = require('../api/js/src/cryptoSol');
+var CryptoJS = require('../api/js/src/cryptoJS');
 
 var EC = require('elliptic').ec;
 var BN = require('bn.js');
 var ec = new EC('secp256k1');
 var bs58check = require('bs58check');
 
+//const { default: cryptoJS } = require('../api/js/cryptoJS');
 
 const ClaimContract = artifacts.require('ClaimContract');
 
@@ -15,13 +17,14 @@ function remove0x(input) {
   if (input.startsWith('0x')) {
     return input.substring(2);
   }
+  return input;
 }
 
 function hexToBuf(input) {
   return Buffer.from(remove0x(input), 'hex');
 }
 
-// appends a prefix to inputBuffer. 
+// appends a prefix to inputBuffer.
 function prefixBuf(inputBuffer, prefixHexString) {
   const prefix = hexToBuf(prefixHexString);
   return Buffer.concat([prefix, inputBuffer]);
@@ -40,13 +43,14 @@ contract('ClaimContract', (accounts) => {
   let testFunctions;
   let cryptoSol;
 
+  // console.error('Type of CryptoJS', typeof CryptoJS);
+  // console.error('Type of CryptoJS', CryptoJS);
+  // console.error('Type of CryptoJS.CryptoJS', typeof  CryptoJS.CryptoJS);
+  let cryptoJS = new CryptoJS.CryptoJS();
+
   it('deploying a new claim contract', async () => {
     claimContract = await ClaimContract.new(callParams);
-    
     testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
-    // console.error('Type of CryptoJS', typeof CryptoJS);
-    // console.error('Type of CryptoJS', CryptoJS);
-    // console.error('Type of CryptoJS.CryptoJS', typeof  CryptoJS.CryptoJS);
     cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
   })
 
@@ -112,68 +116,72 @@ contract('ClaimContract', (accounts) => {
   })
 
 
-  it('PublicKey to DMDAddress works correct.', async() => {
+  it ('dmdAddressToRipeResult returns correct value', async() =>{
     // http://royalforkblog.github.io/2014/08/11/graphical-address-generator/
     // passphrase: bit.diamonds
-    // BIP39 Mnemonic: hello slim hope
-    // address 0: 1PQufB3ymB225SjbE9VS5GdraYDWNjftCk
-    // Public:    0302600289416ed9da3d9e663c7ea07a6d4f46a0df9238235aba4da3764488834c
-    // Private:   KyiQPTyCCbZVaWHFa8AbZLF5KbJtYANAigtpgeejC72CFJ6htuRv
-    // const publicKeyHex = '0302600289416ed9da3d9e663c7ea07a6d4f46a0df9238235aba4da3764488834c';
-    // const expectedAddress = '1PQufB3ymB225SjbE9VS5GdraYDWNjftCk';
 
-    // Public Key:     035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040
-    // result address: 1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj
-    const publicKeyHex = '035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040';
-    const expectedAddress = '1PQufB3ymB225SjbE9VS5GdraYDWNjftCk';
+    const address = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';
+    const expectedRipeResult = 'FDDACAAF7D90A0D7FC90106C3A64ED6E3A2CF859'.toLowerCase();
+    const realRipeResult = cryptoJS.dmdAddressToRipeResult(address).toString('hex');
+    assert.equal(realRipeResult, expectedRipeResult);
 
-    //const inputPrivateKey = 'KyiQPTyCCbZVaWHFa8AbZLF5KbJtYANAigtpgeejC72CFJ6htuRv';
+  })
 
-    // public key = k
-    // x, y = ?
-    //var EC = require('elliptic').ec;
+
+  // it('PublicKey to DMDAddress works correct.', async() => {
+  //   // http://royalforkblog.github.io/2014/08/11/graphical-address-generator/
+  //   // passphrase: bit.diamondsj
+  //   const publicKeyHex = '035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040';
+  //   const expectedAddress = '1PQufB3ymB225SjbE9VS5GdraYDWNjftCk';
+
+  //   //const inputPrivateKey = 'KyiQPTyCCbZVaWHFa8AbZLF5KbJtYANAigtpgeejC72CFJ6htuRv';
+
+  //   // public key = k
+  //   // x, y = ?
+  //   //var EC = require('elliptic').ec;
     
-    var ec = new EC('secp256k1');
+  //   var ec = new EC('secp256k1');
 
-    //var G = ec.g; // Generator point
-    //var pubPoint=G.mul(pk); // EC multiplication to determine public point 
+  //   //var G = ec.g; // Generator point
+  //   //var pubPoint=G.mul(pk); // EC multiplication to determine public point 
     
-    var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
-    var x = publicKey.getX();
-    var y = publicKey.getY();
-    console.log("pub key:" + publicKey.toString('hex'));
-    console.log("x :" + x.toString('hex'));
-    console.log("y :" + y.toString('hex'));
+  //   var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
+  //   var x = publicKey.getX();
+  //   var y = publicKey.getY();
+  //   console.log("pub key:" + publicKey.toString('hex'));
+  //   console.log("x :" + x.toString('hex'));
+  //   console.log("y :" + y.toString('hex'));
 
-    const legacyCompressedEnumValue = 0;
+  //   const legacyCompressedEnumValue = 1;
   
-    const result = await claimContract.contract.methods.PublicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
-    console.log('PublicKeyToBitcoinAddress:', result);
-    result = prefixBuf(result, '00');
-    console.log('with prefix: ' + result.toString('hex'));
+  //   const resultHex = await claimContract.contract.methods.PublicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
+  //   console.log('PublicKeyToBitcoinAddress:', resultHex);
+  //   let result = hexToBuf(resultHex);
+  //   result = prefixBuf(result, '00');
+  //   console.log('with prefix: ' + result.toString('hex'));
     
-    const bs58Result = bs58check.encode(hexToBuf(result));
-    assert.equal(expectedAddress, bs58Result);
-  })
+  //   const bs58Result = bs58check.encode(result);
+  //   assert.equal(expectedAddress, bs58Result);
+  // })
 
-  it('Retrieve Bitcoin address from signature', async() => {
+  // it('Retrieve Bitcoin address from signature', async() => {
 
-    await testFunctions.testAddressRecovery();
-    //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
-    //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
-  })
+  //   await testFunctions.testAddressRecovery();
+  //   //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
+  //   //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
+  // })
 
-  it('Retrieve Bitcoin address from signature', async() => {
+  // it('Retrieve Bitcoin address from signature', async() => {
 
-    //await testFunctions.testBitcoinSignAndRecovery();
-    //console.log('testFunctions: ', testFunctions);
-    //console.log(testFunctions);
-    await testFunctions.testAddressRecovery();
-    //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
-    //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
-    //console.log('recoveredAddress: ' + recoveredAddress);
-    //assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
-  })
+  //   //await testFunctions.testBitcoinSignAndRecovery();
+  //   //console.log('testFunctions: ', testFunctions);
+  //   //console.log(testFunctions);
+  //   await testFunctions.testAddressRecovery();
+  //   //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
+  //   //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
+  //   //console.log('recoveredAddress: ' + recoveredAddress);
+  //   //assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
+  // })
 
 
 })

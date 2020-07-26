@@ -42,14 +42,14 @@ exports.__esModule = true;
 var js_sha256_1 = __importDefault(require("js-sha256"));
 var bitcoinjs_message_1 = __importDefault(require("bitcoinjs-message"));
 var bitcoinjs_lib_1 = __importDefault(require("bitcoinjs-lib"));
-var cryptoJS_1 = __importDefault(require("./cryptoJS"));
+var cryptoJS_1 = require("../src/cryptoJS");
 var elliptic_1 = __importDefault(require("elliptic"));
 //var ec = new EC('secp256k1');
 var TestFunctions = /** @class */ (function () {
     function TestFunctions(web3Instance, instance) {
         this.web3Instance = web3Instance;
         this.instance = instance;
-        this.cryptoJS = new cryptoJS_1["default"]();
+        this.cryptoJS = new cryptoJS_1.CryptoJS();
         if (instance === undefined || instance === null) {
             throw Error("Claim contract must be defined!!");
         }

@@ -1,9 +1,17 @@
 
+import base58check from 'base58check';
+//import { toBase58Check, fromBase58Check } from 'bitcoinjs-lib/types/address';
+
+//var bs58check = require('bs58check');
 
 /**
  * Crypto functions used in this project implemented in JS.
  */
-export default class CryptoJS {
+export class CryptoJS {
+
+  public constructor() {
+    
+  }
 
   public async messageToHash(messageString: string) {
 
@@ -12,6 +20,19 @@ export default class CryptoJS {
     // console.log('messageToHash');
     // console.log(hash);
     // return hash;
+  }
+
+  /**
+   * 
+   * @param address dmd or bitcoin style address.
+   * @return Buffer with the significant bytes of the public key, not including the version number prefix, or the checksum postfix.
+   */
+  public dmdAddressToRipeResult(address: string) : Buffer {
+
+    console.log('address:', address);
+    const decoded  = base58check.decode(address);
+    console.log('decoded:', decoded);
+    return decoded.data;
   }
 
   public signatureBase64ToRSV(signatureBase64: string) : { r: Buffer, s: Buffer, v: number }

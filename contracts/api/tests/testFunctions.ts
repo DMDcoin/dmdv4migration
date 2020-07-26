@@ -8,7 +8,7 @@ import { ecrecover } from 'ethereumjs-util'
 import bitcoinMessage from 'bitcoinjs-message'
 import bitcoin from 'bitcoinjs-lib'
 
-import CryptoJS from './cryptoJS'
+import { CryptoJS } from '../src/cryptoJS'
 
 import EC from 'elliptic'
 

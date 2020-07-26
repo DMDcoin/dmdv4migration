@@ -61,11 +61,10 @@ var CryptoJS = /** @class */ (function () {
      * @return Buffer with the significant bytes of the public key, not including the version number prefix, or the checksum postfix.
      */
     CryptoJS.prototype.dmdAddressToRipeResult = function (address) {
-        //toBase58Check()
-        //const addr = fromBase58Check(address);
+        console.log('address:', address);
         var decoded = base58check_1["default"].decode(address);
         console.log('decoded:', decoded);
-        return Buffer.from('0', 'hex');
+        return decoded.data;
     };
     CryptoJS.prototype.signatureBase64ToRSV = function (signatureBase64) {
         var sig = Buffer.from(signatureBase64, 'base64');
@@ -96,5 +95,5 @@ var CryptoJS = /** @class */ (function () {
     };
     return CryptoJS;
 }());
-exports["default"] = CryptoJS;
+exports.CryptoJS = CryptoJS;
 //# sourceMappingURL=cryptoJS.js.map
