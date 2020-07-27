@@ -1,7 +1,7 @@
 pragma solidity >=0.6.2 <0.7.0;
 
 
-import {EC} from  './EC.sol';
+import { EC } from  './EC.sol';
 
 
 contract ClaimContract {
@@ -18,7 +18,7 @@ contract ClaimContract {
   uint8 internal constant BITCOIN_SIG_PREFIX_LEN = 24;
   bytes24 internal constant BITCOIN_SIG_PREFIX_STR = "Bitcoin Signed Message:\n";
 
-  mapping (string => uint256)  public balances;
+  mapping (bytes20 => uint256)  public balances;
 
   constructor() public {
     //balances[""] = 1000000000000;
@@ -404,6 +404,17 @@ contract ClaimContract {
                 addrStr
             );
     }
+  function getHashForClaimMessage(
+    address _claimToAddr,
+    bool  _claimAddrChecksum)
+    public
+    pure
+    returns (bytes32)
+  {
+    return calcHash256(
+          createClaimMessage(_claimToAddr, _claimAddrChecksum)
+      );
+  }
 
   function claimMessageMatchesSignature(
     address _claimToAddr,

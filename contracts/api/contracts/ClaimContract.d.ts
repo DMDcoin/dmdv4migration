@@ -21,7 +21,7 @@ export class ClaimContract extends Contract {
   );
   clone(): ClaimContract;
   methods: {
-    balances(arg0: string): TransactionObject<string>;
+    balances(arg0: string | number[]): TransactionObject<string>;
 
     getPublicKeyFromBitcoinSignature(
       hashValue: string | number[],
@@ -84,6 +84,11 @@ export class ClaimContract extends Contract {
     createClaimMessage(
       claimToAddr: string,
       claimToAddrChecksum: boolean
+    ): TransactionObject<string>;
+
+    getHashForClaimMessage(
+      _claimToAddr: string,
+      _claimAddrChecksum: boolean
     ): TransactionObject<string>;
 
     claimMessageMatchesSignature(

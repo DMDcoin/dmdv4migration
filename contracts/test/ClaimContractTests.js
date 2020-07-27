@@ -116,7 +116,7 @@ contract('ClaimContract', (accounts) => {
   })
 
 
-  it ('dmdAddressToRipeResult returns correct value', async() =>{
+  it ('function dmdAddressToRipeResult', async() =>{
     // http://royalforkblog.github.io/2014/08/11/graphical-address-generator/
     // passphrase: bit.diamonds
 
@@ -128,60 +128,46 @@ contract('ClaimContract', (accounts) => {
   })
 
 
-  // it('PublicKey to DMDAddress works correct.', async() => {
-  //   // http://royalforkblog.github.io/2014/08/11/graphical-address-generator/
-  //   // passphrase: bit.diamondsj
-  //   const publicKeyHex = '035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040';
-  //   const expectedAddress = '1PQufB3ymB225SjbE9VS5GdraYDWNjftCk';
+  it('contract function PublicKeyToBitcoinAddress (PublicKey to DMDAddress)', async() => {
+    // http://royalforkblog.github.io/2014/08/11/graphical-address-generator/
+    // passphrase: bit.diamonds
+    const publicKeyHex = '035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040';
+    const expectedAddress = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';
 
-  //   //const inputPrivateKey = 'KyiQPTyCCbZVaWHFa8AbZLF5KbJtYANAigtpgeejC72CFJ6htuRv';
-
-  //   // public key = k
-  //   // x, y = ?
-  //   //var EC = require('elliptic').ec;
     
-  //   var ec = new EC('secp256k1');
-
-  //   //var G = ec.g; // Generator point
-  //   //var pubPoint=G.mul(pk); // EC multiplication to determine public point 
+    var ec = new EC('secp256k1');
     
-  //   var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
-  //   var x = publicKey.getX();
-  //   var y = publicKey.getY();
-  //   console.log("pub key:" + publicKey.toString('hex'));
-  //   console.log("x :" + x.toString('hex'));
-  //   console.log("y :" + y.toString('hex'));
+    var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
+    var x = publicKey.getX();
+    var y = publicKey.getY();
+    console.log("pub key:" + publicKey.toString('hex'));
+    console.log("x :" + x.toString('hex'));
+    console.log("y :" + y.toString('hex'));
 
-  //   const legacyCompressedEnumValue = 1;
+    const legacyCompressedEnumValue = 1;
   
-  //   const resultHex = await claimContract.contract.methods.PublicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
-  //   console.log('PublicKeyToBitcoinAddress:', resultHex);
-  //   let result = hexToBuf(resultHex);
-  //   result = prefixBuf(result, '00');
-  //   console.log('with prefix: ' + result.toString('hex'));
+    const resultHex = await claimContract.contract.methods.PublicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
+    console.log('PublicKeyToBitcoinAddress:', resultHex);
+    let result = hexToBuf(resultHex);
+    result = prefixBuf(result, '00');
+    console.log('with prefix: ' + result.toString('hex'));
     
-  //   const bs58Result = bs58check.encode(result);
-  //   assert.equal(expectedAddress, bs58Result);
-  // })
+    const bs58Result = bs58check.encode(result);
+    assert.equal(expectedAddress, bs58Result);
+  })
 
-  // it('Retrieve Bitcoin address from signature', async() => {
 
-  //   await testFunctions.testAddressRecovery();
-  //   //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
-  //   //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
-  // })
+  it('Retrieve Bitcoin address from signature', async() => {
 
-  // it('Retrieve Bitcoin address from signature', async() => {
-
-  //   //await testFunctions.testBitcoinSignAndRecovery();
-  //   //console.log('testFunctions: ', testFunctions);
-  //   //console.log(testFunctions);
-  //   await testFunctions.testAddressRecovery();
-  //   //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
-  //   //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
-  //   //console.log('recoveredAddress: ' + recoveredAddress);
-  //   //assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
-  // })
+    //await testFunctions.testBitcoinSignAndRecovery();
+    //console.log('testFunctions: ', testFunctions);
+    //console.log(testFunctions);
+    await testFunctions.testAddressRecovery();
+    //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
+    //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
+    //console.log('recoveredAddress: ' + recoveredAddress);
+    //assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
+  })
 
 
 })

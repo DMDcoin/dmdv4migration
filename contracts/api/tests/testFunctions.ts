@@ -188,9 +188,13 @@ export class TestFunctions {
 
     //console.log('running test on instance: ', this.instance);
 
+    // test with PK: L3qEYQGUWwhFvkR13DCdqahwSfc4BJHXJamNKXGB2wm45JJjzJ58
+    // https://tools.bitcoin.com/verify-message/
+
     const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-    const signatureBase64 = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
-    const btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX"; //is maybe not base64 - it might be base58 ?
+    const btcAddressbase58check = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
+    const signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo="
+    
 
     // Private: L4FkVsvM6FLuwJJHzpHJM6fUdG9acX5QqbvtvTSZRtG3Nsa7J8tv
     // Public : 02bee3163c5ba877f4205ab447fb42373bb1f77e898d0d649dc7c691a483551a37
@@ -204,6 +208,7 @@ export class TestFunctions {
     console.log('Claim Message:');
     console.log(claimMessage);
 
+    //const hashResultSolidity = await this.instance.methods.getHashForClaimMessage(message, true).call();
     const hashResultSolidity = await this.instance.methods.calcHash256(claimMessage).call();
     console.log('hash Result Solidity:', hashResultSolidity);
 
@@ -265,6 +270,8 @@ export class TestFunctions {
 
     console.log('xy27: ', xy27);
     console.log('xy28: ', xy28);
+
+
 
     
 

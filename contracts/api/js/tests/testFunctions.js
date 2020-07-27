@@ -156,20 +156,15 @@ var TestFunctions = /** @class */ (function () {
     // } 
     TestFunctions.prototype.testAddressRecovery = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var message, signatureBase64, btcAddressBase64, claimMessage, hashResultSolidity, hash, sig, hashHex, rHex, sHex, ec, sig27, sig28, recoverResult27, recoverResult28, xy27, xy28, result27, result28;
+            var message, btcAddressbase58check, signatureBase64, hashResultSolidity, hash, sig, hashHex, rHex, sHex, ec, sig27, sig28, recoverResult27, recoverResult28, xy27, xy28, result27, result28;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-                        signatureBase64 = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
-                        btcAddressBase64 = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
-                        return [4 /*yield*/, this.instance.methods.createClaimMessage(message, true).call()];
+                        btcAddressbase58check = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
+                        signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
+                        return [4 /*yield*/, this.instance.methods.getHashForClaimMessage(message, true).call()];
                     case 1:
-                        claimMessage = _a.sent();
-                        console.log('Claim Message:');
-                        console.log(claimMessage);
-                        return [4 /*yield*/, this.instance.methods.calcHash256(claimMessage).call()];
-                    case 2:
                         hashResultSolidity = _a.sent();
                         console.log('hash Result Solidity:', hashResultSolidity);
                         hash = Buffer.from(hashResultSolidity, 'hex');
@@ -188,10 +183,10 @@ var TestFunctions = /** @class */ (function () {
                         console.log('xy27: ', xy27);
                         console.log('xy28: ', xy28);
                         return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call()];
-                    case 3:
+                    case 2:
                         result27 = _a.sent();
                         return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy28.x, xy28.y, 28, rHex, sHex).call()];
-                    case 4:
+                    case 3:
                         result28 = _a.sent();
                         console.log('result27: ', result27);
                         console.log('result28: ', result28);

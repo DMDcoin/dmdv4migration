@@ -67,10 +67,9 @@ var CryptoJS = /** @class */ (function () {
         return decoded.data;
     };
     CryptoJS.prototype.signatureBase64ToRSV = function (signatureBase64) {
+        // where is the encoding of the signature documented ?
+        //is that DER encoding ? Or the Significant part of DER ?
         var sig = Buffer.from(signatureBase64, 'base64');
-        //r: 2077b616f680b086c812f6f8ee9ad2160deb5cd1e513dd69d9662da712293c0d
-        //s: f45bace0bf3c1cdf043dd279c0d762db2f668aa376b48e381b37ac4cec43aefe
-        //v: 17
         console.log('sigBuffer:');
         console.log(sig);
         console.log(sig.toString('hex'));
