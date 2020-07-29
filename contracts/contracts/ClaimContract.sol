@@ -399,7 +399,7 @@ contract ClaimContract {
         return abi.encodePacked(
                 BITCOIN_SIG_PREFIX_LEN,
                 BITCOIN_SIG_PREFIX_STR,
-                uint8(prefixStr.length) + ETH_ADDRESS_HEX_LEN,
+                uint8(prefixStr.length) + ETH_ADDRESS_HEX_LEN + 2,
                 prefixStr,
                 addrStr
             );

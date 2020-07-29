@@ -40,10 +40,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var js_sha256_1 = __importDefault(require("js-sha256"));
-var bitcoinjs_message_1 = __importDefault(require("bitcoinjs-message"));
-var bitcoinjs_lib_1 = __importDefault(require("bitcoinjs-lib"));
+var chai_1 = require("chai");
+var varuint_bitcoin_1 = __importDefault(require("varuint-bitcoin"));
+//import bitcoinMessage from 'bitcoinjs-message'
+//import bitcoin from 'bitcoinjs-lib'
+var bitcoin = require('bitcoinjs-lib');
+var bitcoinMessage = require('bitcoinjs-message');
 var cryptoJS_1 = require("../src/cryptoJS");
 var elliptic_1 = __importDefault(require("elliptic"));
+var cryptoSol_1 = require("../src/cryptoSol");
 //var ec = new EC('secp256k1');
 var TestFunctions = /** @class */ (function () {
     function TestFunctions(web3Instance, instance) {
@@ -53,6 +58,7 @@ var TestFunctions = /** @class */ (function () {
         if (instance === undefined || instance === null) {
             throw Error("Claim contract must be defined!!");
         }
+        this.cryptoSol = new cryptoSol_1.CryptoSol(web3Instance, instance);
     }
     // public async testValidateSignature() {
     //   //let addressToSign = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
@@ -156,15 +162,20 @@ var TestFunctions = /** @class */ (function () {
     // } 
     TestFunctions.prototype.testAddressRecovery = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var message, btcAddressbase58check, signatureBase64, hashResultSolidity, hash, sig, hashHex, rHex, sHex, ec, sig27, sig28, recoverResult27, recoverResult28, xy27, xy28, result27, result28;
+            var message, btcAddressbase58check, signatureBase64, claimMessage, hashResultSolidity, hash, sig, hashHex, rHex, sHex, ec, sig27, sig28, recoverResult27, recoverResult28, xy27, xy28, result27, result28;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
                         btcAddressbase58check = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
                         signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
-                        return [4 /*yield*/, this.instance.methods.getHashForClaimMessage(message, true).call()];
+                        return [4 /*yield*/, this.instance.methods.createClaimMessage(message, true).call()];
                     case 1:
+                        claimMessage = _a.sent();
+                        console.log('Claim Message:');
+                        console.log(claimMessage);
+                        return [4 /*yield*/, this.instance.methods.calcHash256(claimMessage).call()];
+                    case 2:
                         hashResultSolidity = _a.sent();
                         console.log('hash Result Solidity:', hashResultSolidity);
                         hash = Buffer.from(hashResultSolidity, 'hex');
@@ -183,10 +194,10 @@ var TestFunctions = /** @class */ (function () {
                         console.log('xy27: ', xy27);
                         console.log('xy28: ', xy28);
                         return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call()];
-                    case 2:
+                    case 3:
                         result27 = _a.sent();
                         return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy28.x, xy28.y, 28, rHex, sHex).call()];
-                    case 3:
+                    case 4:
                         result28 = _a.sent();
                         console.log('result27: ', result27);
                         console.log('result28: ', result28);
@@ -196,13 +207,78 @@ var TestFunctions = /** @class */ (function () {
         });
     };
     TestFunctions.prototype.testBitcoinSignAndRecovery = function () {
-        var keyPair = bitcoinjs_lib_1["default"].ECPair.fromWIF('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss');
+        var keyPair = bitcoin.ECPair.fromWIF('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss');
         var privateKey = keyPair.privateKey;
         var message = 'This is an example of a signed message.';
-        var signature = bitcoinjs_message_1["default"].sign(message, privateKey, keyPair.compressed);
+        var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
         console.log(signature.toString('base64'));
-        var signature = bitcoinjs_message_1["default"].sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' });
+        var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' });
         console.log(signature.toString('base64'));
+    };
+    TestFunctions.prototype.testBitcoinMessageJS = function () {
+        var privateKeyWid = 'L3qEYQGUWwhFvkR13DCdqahwSfc4BJHXJamNKXGB2wm45JJjzJ58';
+        var address = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';
+        var message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
+        var keyPair = bitcoin.ECPair.fromWIF(privateKeyWid);
+        var privateKey = keyPair.privateKey;
+        var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
+        console.log('signature: ', signature.toString('base64'));
+        //var publicKey = keyPair.publicKey.toString('hex');
+        //var signature = bitcoinMessage.
+        //console.log(signature.toString('base64'))
+        var verifyResult = bitcoinMessage.verify(message, address, signature);
+        console.log('verifyResult = ', verifyResult);
+        chai_1.expect(verifyResult).to.be.equal(true);
+    };
+    TestFunctions.prototype.getBitcoinSignedMessageMagic = function (message) {
+        var messagePrefix = '\u0018Bitcoin Signed Message:\n';
+        var messagePrefixBuffer = Buffer.from(messagePrefix, 'utf8');
+        ;
+        var messageBuffer = Buffer.from(message, 'utf8');
+        var messageVISize = varuint_bitcoin_1["default"].encodingLength(message.length);
+        var buffer = Buffer.allocUnsafe(messagePrefix.length + messageVISize + message.length);
+        messagePrefixBuffer.copy(buffer, 0);
+        varuint_bitcoin_1["default"].encode(message.length, buffer, messagePrefix.length);
+        messageBuffer.copy(buffer, messagePrefix.length + messageVISize);
+        return buffer;
+    };
+    TestFunctions.prototype.testMessageMagicHexIsCorrect = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var address, resultJS, resultSol;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        address = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
+                        resultJS = '0x' + this.getBitcoinSignedMessageMagic(address).toString('hex');
+                        return [4 /*yield*/, this.cryptoSol.addressToClaimMessage(address)];
+                    case 1:
+                        resultSol = _a.sent();
+                        chai_1.expect(resultSol).to.be.equal(resultJS);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    TestFunctions.prototype.testMessageHashIsCorrect = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var message, buffer, hash, hashFromSolidity;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
+                        buffer = this.getBitcoinSignedMessageMagic(message);
+                        console.log('0x' + buffer.toString('hex'));
+                        hash = '0x' + bitcoinMessage.magicHash(message).toString('hex');
+                        console.log('Bitcoin Hash: ', hash);
+                        return [4 /*yield*/, this.instance.methods.getHashForClaimMessage(message, true).call()];
+                    case 1:
+                        hashFromSolidity = _a.sent();
+                        console.log('hashFromSolidity', hashFromSolidity);
+                        chai_1.expect(hash).to.be.equal(hashFromSolidity);
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     return TestFunctions;
 }());

@@ -1,6 +1,6 @@
 
 
-var TestFunctions = require('../api/js/testFunctions');
+var TestFunctions = require('../api/js/tests/testFunctions');
 var CryptoSol = require('../api/js/src/cryptoSol');
 var CryptoJS = require('../api/js/src/cryptoJS');
 
@@ -82,12 +82,13 @@ contract('ClaimContract', (accounts) => {
 
   it('addressToClaimMessage delivers expected claimMessage.', async() => {
 
-    const address = '0xb56c4974EB4CFC2B339B441a4Ae854FeBE2B6504';
-    //todo: define the real expected result to make sure that this works.
-    const expectedResult = '0x18426974636f696e205369676e6564204d6573736167653a0a28307862353663343937344542344346433242333339423434316134416538353446654245324236353034'
-    const result = await cryptoSol.addressToClaimMessage(address);
-    assert.equal(result, expectedResult);
-    //console.log('claim Message: ', result);
+    await testFunctions.testMessageMagicHexIsCorrect();
+    // const address = '0xb56c4974EB4CFC2B339B441a4Ae854FeBE2B6504';
+    // //todo: define the real expected result to make sure that this works.
+    // const expectedResult = '0x18426974636f696e205369676e6564204d6573736167653a0a28307862353663343937344542344346433242333339423434316134416538353446654245324236353034'
+    // const result = await cryptoSol.addressToClaimMessage(address);
+    // assert.equal(result, expectedResult);
+    // //console.log('claim Message: ', result);
   })
 
 
@@ -169,5 +170,13 @@ contract('ClaimContract', (accounts) => {
     //assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
   })
 
+  it('testSignAndRecoverMessageWithBitcoinMessageJS', async() => {
+    //minimal test if the version of BitcoinMessageJS works as expected.
+    testFunctions.testBitcoinMessageJS();
+  })
+
+  it('testMagicHash', async() => {
+    await testFunctions.testMessageHashIsCorrect();
+  })
 
 })

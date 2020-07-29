@@ -4,13 +4,23 @@ import ClaimContract from '../contracts/ClaimContract.d'
 import Web3 from 'web3';
 import sha256 from 'js-sha256'
 import { ecrecover } from 'ethereumjs-util'
+import { expect } from 'chai';
+import varuint from'varuint-bitcoin';
 
-import bitcoinMessage from 'bitcoinjs-message'
-import bitcoin from 'bitcoinjs-lib'
+
+//import bitcoinMessage from 'bitcoinjs-message'
+//import bitcoin from 'bitcoinjs-lib'
+
+
+const bitcoin = require('bitcoinjs-lib');
+const bitcoinMessage = require('bitcoinjs-message');
+
+
 
 import { CryptoJS } from '../src/cryptoJS'
 
 import EC from 'elliptic'
+import { CryptoSol } from '../src/cryptoSol';
 
 //var ec = new EC('secp256k1');
 
@@ -18,6 +28,7 @@ import EC from 'elliptic'
 export class TestFunctions {
 
   public cryptoJS = new CryptoJS();
+  public cryptoSol : CryptoSol;
 
   public constructor(public web3Instance: Web3, public instance : ClaimContract.ClaimContract) {
     
@@ -25,7 +36,7 @@ export class TestFunctions {
       throw Error("Claim contract must be defined!!");
     }
 
-    
+    this.cryptoSol = new CryptoSol(web3Instance, instance);
   }
 
   // public async testValidateSignature() {
@@ -78,7 +89,6 @@ export class TestFunctions {
   // };
 
   //Ethereum Address to string with checksum
-
   public runTestEthereumAddressToStringWithChecksum() {
 
     const address = '0xfec7b00dc0192319dda0c777a9f04e47dc49bd18';
@@ -183,6 +193,7 @@ export class TestFunctions {
   // public async messageToHashInContract(value: string) : Buffer {
   //   const result27 = await this.instance.methods.claimMessageCreate(message, true, hashHex, xy27.x, xy27.y, 27, rHex, sHex).call();
   // } 
+
 
   public async testAddressRecovery() {
 
@@ -296,6 +307,66 @@ export class TestFunctions {
 
     var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' })
     console.log(signature.toString('base64'))
+  }
+
+
+  
+  public testBitcoinMessageJS() {
+
+    const privateKeyWid = 'L3qEYQGUWwhFvkR13DCdqahwSfc4BJHXJamNKXGB2wm45JJjzJ58';
+    const address = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';
+    const message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
+
+    var keyPair = bitcoin.ECPair.fromWIF(privateKeyWid);
+    var privateKey = keyPair.privateKey;
+
+    var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
+    console.log('signature: ', signature.toString('base64'));
+
+    //var publicKey = keyPair.publicKey.toString('hex');
+    //var signature = bitcoinMessage.
+    //console.log(signature.toString('base64'))
+    const verifyResult = bitcoinMessage.verify(message, address, signature);
+    console.log('verifyResult = ', verifyResult);
+    expect(verifyResult).to.be.equal(true);
+  }
+
+  private getBitcoinSignedMessageMagic(message: string) {
+
+    const messagePrefix = '\u0018Bitcoin Signed Message:\n';
+    const messagePrefixBuffer = Buffer.from(messagePrefix, 'utf8');;
+    const messageBuffer = Buffer.from(message, 'utf8');
+    const messageVISize = varuint.encodingLength(message.length);
+
+    const buffer = Buffer.allocUnsafe(
+      messagePrefix.length + messageVISize + message.length
+    );
+
+    messagePrefixBuffer.copy(buffer, 0);
+    varuint.encode(message.length, buffer, messagePrefix.length);
+    messageBuffer.copy(buffer, messagePrefix.length + messageVISize);
+    return buffer;
+  }
+
+  public async testMessageMagicHexIsCorrect()
+  {
+    const address = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
+    const resultJS = '0x' + this.getBitcoinSignedMessageMagic(address).toString('hex');
+    const resultSol = await this.cryptoSol.addressToClaimMessage(address);
+    expect(resultSol).to.be.equal(resultJS);
+  }
+
+  public async testMessageHashIsCorrect() {
+
+    const message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
+    const buffer = this.getBitcoinSignedMessageMagic(message);
+    console.log('0x' + buffer.toString('hex'));
+    
+    var hash = '0x' + bitcoinMessage.magicHash(message).toString('hex');
+    console.log('Bitcoin Hash: ', hash);
+    const hashFromSolidity = await this.instance.methods.getHashForClaimMessage(message, true).call();
+    console.log('hashFromSolidity', hashFromSolidity);
+    expect(hash).to.be.equal(hashFromSolidity);
   }
 }
 
