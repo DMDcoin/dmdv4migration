@@ -118,7 +118,7 @@ contract('ClaimContract', (accounts) => {
 
 
   it ('function dmdAddressToRipeResult', async() =>{
-    // http://royalforkblog.github.io/2014/08/11/graphical-address-generator/
+    // https://royalforkblog.github.io/2014/08/11/graphical-address-generator/
     // passphrase: bit.diamonds
 
     const address = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';
@@ -130,21 +130,17 @@ contract('ClaimContract', (accounts) => {
 
 
   it('contract function PublicKeyToBitcoinAddress (PublicKey to DMDAddress)', async() => {
-    // http://royalforkblog.github.io/2014/08/11/graphical-address-generator/
+    // https://royalforkblog.github.io/2014/08/11/graphical-address-generator/
     // passphrase: bit.diamonds
     const publicKeyHex = '035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040';
-    const expectedAddress = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';
-
-    
+    const expectedAddress = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';    
     var ec = new EC('secp256k1');
-    
     var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
     var x = publicKey.getX();
     var y = publicKey.getY();
     console.log("pub key:" + publicKey.toString('hex'));
     console.log("x :" + x.toString('hex'));
     console.log("y :" + y.toString('hex'));
-
     const legacyCompressedEnumValue = 1;
   
     const resultHex = await claimContract.contract.methods.PublicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
@@ -159,15 +155,8 @@ contract('ClaimContract', (accounts) => {
 
 
   it('Retrieve Bitcoin address from signature', async() => {
-
-    //await testFunctions.testBitcoinSignAndRecovery();
-    //console.log('testFunctions: ', testFunctions);
-    //console.log(testFunctions);
+    
     await testFunctions.testAddressRecovery();
-    //let recoveredPublicKey = await claimContract.getPublicKeyFromBitcoinSignature.call(dmdSignature, addressToSign, callParams)
-    //let recoveredAddress = await claimContract.getBitcoinAddressFromSignature.call(dmdSignature, addressToSign, callParams);
-    //console.log('recoveredAddress: ' + recoveredAddress);
-    //assert.equal(dmdAddress, recoveredAddress, 'recovered address must be equal to expected address.');
   })
 
   it('testSignAndRecoverMessageWithBitcoinMessageJS', async() => {

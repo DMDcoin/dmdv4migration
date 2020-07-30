@@ -206,15 +206,6 @@ var TestFunctions = /** @class */ (function () {
             });
         });
     };
-    TestFunctions.prototype.testBitcoinSignAndRecovery = function () {
-        var keyPair = bitcoin.ECPair.fromWIF('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss');
-        var privateKey = keyPair.privateKey;
-        var message = 'This is an example of a signed message.';
-        var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
-        console.log(signature.toString('base64'));
-        var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' });
-        console.log(signature.toString('base64'));
-    };
     TestFunctions.prototype.testBitcoinMessageJS = function () {
         var privateKeyWid = 'L3qEYQGUWwhFvkR13DCdqahwSfc4BJHXJamNKXGB2wm45JJjzJ58';
         var address = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';
@@ -261,13 +252,11 @@ var TestFunctions = /** @class */ (function () {
     };
     TestFunctions.prototype.testMessageHashIsCorrect = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var message, buffer, hash, hashFromSolidity;
+            var message, hash, hashFromSolidity;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
-                        buffer = this.getBitcoinSignedMessageMagic(message);
-                        console.log('0x' + buffer.toString('hex'));
                         hash = '0x' + bitcoinMessage.magicHash(message).toString('hex');
                         console.log('Bitcoin Hash: ', hash);
                         return [4 /*yield*/, this.instance.methods.getHashForClaimMessage(message, true).call()];
@@ -283,7 +272,4 @@ var TestFunctions = /** @class */ (function () {
     return TestFunctions;
 }());
 exports.TestFunctions = TestFunctions;
-//
-//const test = new TestFunctions(null, null);
-//test.testAddressRecovery();
 //# sourceMappingURL=testFunctions.js.map

@@ -1,5 +1,4 @@
 
-
 import ClaimContract from '../contracts/ClaimContract.d'
 import Web3 from 'web3';
 import sha256 from 'js-sha256'
@@ -7,22 +6,12 @@ import { ecrecover } from 'ethereumjs-util'
 import { expect } from 'chai';
 import varuint from'varuint-bitcoin';
 
-
-//import bitcoinMessage from 'bitcoinjs-message'
-//import bitcoin from 'bitcoinjs-lib'
-
-
 const bitcoin = require('bitcoinjs-lib');
 const bitcoinMessage = require('bitcoinjs-message');
 
-
-
 import { CryptoJS } from '../src/cryptoJS'
-
 import EC from 'elliptic'
 import { CryptoSol } from '../src/cryptoSol';
-
-//var ec = new EC('secp256k1');
 
 
 export class TestFunctions {
@@ -270,7 +259,6 @@ export class TestFunctions {
     const sig28 = { r: sig.r.toString('hex'), s: sig.s.toString('hex'), recoveryParam: 1};
 
     //EthECDSASignature signatureNew = EthECDSASignature.FromDER(derSign);
-
     
     const recoverResult27 = ec.recoverPubKey(hash, sig27, 0);
     const recoverResult28 = ec.recoverPubKey(hash, sig28, 1);
@@ -282,35 +270,29 @@ export class TestFunctions {
     console.log('xy27: ', xy27);
     console.log('xy28: ', xy28);
 
-
-
-    
-
     const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call();
     const result28 = await this.instance.methods.claimMessageMatchesSignature(message,true, xy28.x, xy28.y, 28, rHex, sHex).call();
 
     console.log('result27: ', result27);
     console.log('result28: ', result28);
-
-
   }
 
   public testBitcoinSignAndRecovery() {
 
     var keyPair = bitcoin.ECPair.fromWIF('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss');
     
-    var privateKey = keyPair.privateKey
-    var message = 'This is an example of a signed message.'
+    var privateKey = keyPair.privateKey;
+    var message = 'This is an example of a signed message.';
  
-    var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed)
-    console.log(signature.toString('base64'))
+    var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
+    console.log(signature.toString('base64'));
 
-    var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' })
-    console.log(signature.toString('base64'))
+    var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' });
+    console.log(signature.toString('base64'));
+
+
   }
 
-
-  
   public testBitcoinMessageJS() {
 
     const privateKeyWid = 'L3qEYQGUWwhFvkR13DCdqahwSfc4BJHXJamNKXGB2wm45JJjzJ58';
@@ -350,6 +332,8 @@ export class TestFunctions {
 
   public async testMessageMagicHexIsCorrect()
   {
+    //compares the result of a JS implementation with the Solidity implementation
+    //of handling the raw message with the magic values around it.
     const address = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
     const resultJS = '0x' + this.getBitcoinSignedMessageMagic(address).toString('hex');
     const resultSol = await this.cryptoSol.addressToClaimMessage(address);
@@ -357,11 +341,8 @@ export class TestFunctions {
   }
 
   public async testMessageHashIsCorrect() {
-
+    //compares the result of a JS implementation of the Bitcoin 
     const message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
-    const buffer = this.getBitcoinSignedMessageMagic(message);
-    console.log('0x' + buffer.toString('hex'));
-    
     var hash = '0x' + bitcoinMessage.magicHash(message).toString('hex');
     console.log('Bitcoin Hash: ', hash);
     const hashFromSolidity = await this.instance.methods.getHashForClaimMessage(message, true).call();
@@ -369,7 +350,3 @@ export class TestFunctions {
     expect(hash).to.be.equal(hashFromSolidity);
   }
 }
-
-//
-//const test = new TestFunctions(null, null);
-//test.testAddressRecovery();
