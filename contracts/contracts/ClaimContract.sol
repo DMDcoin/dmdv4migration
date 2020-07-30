@@ -1,8 +1,6 @@
 pragma solidity >=0.6.2 <0.7.0;
 
-
 import { EC } from  './EC.sol';
-
 
 contract ClaimContract {
 
@@ -30,8 +28,6 @@ contract ClaimContract {
   pure
   returns(address)
   {
-
-
     require(v >= 4, 'Bitcoin adds a constant 4 to the v value. this signature seems to be invalid.');
     //#1: decode bitcoin signature.
     //# get R, S, V and Hash of Signature.

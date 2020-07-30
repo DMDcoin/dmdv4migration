@@ -154,10 +154,6 @@ contract('ClaimContract', (accounts) => {
   })
 
 
-  it('Retrieve Bitcoin address from signature', async() => {
-    
-    await testFunctions.testAddressRecovery();
-  })
 
   it('testSignAndRecoverMessageWithBitcoinMessageJS', async() => {
     //minimal test if the version of BitcoinMessageJS works as expected.
@@ -167,5 +163,22 @@ contract('ClaimContract', (accounts) => {
   it('testMagicHash', async() => {
     await testFunctions.testMessageHashIsCorrect();
   })
+
+
+  // it('Retrieve Bitcoin address from signature', async() => {
+    
+  //   await testFunctions.testAddressRecovery();
+  // })
+
+
+  it('Retrieve Public Key from signature', async() => {
+    
+    await testFunctions.getPublicKeyFromSignature();
+  })
+  
+
+  // it('Validating signature in solidity', async() => {
+  //   await testFunctions.testValidateSignature();
+  // })
 
 })

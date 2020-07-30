@@ -39,7 +39,7 @@
     "compile": "truffle compile",
     "tsc": "tsc",
     "testApi": "ts-node ./api/tests/testFunctions.ts",
-    "testVerify": "ts-node ./api/tests/testVerify.ts",
+    "testVerify": "ts-node ./api/tests/runTest.ts",
     "build": "npm run compile && npm run typechain && npm run tsc",
     "buildNTest": "npm run build && truffle test"
   },
