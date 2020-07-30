@@ -40,8 +40,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var base58check_1 = __importDefault(require("base58check"));
+var elliptic_1 = __importDefault(require("elliptic"));
 //import { toBase58Check, fromBase58Check } from 'bitcoinjs-lib/types/address';
 //var bs58check = require('bs58check');
+var bitcoinMessage = require('bitcoinjs-message');
+var secp256k1 = require('secp256k1');
+var SEGWIT_TYPES = {
+    P2WPKH: 'p2wpkh',
+    P2SH_P2WPKH: 'p2sh(p2wpkh)'
+};
 /**
  * Crypto functions used in this project implemented in JS.
  */
@@ -91,6 +98,44 @@ var CryptoJS = /** @class */ (function () {
         console.log("s: " + s.toString('hex'));
         console.log("v: " + v);
         return { r: r, s: s, v: v };
+    };
+    CryptoJS.prototype.decodeSignature = function (buffer) {
+        if (buffer.length !== 65)
+            throw new Error('Invalid signature length');
+        var flagByte = buffer.readUInt8(0) - 27;
+        if (flagByte > 15 || flagByte < 0) {
+            throw new Error('Invalid signature parameter');
+        }
+        return {
+            compressed: !!(flagByte & 12),
+            segwitType: !(flagByte & 8)
+                ? null
+                : !(flagByte & 4)
+                    ? SEGWIT_TYPES.P2SH_P2WPKH
+                    : SEGWIT_TYPES.P2WPKH,
+            recovery: flagByte & 3,
+            signature: buffer.slice(1)
+        };
+    };
+    CryptoJS.prototype.getPublicKeyFromSignature = function (signatureBase64, messageContent) {
+        //const signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
+        //const address = "";
+        var signature = Buffer.from(signatureBase64, 'base64');
+        var parsed = this.decodeSignature(signature);
+        console.log('parsed Signature:', parsed);
+        var hash = bitcoinMessage.magicHash(messageContent);
+        var publicKey = secp256k1.recover(hash, parsed.signature, parsed.recovery, parsed.compressed);
+        //we now have the public key
+        //public key is the X Value with a prefix.
+        //it's 02 or 03 prefix, depending if y is ODD or not.
+        console.log("publicKey: ", publicKey.toString('hex'));
+        var x = publicKey.slice(1).toString('hex');
+        console.log("x: " + x);
+        var ec = new elliptic_1["default"].ec('secp256k1');
+        var key = ec.keyFromPublic(publicKey);
+        var y = key.getPublic().getY().toString('hex');
+        console.log("y: " + y);
+        return { publicKey: publicKey.toString('hex'), x: x, y: y };
     };
     return CryptoJS;
 }());

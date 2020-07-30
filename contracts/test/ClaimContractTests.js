@@ -173,9 +173,8 @@ contract('ClaimContract', (accounts) => {
 
   it('Retrieve Public Key from signature', async() => {
     
-    await testFunctions.getPublicKeyFromSignature();
+    await testFunctions.testSignatureToXY();
   })
-  
 
   // it('Validating signature in solidity', async() => {
   //   await testFunctions.testValidateSignature();

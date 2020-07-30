@@ -103,7 +103,7 @@ export class CryptoJS {
     }
   }
 
-  public getPublicKeyFromSignature(signatureBase64: string, messageContent: string) : {x: string, y: string} {
+  public getPublicKeyFromSignature(signatureBase64: string, messageContent: string) : {publicKey: string, x: string, y: string} {
     
     //const signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
     //const address = "";
@@ -138,6 +138,6 @@ export class CryptoJS {
 
     console.log("y: " + y);
 
-    return {x, y};
+    return {publicKey: publicKey.toString('hex'), x, y};
   }
 }

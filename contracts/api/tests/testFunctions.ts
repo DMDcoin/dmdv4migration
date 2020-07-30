@@ -343,6 +343,18 @@ export class TestFunctions {
     expect(hash).to.be.equal(hashFromSolidity);
   }
 
+  public async testSignatureToXY() 
+  {
+    //https://royalforkblog.github.io/2014/08/11/graphical-address-generator/
+    //passphrase: bit.diamonds
 
+    const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+    const signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
+    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, message);
+
+    expect(key.x).equal("5EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
+    expect(key.y).equal("99523EB43291A1067FA819AA5A74F30810B19D15F6EDC19C9D8AA525B0F6C683".toLowerCase());
+    expect(key.publicKey).equal("035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
+  }
 
 }
