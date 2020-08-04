@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+var cryptoHelpers_1 = require("./cryptoHelpers");
 /**
  * Crypto functions used in this project implemented in Soldity.
  */
@@ -83,6 +84,20 @@ var CryptoSol = /** @class */ (function () {
                         console.log('messageToHash');
                         console.log(hash);
                         return [2 /*return*/, hash];
+                }
+            });
+        });
+    };
+    CryptoSol.prototype.claimMessageMatchesSignature = function (claimToAddress, addressContainsChecksum, pubkeyX, pubkeyY, sigV, sigR, sigS) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(pubkeyX), cryptoHelpers_1.ensure0x(pubkeyY), cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
+                    case 1:
+                        result = _a.sent();
+                        console.log('Claim Result: ', result);
+                        return [2 /*return*/];
                 }
             });
         });

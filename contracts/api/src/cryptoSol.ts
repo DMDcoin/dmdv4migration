@@ -1,6 +1,7 @@
 
 import Web3 from 'web3';
-import ClaimContract from '../contracts/ClaimContract'
+import ClaimContract from '../contracts/ClaimContract';
+import { ensure0x } from './cryptoHelpers';
 
 /**
  * Crypto functions used in this project implemented in Soldity.
@@ -43,4 +44,13 @@ export class CryptoSol {
   }
 
 
+  public async claimMessageMatchesSignature(claimToAddress: string, addressContainsChecksum: boolean,
+    pubkeyX: string, pubkeyY: string,
+    sigV: string,
+    sigR: string,
+    sigS: string) 
+    {
+      const result = await this.instance.methods.claimMessageMatchesSignature(claimToAddress, addressContainsChecksum, ensure0x(pubkeyX), ensure0x(pubkeyY), ensure0x(sigV),ensure0x(sigR), ensure0x(sigS)).call();
+      console.log('Claim Result: ', result);
+    }
 }

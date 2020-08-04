@@ -176,8 +176,8 @@ contract('ClaimContract', (accounts) => {
     await testFunctions.testSignatureToXY();
   })
 
-  // it('Validating signature in solidity', async() => {
-  //   await testFunctions.testValidateSignature();
-  // })
+  it('Validating signature in solidity', async() => {
+     await testFunctions.testSignatureVerificationInContract();
+  })
 
 })

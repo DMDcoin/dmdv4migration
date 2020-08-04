@@ -271,16 +271,37 @@ var TestFunctions = /** @class */ (function () {
     };
     TestFunctions.prototype.testSignatureToXY = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var message, btcAddressbase58check, signatureBase64, key;
+            var message, signatureBase64, key;
             return __generator(this, function (_a) {
                 message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-                btcAddressbase58check = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
                 signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
                 key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, message);
                 chai_1.expect(key.x).equal("5EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
                 chai_1.expect(key.y).equal("99523EB43291A1067FA819AA5A74F30810B19D15F6EDC19C9D8AA525B0F6C683".toLowerCase());
                 chai_1.expect(key.publicKey).equal("035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
                 return [2 /*return*/];
+            });
+        });
+    };
+    TestFunctions.prototype.testSignatureVerificationInContract = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var address, claimToAddress, signatureBase64, key, rs, txResult1, txResult2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        address = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
+                        claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+                        signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
+                        key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, address);
+                        rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1B', rs.r.toString('hex'), rs.s.toString('hex'))];
+                    case 1:
+                        txResult1 = _a.sent();
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1C', rs.r.toString('hex'), rs.s.toString('hex'))];
+                    case 2:
+                        txResult2 = _a.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };

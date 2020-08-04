@@ -357,4 +357,21 @@ export class TestFunctions {
     expect(key.publicKey).equal("035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
   }
 
+  public async testSignatureVerificationInContract()
+  {
+    const address = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
+    const claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+    const signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
+    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, address);
+
+    const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+
+    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1B', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1C', rs.r.toString('hex'), rs.s.toString('hex'));
+
+    
+    //console.log('Soldity Result: ', txResult);
+
+  }
+
 }
