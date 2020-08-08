@@ -116,8 +116,8 @@ and ARTIS also used this Governance Framework.
 
 ### POSDAO
 
-after a first check of the POSDAO Contracts for Governance,
-i could not find Voting related content.
+PosDao does not include a DAO for funding pool management or for unbinded votings.
+
 
 ### Colony.io
 
@@ -172,6 +172,8 @@ is this based on aave ??
 ### Decret Politeia
 
 Based on Bitcoin-tech. Too far away to get ported.
+
+
 
 ### aragon
 
@@ -290,6 +292,13 @@ A: No problem there, the status is determined at the block when the vote is happ
 
 Q: Can this suppot the upgrade of HBBFT-POSDAO ?
 A: Yes, a Vote can have an execution script, therefore it should be able to make an Update (POC would be nice)
+
+### DAOStack Alchemy
+
+Github: https://github.com/daostack/alchemy
+example installation: https://alchemy.daostack.io/dao/0x519b70055af55a007110b4ff99b0ea33071c720a
+
+TODO: Analyze Level of decentralisation.
 
 
 
