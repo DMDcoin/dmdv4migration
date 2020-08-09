@@ -295,12 +295,18 @@ A: Yes, a Vote can have an execution script, therefore it should be able to make
 
 ### DAOStack Alchemy
 
+Medium: https://medium.com/daostack/an-explanation-of-daostack-in-fairly-simple-terms-1956e26b374
 Github: https://github.com/daostack/alchemy
 example installation: https://alchemy.daostack.io/dao/0x519b70055af55a007110b4ff99b0ea33071c720a
 
-TODO: Analyze Level of decentralisation.
+TODO: Analyze Level of decentralisation,
+higher level components seem to use centralized caching layers.
 
-
+Maybe DMD could just include this caching layer in his RPC Standard definition ?
+The experiences we made so far with ethereum was, that without a caching layer,
+it is almost impossible to achieve fast responsive apps.
+Since most DApps would use a centralized RPC anyway, we could just say that such a 
+caching layer is a mandatory coexistance for DMD.
 
 ### compound governance
 
