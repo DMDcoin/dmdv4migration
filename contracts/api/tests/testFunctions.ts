@@ -432,7 +432,7 @@ export class TestFunctions {
 
     // there for we can make a EC Recover on a bitcoin signed message and 
     // compare it with the Ethereum Signed Message
-    
+
     const signaturesBase64 = this.getTestSignatures();
 
     for (let index = 0; index < signaturesBase64.length; index++) {
@@ -452,20 +452,22 @@ export class TestFunctions {
 
   }
 
+  public async testSignatureVerificationInContract() {
 
-  public async testSignatureVerificationInContract()
-  {
     const address = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
     const claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-    const signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
-    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, address);
+    //const signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
+    const signatureBase64 = this.getTestSignatures()[0];
 
+    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
     const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+
+    console.log('got public key X from signature:', key.x);
 
     const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
     const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
 
-    expect(txResult1 || txResult2, "Claim message did not match the signature");
+    expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
     //console.log('Soldity Result: ', txResult);
   }
 }

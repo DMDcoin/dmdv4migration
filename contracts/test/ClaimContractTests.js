@@ -180,12 +180,14 @@ contract('ClaimContract', (accounts) => {
   //    await testFunctions.testAddressRecovery();
   // })
 
-  // it('Validating signature in solidity', async() => {
-  //    await testFunctions.testSignatureVerificationInContract();
-  // })
 
   it('ECRecover from Contracts matches expected Etherem/Bitcoin pseudo address', async() => {
       await testFunctions.testSolECRecover();
+  })
+
+
+  it('Validating signature in solidity', async() => {
+    await testFunctions.testSignatureVerificationInContract();
   })
   
 

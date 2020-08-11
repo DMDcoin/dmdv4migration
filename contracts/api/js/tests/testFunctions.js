@@ -361,16 +361,17 @@ var TestFunctions = /** @class */ (function () {
                     case 0:
                         address = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
                         claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-                        signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
-                        key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, address);
+                        signatureBase64 = this.getTestSignatures()[0];
+                        key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
                         rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+                        console.log('got public key X from signature:', key.x);
                         return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 1:
                         txResult1 = _a.sent();
                         return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 2:
                         txResult2 = _a.sent();
-                        chai_1.expect(txResult1 || txResult2, "Claim message did not match the signature");
+                        chai_1.expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
                         return [2 /*return*/];
                 }
             });
