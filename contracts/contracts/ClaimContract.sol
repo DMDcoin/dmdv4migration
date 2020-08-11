@@ -412,7 +412,16 @@ contract ClaimContract {
       );
   }
 
-  function getSignatureEthAddress(
+  /**
+  * @dev returns the ethereum pseude address of a DMD signed message.
+  * @param _claimToAddr address target address for the claim.
+  * @param _claimAddrChecksum bool target address was signed using the Ethereum checksum (EIP-55)
+  * @param _v uint8 v component of the signature.
+  * @param _r bytes32 r component of the signature.
+  * @param _s bytes32 s component of the signautre.
+  * @return address DMD pseudo address of the signer. (what would be the address if the same Private Key would have been used on an DMDv3 than in DMDv4)
+  */
+  function getEthAddressFromSignature(
     address _claimToAddr,
     bool    _claimAddrChecksum,
     uint8 _v,

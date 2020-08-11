@@ -67,7 +67,7 @@ export class CryptoSol {
       return result;
     }
 
-    public async getSignatureEthAddress(
+    public async getEthAddressFromSignature(
       claimToAddress: string,
       addressContainsChecksum: boolean,
       sigV: string,
@@ -75,7 +75,7 @@ export class CryptoSol {
       sigS: string | Buffer) 
       : Promise<string> {
 
-      return this.instance.methods.getSignatureEthAddress(
+      return this.instance.methods.getEthAddressFromSignature(
         claimToAddress, 
         addressContainsChecksum,
         ensure0x(sigV),

@@ -322,24 +322,33 @@ var TestFunctions = /** @class */ (function () {
     };
     TestFunctions.prototype.testSolECRecover = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var expectedEthAddress, signatureBase64, message, rs, recoveredETHAddress, recoveredETHAddress2;
+            var expectedEthAddress, message, signaturesBase64, index, signatureBase64, rs, recoveredETHAddress, recoveredETHAddress2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         expectedEthAddress = '0xA5956975DE8711DFcc82DE5f8F5d151c41556656';
-                        signatureBase64 = this.getTestSignatures()[0];
                         message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-                        rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
-                        return [4 /*yield*/, this.cryptoSol.getSignatureEthAddress(message, true, '0x1b', rs.r, rs.s)];
+                        signaturesBase64 = this.getTestSignatures();
+                        index = 0;
+                        _a.label = 1;
                     case 1:
-                        recoveredETHAddress = _a.sent();
-                        return [4 /*yield*/, this.cryptoSol.getSignatureEthAddress(message, true, '0x1c', rs.r, rs.s)];
+                        if (!(index < signaturesBase64.length)) return [3 /*break*/, 5];
+                        signatureBase64 = this.getTestSignatures()[0];
+                        rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+                        return [4 /*yield*/, this.cryptoSol.getEthAddressFromSignature(message, true, '0x1b', rs.r, rs.s)];
                     case 2:
+                        recoveredETHAddress = _a.sent();
+                        return [4 /*yield*/, this.cryptoSol.getEthAddressFromSignature(message, true, '0x1c', rs.r, rs.s)];
+                    case 3:
                         recoveredETHAddress2 = _a.sent();
                         console.log('recovered: ', recoveredETHAddress);
                         console.log('recovered: ', recoveredETHAddress2);
                         chai_1.expect(expectedEthAddress).to.be.oneOf([recoveredETHAddress, recoveredETHAddress2]); // on equal(expectedEthAddress);
-                        return [2 /*return*/];
+                        _a.label = 4;
+                    case 4:
+                        index++;
+                        return [3 /*break*/, 1];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

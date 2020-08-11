@@ -426,33 +426,29 @@ export class TestFunctions {
 
     // https://www.royalfork.org/2017/12/10/eth-graphical-address/
     // passphrase: bit.diamonds
+
     const expectedEthAddress = '0xA5956975DE8711DFcc82DE5f8F5d151c41556656';
+    const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
 
     // there for we can make a EC Recover on a bitcoin signed message and 
     // compare it with the Ethereum Signed Message
     
-    const signatureBase64 = this.getTestSignatures()[0];
+    const signaturesBase64 = this.getTestSignatures();
 
-    const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-    
-    // expecting now the bug in this function: extracting the R and S value
-    // 
-    const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+    for (let index = 0; index < signaturesBase64.length; index++) {
 
+      const signatureBase64 = this.getTestSignatures()[0];
+      const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+      const recoveredETHAddress = await this.cryptoSol.getEthAddressFromSignature(message, true, '0x1b', rs.r, rs.s);
+      const recoveredETHAddress2 = await this.cryptoSol.getEthAddressFromSignature(message, true, '0x1c', rs.r, rs.s);
 
-    const recoveredETHAddress = await this.cryptoSol.getSignatureEthAddress(message, true, '0x1b', rs.r, rs.s);
-    const recoveredETHAddress2 = await this.cryptoSol.getSignatureEthAddress(message, true, '0x1c', rs.r, rs.s);
-
-    console.log('recovered: ', recoveredETHAddress);
-    console.log('recovered: ', recoveredETHAddress2);
+      console.log('recovered: ', recoveredETHAddress);
+      console.log('recovered: ', recoveredETHAddress2);
 
 
-    expect(expectedEthAddress).to.be.oneOf( [recoveredETHAddress ,recoveredETHAddress2] ); // on equal(expectedEthAddress);
+      expect(expectedEthAddress).to.be.oneOf( [recoveredETHAddress ,recoveredETHAddress2] ); // on equal(expectedEthAddress);
 
-    // const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, message);
-    // expect(key.x).equal("5EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
-    // expect(key.y).equal("99523EB43291A1067FA819AA5A74F30810B19D15F6EDC19C9D8AA525B0F6C683".toLowerCase());
-    // expect(key.publicKey).equal("035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
+    }
 
   }
 

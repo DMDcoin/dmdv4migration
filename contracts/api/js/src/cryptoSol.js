@@ -102,10 +102,10 @@ var CryptoSol = /** @class */ (function () {
             });
         });
     };
-    CryptoSol.prototype.getSignatureEthAddress = function (claimToAddress, addressContainsChecksum, sigV, sigR, sigS) {
+    CryptoSol.prototype.getEthAddressFromSignature = function (claimToAddress, addressContainsChecksum, sigV, sigR, sigS) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.instance.methods.getSignatureEthAddress(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
+                return [2 /*return*/, this.instance.methods.getEthAddressFromSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
             });
         });
     };

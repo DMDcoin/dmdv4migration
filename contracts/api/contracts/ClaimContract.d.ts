@@ -91,7 +91,7 @@ export class ClaimContract extends Contract {
       _claimAddrChecksum: boolean
     ): TransactionObject<string>;
 
-    getSignatureEthAddress(
+    getEthAddressFromSignature(
       _claimToAddr: string,
       _claimAddrChecksum: boolean,
       _v: number | string,
