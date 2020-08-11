@@ -153,9 +153,7 @@ contract('ClaimContract', (accounts) => {
     assert.equal(expectedAddress, bs58Result);
   })
 
-
-
-  it('testSignAndRecoverMessageWithBitcoinMessageJS', async() => {
+  it('Test Signing and Verification with Bitcoin Tool: testBitcoinMessageJS', async() => {
     //minimal test if the version of BitcoinMessageJS works as expected.
     testFunctions.testBitcoinMessageJS();
   })
@@ -164,17 +162,22 @@ contract('ClaimContract', (accounts) => {
     await testFunctions.testMessageHashIsCorrect();
   })
 
-
   // it('Retrieve Bitcoin address from signature', async() => {
     
-  //   await testFunctions.testAddressRecovery();
+  //    await testFunctions.testAddressRecovery();
   // })
 
 
-  it('Retrieve Public Key from signature', async() => {
+  it('Retrieve Public Key from signature (testSignatureToXY)', async() => {
     
     await testFunctions.testSignatureToXY();
   })
+
+  it('Retrieve Public Key from multiple signatures (testSignatureToXYMulti)', async() => {
+    
+    await testFunctions.testSignatureToXYMulti();
+  })
+  
 
   it('Validating signature in solidity', async() => {
      await testFunctions.testSignatureVerificationInContract();
