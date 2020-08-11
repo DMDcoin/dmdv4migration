@@ -3,7 +3,7 @@ import ClaimContract from '../contracts/ClaimContract.d'
 import Web3 from 'web3';
 import sha256 from 'js-sha256'
 import { ecrecover } from 'ethereumjs-util'
-import { expect } from 'chai';
+import { expect, assert } from 'chai';
 import varuint from'varuint-bitcoin';
 
 const bitcoin = require('bitcoinjs-lib');
@@ -358,20 +358,12 @@ export class TestFunctions {
   }
 
 
-  public async testSignatureToXYMulti() 
-  {
-    //same test than in testSignatureToXYMulti
-    // But with multi signatures of the same key.
-    // in order to cover different signatures variations,
-    // like short S and short R
+  private getTestSignatures() {
 
-    //https://royalforkblog.github.io/2014/08/11/graphical-address-generator/
-    //passphrase: bit.diamonds
-
-    //signatures created with: https://reinproject.org/bitcoin-signature-tool/#sign
-
-
-    const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+    //returns a bunch of test signatures used in various tests.
+    //those are created with  https://reinproject.org/bitcoin-signature-tool/#sign
+    // the signed message is: "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+    // the private key is: 
     const signaturesBase64 = 
       [ "IA7ZY6Vi52XpL6BKiq74jeP7phdBJO5JqgsEUsmUDZZFNWnsC6X3kknADhJdXCTLcjAUI1bwn1IAVprv/krj7tQ=",
         "IJ42x26AH10GPhfnXdHMzj5KAmjekeaS4sA6uo2unlW+GLJqSSrVW03sYFIouW/oOE6v/uCl5z0jgmbLmOngSXI=",
@@ -386,6 +378,24 @@ export class TestFunctions {
         "IIdIJSBKUExSabzNhmOtOamrTEnLHQeHEMVPM5BBfvYlTEtG3FvWzIWiAUe0ET4LFLWRkO8e6/TboyqYIT1QxgM=",
         "HxqyFxgt2+wWQB0hi5vt2yW7+3Qly+Rf7gNQIF8Ui+Zbj5JCalRrCcrJn2680QJuRBbIA9uc68wWS2J00LENRR8="
       ];
+      return signaturesBase64;
+  }
+
+  public async testSignatureToXYMulti() 
+  {
+    // same test than in testSignatureToXYMulti
+    // But with multi signatures of the same key.
+    // in order to cover different signatures variations,
+    // like short S and short R
+
+    //https://royalforkblog.github.io/2014/08/11/graphical-address-generator/
+    //passphrase: bit.diamonds
+
+    //signatures created with: https://reinproject.org/bitcoin-signature-tool/#sign
+
+
+    const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+    const signaturesBase64 = this.getTestSignatures();
 
     for (let index = 0; index < signaturesBase64.length; index++) {
       const signatureBase64 = signaturesBase64[index];
@@ -394,7 +404,58 @@ export class TestFunctions {
       expect(key.y).equal("99523EB43291A1067FA819AA5A74F30810B19D15F6EDC19C9D8AA525B0F6C683".toLowerCase());
       expect(key.publicKey).equal("035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
     }
+
   }
+
+  public async testSolECRecover()
+  {
+
+    // same test than in testSignatureToXYMulti
+    // But with multi signatures of the same key.
+    // in order to cover different signatures variations,
+    // like short S and short R
+
+    // with this tool, we can create a Bitcoin address from a passphrase, 
+    // also knowing X and Y. 
+
+    // https://royalforkblog.github.io/2014/08/11/graphical-address-generator/
+    // passphrase: bit.diamonds
+
+    // and with this tool we can create the equivalent Ethereum Address, 
+    // with the same X and Y then the Bitcoin ist.
+
+    // https://www.royalfork.org/2017/12/10/eth-graphical-address/
+    // passphrase: bit.diamonds
+    const expectedEthAddress = '0xA5956975DE8711DFcc82DE5f8F5d151c41556656';
+
+    // there for we can make a EC Recover on a bitcoin signed message and 
+    // compare it with the Ethereum Signed Message
+    
+    const signatureBase64 = this.getTestSignatures()[0];
+
+    const message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+    
+    // expecting now the bug in this function: extracting the R and S value
+    // 
+    const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+
+
+    const recoveredETHAddress = await this.cryptoSol.getSignatureEthAddress(message, true, '0x1b', rs.r, rs.s);
+    const recoveredETHAddress2 = await this.cryptoSol.getSignatureEthAddress(message, true, '0x1c', rs.r, rs.s);
+
+    console.log('recovered: ', recoveredETHAddress);
+    console.log('recovered: ', recoveredETHAddress2);
+
+
+    expect(expectedEthAddress).to.be.oneOf( [recoveredETHAddress ,recoveredETHAddress2] ); // on equal(expectedEthAddress);
+
+    // const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, message);
+    // expect(key.x).equal("5EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
+    // expect(key.y).equal("99523EB43291A1067FA819AA5A74F30810B19D15F6EDC19C9D8AA525B0F6C683".toLowerCase());
+    // expect(key.publicKey).equal("035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
+
+  }
+
 
   public async testSignatureVerificationInContract()
   {
@@ -405,12 +466,10 @@ export class TestFunctions {
 
     const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
 
-    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1B', rs.r.toString('hex'), rs.s.toString('hex'));
-    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1C', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
 
-    
+    expect(txResult1 || txResult2, "Claim message did not match the signature");
     //console.log('Soldity Result: ', txResult);
-
   }
-
 }

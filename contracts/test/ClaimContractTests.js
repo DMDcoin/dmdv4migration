@@ -162,10 +162,7 @@ contract('ClaimContract', (accounts) => {
     await testFunctions.testMessageHashIsCorrect();
   })
 
-  // it('Retrieve Bitcoin address from signature', async() => {
-    
-  //    await testFunctions.testAddressRecovery();
-  // })
+
 
 
   it('Retrieve Public Key from signature (testSignatureToXY)', async() => {
@@ -178,9 +175,18 @@ contract('ClaimContract', (accounts) => {
     await testFunctions.testSignatureToXYMulti();
   })
   
+    // it('Retrieve Bitcoin address from signature', async() => {
+    
+  //    await testFunctions.testAddressRecovery();
+  // })
 
-  it('Validating signature in solidity', async() => {
-     await testFunctions.testSignatureVerificationInContract();
+  // it('Validating signature in solidity', async() => {
+  //    await testFunctions.testSignatureVerificationInContract();
+  // })
+
+  it('ECRecover from Contracts matches expected Etherem/Bitcoin pseudo address', async() => {
+      await testFunctions.testSolECRecover();
   })
+  
 
 })

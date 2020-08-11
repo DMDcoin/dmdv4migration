@@ -8,6 +8,9 @@ function remove0x(input) {
 }
 exports.remove0x = remove0x;
 function ensure0x(input) {
+    if (input instanceof Buffer) {
+        input = input.toString('hex');
+    }
     if (!input.startsWith('0x')) {
         return '0x' + input;
     }

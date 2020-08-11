@@ -283,6 +283,67 @@ var TestFunctions = /** @class */ (function () {
             });
         });
     };
+    TestFunctions.prototype.getTestSignatures = function () {
+        //returns a bunch of test signatures used in various tests.
+        //those are created with  https://reinproject.org/bitcoin-signature-tool/#sign
+        // the signed message is: "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+        // the private key is: 
+        var signaturesBase64 = ["IA7ZY6Vi52XpL6BKiq74jeP7phdBJO5JqgsEUsmUDZZFNWnsC6X3kknADhJdXCTLcjAUI1bwn1IAVprv/krj7tQ=",
+            "IJ42x26AH10GPhfnXdHMzj5KAmjekeaS4sA6uo2unlW+GLJqSSrVW03sYFIouW/oOE6v/uCl5z0jgmbLmOngSXI=",
+            "Hw9HBbWTVJkMOqfqy2CscivlB/CzNR3sanGhguYSWtshv5VOjffwEopeES+UnsrLPvYFtgA1jQKWGAyR8lEE3AA=",
+            "H1lPAFpDfLx6tSUyWSRmiYeuHbUaGzy2Lx+FhqXyQ+y/DIg3Ep8xGNyrn5hDDDt314UbPB9E5QpI75JoEU3ZUE4=",
+            "H+FQO+Am4R+k8hzw9U5ImJLCtikbmr8hqVcGfpdjDMnvPIal7HMIINX8WYhQ1LzxiXKoSFDAnJbS9Q8rBAdtZag=",
+            "IOzKhB75qO45TUaXcuHZhW+3fFhFhRHUJhYTK+Rqzlftov1FTt5PeC2p5+tpkF8sYemm5tclPppg4vSt5N0Pp6E=",
+            "IE8itTa9jSnTCC2TwJAyFIk60wbXlz8wpN3htH3+Zb5uLH0QZd60IsouCkyIZem16z9DwscFjPeBWOSmYbH26D0=",
+            "HzwB2jWF13IxdjadcNU/hEapqGBsIrvJIhHqyWx6t8lK5YM9Wg0A6AZ91wwChjAm55ESymyiciS0dxGI2Uakm88=",
+            "IEgJZn56Gd0u5ZnUAXHcCkuBSIHrymvoqsZF8sGDvr0ZiY7yfKJ7RhR4+tWWmjTHHIxOfhv0Wa7FNz7yC8v3LUY=",
+            "IIf+kRcuzsQPbR5bW2W1Kz9urfxmsM0MbGYGuhML1pKdS8JLdUEEVEY86KIN/famgcQw43La02LTg142GBlGwaE=",
+            "IIdIJSBKUExSabzNhmOtOamrTEnLHQeHEMVPM5BBfvYlTEtG3FvWzIWiAUe0ET4LFLWRkO8e6/TboyqYIT1QxgM=",
+            "HxqyFxgt2+wWQB0hi5vt2yW7+3Qly+Rf7gNQIF8Ui+Zbj5JCalRrCcrJn2680QJuRBbIA9uc68wWS2J00LENRR8="
+        ];
+        return signaturesBase64;
+    };
+    TestFunctions.prototype.testSignatureToXYMulti = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var message, signaturesBase64, index, signatureBase64, key;
+            return __generator(this, function (_a) {
+                message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+                signaturesBase64 = this.getTestSignatures();
+                for (index = 0; index < signaturesBase64.length; index++) {
+                    signatureBase64 = signaturesBase64[index];
+                    key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, message);
+                    chai_1.expect(key.x).equal("5EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
+                    chai_1.expect(key.y).equal("99523EB43291A1067FA819AA5A74F30810B19D15F6EDC19C9D8AA525B0F6C683".toLowerCase());
+                    chai_1.expect(key.publicKey).equal("035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040".toLowerCase());
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    TestFunctions.prototype.testSolECRecover = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var expectedEthAddress, signatureBase64, message, rs, recoveredETHAddress, recoveredETHAddress2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        expectedEthAddress = '0xA5956975DE8711DFcc82DE5f8F5d151c41556656';
+                        signatureBase64 = this.getTestSignatures()[0];
+                        message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+                        rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+                        return [4 /*yield*/, this.cryptoSol.getSignatureEthAddress(message, true, '0x1b', rs.r, rs.s)];
+                    case 1:
+                        recoveredETHAddress = _a.sent();
+                        return [4 /*yield*/, this.cryptoSol.getSignatureEthAddress(message, true, '0x1c', rs.r, rs.s)];
+                    case 2:
+                        recoveredETHAddress2 = _a.sent();
+                        console.log('recovered: ', recoveredETHAddress);
+                        console.log('recovered: ', recoveredETHAddress2);
+                        chai_1.expect(expectedEthAddress).to.be.oneOf([recoveredETHAddress, recoveredETHAddress2]); // on equal(expectedEthAddress);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     TestFunctions.prototype.testSignatureVerificationInContract = function () {
         return __awaiter(this, void 0, void 0, function () {
             var address, claimToAddress, signatureBase64, key, rs, txResult1, txResult2;
@@ -294,12 +355,13 @@ var TestFunctions = /** @class */ (function () {
                         signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
                         key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, address);
                         rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1B', rs.r.toString('hex'), rs.s.toString('hex'))];
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 1:
                         txResult1 = _a.sent();
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1C', rs.r.toString('hex'), rs.s.toString('hex'))];
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 2:
                         txResult2 = _a.sent();
+                        chai_1.expect(txResult1 || txResult2, "Claim message did not match the signature");
                         return [2 /*return*/];
                 }
             });

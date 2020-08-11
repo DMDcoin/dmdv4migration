@@ -412,6 +412,27 @@ contract ClaimContract {
       );
   }
 
+  function getSignatureEthAddress(
+    address _claimToAddr,
+    bool    _claimAddrChecksum,
+    uint8 _v,
+    bytes32 _r,
+    bytes32 _s
+  )
+  public
+  pure
+  returns (address)
+  {
+    //require(_v >= 27 && _v <= 30, "v invalid");
+
+     /* Create and hash the claim message text */
+      bytes32 messageHash = calcHash256(
+          createClaimMessage(_claimToAddr, _claimAddrChecksum)
+      );
+
+    return ecrecover(messageHash, _v, _r, _s);
+  }
+
   function claimMessageMatchesSignature(
     address _claimToAddr,
     bool    _claimAddrChecksum,

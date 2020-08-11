@@ -6,12 +6,19 @@ export function remove0x(input: string) {
   return input;
 }
 
-export function ensure0x(input: string) {
+export function ensure0x(input: string | Buffer) {
+
+  if (input instanceof Buffer) {
+    input = input.toString('hex');
+  }
+
   if (!input.startsWith('0x')) {
     return '0x' + input;
   }
   return input;
+
 }
+
 
 export function hexToBuf(input: string) : Buffer {
   return Buffer.from(remove0x(input), 'hex');

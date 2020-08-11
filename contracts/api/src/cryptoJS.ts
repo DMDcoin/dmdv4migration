@@ -50,22 +50,22 @@ export class CryptoJS {
   
   public signatureBase64ToRSV(signatureBase64: string) : { r: Buffer, s: Buffer, v: number }
   {
-    var ec = new EC.ec('secp256k1');
+    //var ec = new EC.ec('secp256k1');
 
     //const input = new EC. SignatureInput();
     
 
-    const signature = new EC.ec.Signature(signatureBase64, 'base64');
+    // const signature = new EC.ec.Signature(signatureBase64, 'base64');
 
-    const rr = signature.r.toBuffer();
-    const ss = signature.s.toBuffer();
-    const vv = signature.recoveryParam;
+    // const rr = signature.r.toBuffer();
+    // const ss = signature.s.toBuffer();
+    // const vv = signature.recoveryParam;
 
-    console.log(`r: ${rr.toString('hex')}`);
-    console.log(`s: ${ss.toString('hex')}`);
-    console.log(`v: ${vv}`);
+    // console.log(`r: ${rr.toString('hex')}`);
+    // console.log(`s: ${ss.toString('hex')}`);
+    // console.log(`v: ${vv}`);
 
-    return { r: rr, s: ss, v: vv};
+    // return { r: rr, s: ss, v: vv};
 
     // where is the encoding of the signature documented ?
     //is that DER encoding ? Or the Significant part of DER ?

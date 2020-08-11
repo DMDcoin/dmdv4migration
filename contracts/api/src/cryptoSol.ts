@@ -44,13 +44,44 @@ export class CryptoSol {
   }
 
 
-  public async claimMessageMatchesSignature(claimToAddress: string, addressContainsChecksum: boolean,
-    pubkeyX: string, pubkeyY: string,
+  public async claimMessageMatchesSignature(
+    claimToAddress: string,
+    addressContainsChecksum: boolean,
+    pubkeyX: string,
+    pubkeyY: string,
     sigV: string,
     sigR: string,
-    sigS: string) 
+    sigS: string) :
+    Promise<boolean>
     {
-      const result = await this.instance.methods.claimMessageMatchesSignature(claimToAddress, addressContainsChecksum, ensure0x(pubkeyX), ensure0x(pubkeyY), ensure0x(sigV),ensure0x(sigR), ensure0x(sigS)).call();
+      const result = 
+        await this.instance.methods.claimMessageMatchesSignature(
+          claimToAddress, 
+          addressContainsChecksum, 
+          ensure0x(pubkeyX), 
+          ensure0x(pubkeyY), 
+          ensure0x(sigV),
+          ensure0x(sigR), 
+          ensure0x(sigS)).call();
       console.log('Claim Result: ', result);
+      return result;
+    }
+
+    public async getSignatureEthAddress(
+      claimToAddress: string,
+      addressContainsChecksum: boolean,
+      sigV: string,
+      sigR: string | Buffer,
+      sigS: string | Buffer) 
+      : Promise<string> {
+
+      return this.instance.methods.getSignatureEthAddress(
+        claimToAddress, 
+        addressContainsChecksum,
+        ensure0x(sigV),
+        ensure0x(sigR), 
+        ensure0x(sigS)
+      ).call();
+
     }
 }

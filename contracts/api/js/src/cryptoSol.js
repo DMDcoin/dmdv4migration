@@ -97,8 +97,15 @@ var CryptoSol = /** @class */ (function () {
                     case 1:
                         result = _a.sent();
                         console.log('Claim Result: ', result);
-                        return [2 /*return*/];
+                        return [2 /*return*/, result];
                 }
+            });
+        });
+    };
+    CryptoSol.prototype.getSignatureEthAddress = function (claimToAddress, addressContainsChecksum, sigV, sigR, sigS) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.instance.methods.getSignatureEthAddress(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
             });
         });
     };
