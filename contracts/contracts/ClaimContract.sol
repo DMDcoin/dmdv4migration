@@ -339,19 +339,19 @@ contract ClaimContract {
 
   /**
   * @dev calculates the address string representation of the signed address.
-  * @param addr address
-  * @param includeAddrChecksum bool. should the addressChecksum be used for this caluclation.
+  * @param _addr address
+  * @param _includeAddrChecksum bool. should the addressChecksum be used for this caluclation.
   * @return addrStr ethereum address(24 byte)
   */
-  function calculateAddressString(address addr, bool includeAddrChecksum)
+  function calculateAddressString(address _addr, bool _includeAddrChecksum)
     public
     pure
     returns (bytes memory addrStr)
   {
       bytes memory tmp = new bytes(ETH_ADDRESS_HEX_LEN);
-      _hexStringFromData(tmp, bytes32(bytes20(addr)), 0, ETH_ADDRESS_BYTE_LEN);
+      _hexStringFromData(tmp, bytes32(bytes20(_addr)), 0, ETH_ADDRESS_BYTE_LEN);
 
-      if (includeAddrChecksum) {
+      if (_includeAddrChecksum) {
           bytes32 addrStrHash = keccak256(tmp);
 
           uint256 offset = 0;
@@ -379,8 +379,13 @@ contract ClaimContract {
       return addrStr;
   }
 
-
-  function createClaimMessage(address claimToAddr, bool claimToAddrChecksum)
+  /**
+  * @dev returns the hash for the provided claim target address.
+  * @param _claimToAddr address target address for the claim.
+  * @param _claimAddrChecksum bool target address was signed using the Ethereum checksum (EIP-55)
+  * @return bytes32 DMD style hash of the claim message.
+  */
+  function createClaimMessage(address _claimToAddr, bool _claimAddrChecksum)
         public
         pure
         returns (bytes memory)
@@ -390,7 +395,7 @@ contract ClaimContract {
         //TODO: pass this as an argument. evaluate in JS before includeAddrChecksum is used or not.
         //now for testing, we assume Yes.
 
-        bytes memory addrStr = calculateAddressString(claimToAddr, claimToAddrChecksum);
+        bytes memory addrStr = calculateAddressString(_claimToAddr, _claimAddrChecksum);
 
         return abi.encodePacked(
                 BITCOIN_SIG_PREFIX_LEN,
@@ -400,6 +405,13 @@ contract ClaimContract {
                 addrStr
             );
     }
+
+  /**
+  * @dev returns the hash for the provided claim target address.
+  * @param _claimToAddr address target address for the claim.
+  * @param _claimAddrChecksum bool target address was signed using the Ethereum checksum (EIP-55)
+  * @return bytes32 DMD style hash of the claim message.
+  */
   function getHashForClaimMessage(
     address _claimToAddr,
     bool  _claimAddrChecksum)

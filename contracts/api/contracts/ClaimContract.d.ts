@@ -77,13 +77,13 @@ export class ClaimContract extends Contract {
     calcHash256(data: string | number[]): TransactionObject<string>;
 
     calculateAddressString(
-      addr: string,
-      includeAddrChecksum: boolean
+      _addr: string,
+      _includeAddrChecksum: boolean
     ): TransactionObject<string>;
 
     createClaimMessage(
-      claimToAddr: string,
-      claimToAddrChecksum: boolean
+      _claimToAddr: string,
+      _claimAddrChecksum: boolean
     ): TransactionObject<string>;
 
     getHashForClaimMessage(

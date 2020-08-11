@@ -18,3 +18,7 @@ and run the testscript on it:
 ## Developing
 
 
+## Todo List
+
+- unify spaces to 4 indents
+- linter integration for Typescript and Solidity
