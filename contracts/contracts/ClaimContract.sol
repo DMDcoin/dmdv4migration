@@ -1,7 +1,5 @@
 pragma solidity >=0.6.2 <0.7.0;
 
-import { EC } from  './EC.sol';
-
 contract ClaimContract {
 
   enum AddressType { LegacyUncompressed, LegacyCompressed, SegwitUncompressed, SegwitCompressed }
