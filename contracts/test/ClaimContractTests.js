@@ -7,7 +7,7 @@ var CryptoJS = require('../api/js/src/cryptoJS');
 var EC = require('elliptic').ec;
 var BN = require('bn.js');
 var ec = new EC('secp256k1');
-var bs58check = require('bs58check');
+
 
 //const { default: cryptoJS } = require('../api/js/cryptoJS');
 
@@ -129,28 +129,8 @@ contract('ClaimContract', (accounts) => {
   })
 
 
-  it('contract function PublicKeyToBitcoinAddress (PublicKey to DMDAddress)', async() => {
-    // https://royalforkblog.github.io/2014/08/11/graphical-address-generator/
-    // passphrase: bit.diamonds
-    const publicKeyHex = '035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040';
-    const expectedAddress = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';    
-    var ec = new EC('secp256k1');
-    var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
-    var x = publicKey.getX();
-    var y = publicKey.getY();
-    console.log("pub key:" + publicKey.toString('hex'));
-    console.log("x :" + x.toString('hex'));
-    console.log("y :" + y.toString('hex'));
-    const legacyCompressedEnumValue = 1;
-  
-    const resultHex = await claimContract.contract.methods.PublicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
-    console.log('PublicKeyToBitcoinAddress:', resultHex);
-    let result = hexToBuf(resultHex);
-    result = prefixBuf(result, '00');
-    console.log('with prefix: ' + result.toString('hex'));
-    
-    const bs58Result = bs58check.encode(result);
-    assert.equal(expectedAddress, bs58Result);
+  it('contract function PublicKeyToDMDAddress (PublicKey to DMDAddress)', async() => {
+    await testFunctions.testPublicKeyToDMDAddress();
   })
 
   it('Test Signing and Verification with Bitcoin Tool: testBitcoinMessageJS', async() => {

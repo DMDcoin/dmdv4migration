@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var cryptoHelpers_1 = require("./cryptoHelpers");
+var cryptoJS_1 = require("./cryptoJS");
 /**
  * Crypto functions used in this project implemented in Soldity.
  */
@@ -44,6 +45,7 @@ var CryptoSol = /** @class */ (function () {
     function CryptoSol(web3Instance, instance) {
         this.web3Instance = web3Instance;
         this.instance = instance;
+        this.cryptoJS = new cryptoJS_1.CryptoJS();
         if (instance === undefined || instance === null) {
             throw Error("Claim contract must be defined!!");
         }
@@ -106,6 +108,34 @@ var CryptoSol = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.instance.methods.getEthAddressFromSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
+            });
+        });
+    };
+    /**
+     * returns the essential part of a Bitcoin-style legacy compressed address associated with the given ECDSA public key
+     * @param x X coordinate of the ECDSA public key
+     * @param y Y coordinate of the ECDSA public key
+     * @returns Hex string holding the essential part of the legacy compressed address associated with the given ECDSA public key
+     */
+    CryptoSol.prototype.publicKeyToBitcoinAddressEssential = function (x, y) {
+        return __awaiter(this, void 0, void 0, function () {
+            var legacyCompressedEnumValue;
+            return __generator(this, function (_a) {
+                legacyCompressedEnumValue = 1;
+                return [2 /*return*/, this.instance.methods.PublicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call()];
+            });
+        });
+    };
+    CryptoSol.prototype.publicKeyToBitcoinAddress = function (x, y, addressPrefix) {
+        return __awaiter(this, void 0, void 0, function () {
+            var essentialPart;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.publicKeyToBitcoinAddressEssential(x, y)];
+                    case 1:
+                        essentialPart = _a.sent();
+                        return [2 /*return*/, this.cryptoJS.bitcoinAddressEssentialToFullQualifiedAddress(essentialPart, addressPrefix)];
+                }
             });
         });
     };

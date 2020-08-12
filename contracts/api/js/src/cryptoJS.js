@@ -41,6 +41,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var base58check_1 = __importDefault(require("base58check"));
 var elliptic_1 = __importDefault(require("elliptic"));
+var cryptoHelpers_1 = require("./cryptoHelpers");
+var bs58check = require('bs58check');
 //import { toBase58Check, fromBase58Check } from 'bitcoinjs-lib/types/address';
 //var bs58check = require('bs58check');
 var bitcoinMessage = require('bitcoinjs-message');
@@ -146,6 +148,25 @@ var CryptoJS = /** @class */ (function () {
         var y = key.getPublic().getY().toString('hex');
         console.log("y: " + y);
         return { publicKey: publicKey.toString('hex'), x: x, y: y };
+    };
+    CryptoJS.prototype.getXYfromPublicKeyHex = function (publicKeyHex) {
+        var ec = new elliptic_1["default"].ec('secp256k1');
+        var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
+        var x = publicKey.getX();
+        var y = publicKey.getY();
+        //console.log("pub key:" + publicKey.toString('hex'));
+        //console.log("x :" + x.toString('hex'));
+        //console.log("y :" + y.toString('hex'));
+        return { x: x, y: y };
+    };
+    CryptoJS.prototype.bitcoinAddressEssentialToFullQualifiedAddress = function (essentialPart, addressPrefix) {
+        if (addressPrefix === void 0) { addressPrefix = '00'; }
+        // console.log('PublicKeyToBitcoinAddress:', essentialPart);
+        var result = cryptoHelpers_1.hexToBuf(essentialPart);
+        result = cryptoHelpers_1.prefixBuf(result, addressPrefix);
+        //console.log('with prefix: ' + result.toString('hex'));
+        var bs58Result = bs58check.encode(result);
+        return bs58Result;
     };
     return CryptoJS;
 }());

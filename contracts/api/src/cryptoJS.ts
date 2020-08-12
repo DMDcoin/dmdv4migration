@@ -3,7 +3,9 @@ import base58check from 'base58check';
 import EC from 'elliptic'
 import { BN } from 'ethereumjs-util';
 
+import { hexToBuf, prefixBuf } from './cryptoHelpers'
 
+var bs58check = require('bs58check');
 
 //import { toBase58Check, fromBase58Check } from 'bitcoinjs-lib/types/address';
 //var bs58check = require('bs58check');
@@ -21,7 +23,7 @@ const SEGWIT_TYPES = {
  * Crypto functions used in this project implemented in JS.
  */
 export class CryptoJS {
-
+  
   public constructor() {
     
   }
@@ -159,4 +161,30 @@ export class CryptoJS {
 
     return {publicKey: publicKey.toString('hex'), x, y};
   }
+
+
+  public getXYfromPublicKeyHex(publicKeyHex: string) : { x: BN; y: BN; } {
+    var ec = new EC.ec('secp256k1');
+    var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
+    var x = publicKey.getX();
+    var y = publicKey.getY();
+    //console.log("pub key:" + publicKey.toString('hex'));
+    //console.log("x :" + x.toString('hex'));
+    //console.log("y :" + y.toString('hex'));
+    return { x, y};
+  }
+
+
+  public bitcoinAddressEssentialToFullQualifiedAddress(essentialPart: string, addressPrefix = '00') {
+
+    // console.log('PublicKeyToBitcoinAddress:', essentialPart);
+    let result = hexToBuf(essentialPart);
+    result = prefixBuf(result, addressPrefix);
+    //console.log('with prefix: ' + result.toString('hex'));
+    
+    const bs58Result = bs58check.encode(result);
+    
+    return bs58Result;
+  }
+
 }

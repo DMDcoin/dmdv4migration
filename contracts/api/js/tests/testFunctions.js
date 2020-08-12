@@ -42,11 +42,11 @@ exports.__esModule = true;
 var js_sha256_1 = __importDefault(require("js-sha256"));
 var chai_1 = require("chai");
 var varuint_bitcoin_1 = __importDefault(require("varuint-bitcoin"));
-var bitcoin = require('bitcoinjs-lib');
-var bitcoinMessage = require('bitcoinjs-message');
 var cryptoJS_1 = require("../src/cryptoJS");
 var elliptic_1 = __importDefault(require("elliptic"));
 var cryptoSol_1 = require("../src/cryptoSol");
+var bitcoin = require('bitcoinjs-lib');
+var bitcoinMessage = require('bitcoinjs-message');
 var TestFunctions = /** @class */ (function () {
     function TestFunctions(web3Instance, instance) {
         this.web3Instance = web3Instance;
@@ -57,35 +57,26 @@ var TestFunctions = /** @class */ (function () {
         }
         this.cryptoSol = new cryptoSol_1.CryptoSol(web3Instance, instance);
     }
-    TestFunctions.prototype.testValidateSignature = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var addressToSign, btcSignature, btcAddress, signature, sig, v, r, s, hashOfSignedInfo;
-            return __generator(this, function (_a) {
-                addressToSign = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-                btcSignature = "IHe2FvaAsIbIEvb47prSFg3rXNHlE91p2WYtpxIpPA30W6zgvzwc3wQ90nnA12LbL2aKo3a0jjgbN6xM7EOu/hE=";
-                btcAddress = "1BzFQE9RWjNQEuN2pJTFEHN21LureERhKX";
-                signature = btcSignature;
-                sig = new Buffer(signature, 'base64');
-                //console.log('Length: ' + dmdSignatureBuffer.length);
-                //130 chars = 65 bytes => R, S, V.
-                //let dmdSignatureHex2 = '20826b807d8b55f95adb5e1f39b7c61ccbc457198432d6635caf5f093ff73d6a67612cc64b40195b35c38462adf708d7e99e95d2a4b5805344ed165e5120fad425';
-                //let dmdSignatureHex = '20826b807d8b55f95adb5e1f39b7c61ccbc457198432d6635caf5f093ff73d6a67612cc64b40195b35c38462adf708d7e99e95d2a4b5805344ed165e5120fad425';
-                if (sig.byteLength != 65) {
-                    throw Error("Expected length of 65. got: " + sig.byteLength);
-                }
-                console.log(sig);
-                v = Array.from(sig.slice(0, 1));
-                r = Array.from(sig.slice(1, 33));
-                s = Array.from(sig.slice(33, 65));
-                console.log('r', r);
-                console.log('s', s);
-                console.log('v', v);
-                hashOfSignedInfo = "";
-                return [2 /*return*/];
-            });
-        });
+    TestFunctions.prototype.getTestSignatures = function () {
+        //returns a bunch of test signatures used in various tests.
+        //those are created with  https://reinproject.org/bitcoin-signature-tool/#sign
+        // the signed message is: "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+        // the private key is: 
+        var signaturesBase64 = ["IA7ZY6Vi52XpL6BKiq74jeP7phdBJO5JqgsEUsmUDZZFNWnsC6X3kknADhJdXCTLcjAUI1bwn1IAVprv/krj7tQ=",
+            "IJ42x26AH10GPhfnXdHMzj5KAmjekeaS4sA6uo2unlW+GLJqSSrVW03sYFIouW/oOE6v/uCl5z0jgmbLmOngSXI=",
+            "Hw9HBbWTVJkMOqfqy2CscivlB/CzNR3sanGhguYSWtshv5VOjffwEopeES+UnsrLPvYFtgA1jQKWGAyR8lEE3AA=",
+            "H1lPAFpDfLx6tSUyWSRmiYeuHbUaGzy2Lx+FhqXyQ+y/DIg3Ep8xGNyrn5hDDDt314UbPB9E5QpI75JoEU3ZUE4=",
+            "H+FQO+Am4R+k8hzw9U5ImJLCtikbmr8hqVcGfpdjDMnvPIal7HMIINX8WYhQ1LzxiXKoSFDAnJbS9Q8rBAdtZag=",
+            "IOzKhB75qO45TUaXcuHZhW+3fFhFhRHUJhYTK+Rqzlftov1FTt5PeC2p5+tpkF8sYemm5tclPppg4vSt5N0Pp6E=",
+            "IE8itTa9jSnTCC2TwJAyFIk60wbXlz8wpN3htH3+Zb5uLH0QZd60IsouCkyIZem16z9DwscFjPeBWOSmYbH26D0=",
+            "HzwB2jWF13IxdjadcNU/hEapqGBsIrvJIhHqyWx6t8lK5YM9Wg0A6AZ91wwChjAm55ESymyiciS0dxGI2Uakm88=",
+            "IEgJZn56Gd0u5ZnUAXHcCkuBSIHrymvoqsZF8sGDvr0ZiY7yfKJ7RhR4+tWWmjTHHIxOfhv0Wa7FNz7yC8v3LUY=",
+            "IIf+kRcuzsQPbR5bW2W1Kz9urfxmsM0MbGYGuhML1pKdS8JLdUEEVEY86KIN/famgcQw43La02LTg142GBlGwaE=",
+            "IIdIJSBKUExSabzNhmOtOamrTEnLHQeHEMVPM5BBfvYlTEtG3FvWzIWiAUe0ET4LFLWRkO8e6/TboyqYIT1QxgM=",
+            "HxqyFxgt2+wWQB0hi5vt2yW7+3Qly+Rf7gNQIF8Ui+Zbj5JCalRrCcrJn2680QJuRBbIA9uc68wWS2J00LENRR8="
+        ];
+        return signaturesBase64;
     };
-    ;
     TestFunctions.prototype.messageToHashToSign = function (message) {
         // https://bitcoin.stackexchange.com/questions/36838/why-does-the-standard-bitcoin-message-signature-include-a-magic-prefix
         var bitcoinPrefixString = '\x18Bitcoin Signed Message:\n';
@@ -283,26 +274,6 @@ var TestFunctions = /** @class */ (function () {
             });
         });
     };
-    TestFunctions.prototype.getTestSignatures = function () {
-        //returns a bunch of test signatures used in various tests.
-        //those are created with  https://reinproject.org/bitcoin-signature-tool/#sign
-        // the signed message is: "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-        // the private key is: 
-        var signaturesBase64 = ["IA7ZY6Vi52XpL6BKiq74jeP7phdBJO5JqgsEUsmUDZZFNWnsC6X3kknADhJdXCTLcjAUI1bwn1IAVprv/krj7tQ=",
-            "IJ42x26AH10GPhfnXdHMzj5KAmjekeaS4sA6uo2unlW+GLJqSSrVW03sYFIouW/oOE6v/uCl5z0jgmbLmOngSXI=",
-            "Hw9HBbWTVJkMOqfqy2CscivlB/CzNR3sanGhguYSWtshv5VOjffwEopeES+UnsrLPvYFtgA1jQKWGAyR8lEE3AA=",
-            "H1lPAFpDfLx6tSUyWSRmiYeuHbUaGzy2Lx+FhqXyQ+y/DIg3Ep8xGNyrn5hDDDt314UbPB9E5QpI75JoEU3ZUE4=",
-            "H+FQO+Am4R+k8hzw9U5ImJLCtikbmr8hqVcGfpdjDMnvPIal7HMIINX8WYhQ1LzxiXKoSFDAnJbS9Q8rBAdtZag=",
-            "IOzKhB75qO45TUaXcuHZhW+3fFhFhRHUJhYTK+Rqzlftov1FTt5PeC2p5+tpkF8sYemm5tclPppg4vSt5N0Pp6E=",
-            "IE8itTa9jSnTCC2TwJAyFIk60wbXlz8wpN3htH3+Zb5uLH0QZd60IsouCkyIZem16z9DwscFjPeBWOSmYbH26D0=",
-            "HzwB2jWF13IxdjadcNU/hEapqGBsIrvJIhHqyWx6t8lK5YM9Wg0A6AZ91wwChjAm55ESymyiciS0dxGI2Uakm88=",
-            "IEgJZn56Gd0u5ZnUAXHcCkuBSIHrymvoqsZF8sGDvr0ZiY7yfKJ7RhR4+tWWmjTHHIxOfhv0Wa7FNz7yC8v3LUY=",
-            "IIf+kRcuzsQPbR5bW2W1Kz9urfxmsM0MbGYGuhML1pKdS8JLdUEEVEY86KIN/famgcQw43La02LTg142GBlGwaE=",
-            "IIdIJSBKUExSabzNhmOtOamrTEnLHQeHEMVPM5BBfvYlTEtG3FvWzIWiAUe0ET4LFLWRkO8e6/TboyqYIT1QxgM=",
-            "HxqyFxgt2+wWQB0hi5vt2yW7+3Qly+Rf7gNQIF8Ui+Zbj5JCalRrCcrJn2680QJuRBbIA9uc68wWS2J00LENRR8="
-        ];
-        return signaturesBase64;
-    };
     TestFunctions.prototype.testSignatureToXYMulti = function () {
         return __awaiter(this, void 0, void 0, function () {
             var message, signaturesBase64, index, signatureBase64, key;
@@ -349,6 +320,24 @@ var TestFunctions = /** @class */ (function () {
                         index++;
                         return [3 /*break*/, 1];
                     case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    TestFunctions.prototype.testPublicKeyToDMDAddress = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var publicKeyHex, expectedAddress, _a, x, y, bs58Result;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        publicKeyHex = '035EF44A6382FABDCB62425D68A0C61998881A1417B9ED068513310DBAE8C61040';
+                        expectedAddress = '1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj';
+                        _a = this.cryptoJS.getXYfromPublicKeyHex(publicKeyHex), x = _a.x, y = _a.y;
+                        return [4 /*yield*/, this.cryptoSol.publicKeyToBitcoinAddress(x, y, '00')];
+                    case 1:
+                        bs58Result = _b.sent();
+                        chai_1.assert.equal(expectedAddress, bs58Result);
+                        return [2 /*return*/];
                 }
             });
         });

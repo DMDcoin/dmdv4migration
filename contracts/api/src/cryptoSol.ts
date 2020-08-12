@@ -2,11 +2,14 @@
 import Web3 from 'web3';
 import ClaimContract from '../contracts/ClaimContract';
 import { ensure0x } from './cryptoHelpers';
-
+import { BN } from 'ethereumjs-util';
+import { CryptoJS } from './cryptoJS';
 /**
  * Crypto functions used in this project implemented in Soldity.
  */
 export class CryptoSol {
+
+  public cryptoJS = new CryptoJS();
 
   public constructor(public web3Instance: Web3, public instance : ClaimContract.ClaimContract) {
     
@@ -82,6 +85,23 @@ export class CryptoSol {
         ensure0x(sigR), 
         ensure0x(sigS)
       ).call();
+    }
 
+    /**
+     * returns the essential part of a Bitcoin-style legacy compressed address associated with the given ECDSA public key
+     * @param x X coordinate of the ECDSA public key
+     * @param y Y coordinate of the ECDSA public key
+     * @returns Hex string holding the essential part of the legacy compressed address associated with the given ECDSA public key
+     */
+    async publicKeyToBitcoinAddressEssential(x: BN, y: BN) : Promise<string> {
+      const legacyCompressedEnumValue = 1;
+      return this.instance.methods.PublicKeyToBitcoinAddress(
+        '0x' + x.toString('hex'),
+        '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
+    }
+
+    async publicKeyToBitcoinAddress(x: BN, y: BN, addressPrefix: string) {
+      const essentialPart = await this.publicKeyToBitcoinAddressEssential(x, y);
+      return this.cryptoJS.bitcoinAddressEssentialToFullQualifiedAddress(essentialPart, addressPrefix);
     }
 }

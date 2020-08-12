@@ -42,25 +42,11 @@ contract ClaimContract {
     );
   }
 
-
-//  function getPublicKeyFromSignature(bytes65 memory signatureBytes)
-//  public
-//  pure
-//  returns(string memory)
-//  {
-    //#1: decode bitcoin signature.
-    //# get R, S, V and Hash of Signature.
-    //# do ecrecover on it.
-    //return "todo: implement this magic!";
-//  }
-
-
-
-    /// @dev Calculate the Bitcoin-style address associated with an ECDSA public key
-    /// @param a_publicKeyX First half of ECDSA public key
-    /// @param a_publicKeyY Second half of ECDSA public key
+    /// @dev returns the essential part of a Bitcoin-style address associated with an ECDSA public key
+    /// @param a_publicKeyX X coordinate of the ECDSA public key
+    /// @param a_publicKeyY Y coordinate of the ECDSA public key
     /// @param a_nAddressType Whether DMD is Legacy or Segwit address and if it was compressed
-    /// @return Raw DMD address
+    /// @return Raw parts of the Bitcoin Style address
     function PublicKeyToBitcoinAddress(
         bytes32 a_publicKeyX,
         bytes32 a_publicKeyY,
@@ -71,9 +57,9 @@ contract ClaimContract {
         uint8 initialByte;
         if(a_nAddressType == AddressType.LegacyCompressed || a_nAddressType == AddressType.SegwitCompressed)
         {
-                //Hash the compressed format
-                initialByte = (uint256(a_publicKeyY) & 1) == 0 ? 0x02 : 0x03;
-                publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, a_publicKeyX))));
+            //Hash the compressed format
+            initialByte = (uint256(a_publicKeyY) & 1) == 0 ? 0x02 : 0x03;
+            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, a_publicKeyX))));
         }
         else
         {
