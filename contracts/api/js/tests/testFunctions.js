@@ -35,6 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -52,11 +59,21 @@ var TestFunctions = /** @class */ (function () {
         this.web3Instance = web3Instance;
         this.instance = instance;
         this.cryptoJS = new cryptoJS_1.CryptoJS();
+        this.logDebug = false;
         if (instance === undefined || instance === null) {
             throw Error("Claim contract must be defined!!");
         }
         this.cryptoSol = new cryptoSol_1.CryptoSol(web3Instance, instance);
     }
+    TestFunctions.prototype.log = function (message) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        if (this.logDebug) {
+            console.log.apply(console, __spreadArrays([message], params));
+        }
+    };
     TestFunctions.prototype.getTestSignatures = function () {
         //returns a bunch of test signatures used in various tests.
         //those are created with  https://reinproject.org/bitcoin-signature-tool/#sign
@@ -96,10 +113,10 @@ var TestFunctions = /** @class */ (function () {
         var buffer = Buffer.alloc(bitcoinPrefixBuffer.byteLength + messageBuffer.byteLength);
         bitcoinPrefixBuffer.copy(buffer, 0);
         messageBuffer.copy(buffer, bitcoinPrefixBuffer.length);
-        console.log("Buffer to sign:");
-        console.log(buffer.toString('hex'));
+        this.log("Buffer to sign:");
+        this.log(buffer.toString('hex'));
         var hashResult = js_sha256_1["default"].sha256(js_sha256_1["default"].sha256(messageBuffer));
-        console.log('HashResult: ' + hashResult);
+        this.log('HashResult: ' + hashResult);
         // 6b4539ed373c9977a4b66f9abdece0884bb9e546ed4a76855297edb703d05486
         var hashResultString = hashResult;
         if (hashResultString) {
@@ -154,14 +171,14 @@ var TestFunctions = /** @class */ (function () {
                         return [4 /*yield*/, this.instance.methods.createClaimMessage(message, true).call()];
                     case 1:
                         claimMessage = _a.sent();
-                        console.log('Claim Message:');
-                        console.log(claimMessage);
+                        this.log('Claim Message:');
+                        this.log(claimMessage);
                         return [4 /*yield*/, this.instance.methods.calcHash256(claimMessage).call()];
                     case 2:
                         hashResultSolidity = _a.sent();
-                        console.log('hash Result Solidity:', hashResultSolidity);
+                        this.log('hash Result Solidity:', hashResultSolidity);
                         hash = Buffer.from(hashResultSolidity, 'hex');
-                        console.log("hash: " + hash.toString('hex'));
+                        this.log("hash: " + hash.toString('hex'));
                         sig = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
                         hashHex = '0x' + hash.toString('hex');
                         rHex = '0x' + sig.r.toString('hex');
@@ -173,16 +190,16 @@ var TestFunctions = /** @class */ (function () {
                         recoverResult28 = ec.recoverPubKey(hash, sig28, 1);
                         xy27 = this.recoveryToXY(recoverResult27);
                         xy28 = this.recoveryToXY(recoverResult28);
-                        console.log('xy27: ', xy27);
-                        console.log('xy28: ', xy28);
+                        this.log('xy27: ', xy27);
+                        this.log('xy28: ', xy28);
                         return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call()];
                     case 3:
                         result27 = _a.sent();
                         return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy28.x, xy28.y, 28, rHex, sHex).call()];
                     case 4:
                         result28 = _a.sent();
-                        console.log('result27: ', result27);
-                        console.log('result28: ', result28);
+                        this.log('result27: ', result27);
+                        this.log('result28: ', result28);
                         return [2 /*return*/];
                 }
             });
@@ -193,9 +210,9 @@ var TestFunctions = /** @class */ (function () {
         var privateKey = keyPair.privateKey;
         var message = 'This is an example of a signed message.';
         var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
-        console.log(signature.toString('base64'));
+        this.log(signature.toString('base64'));
         var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed, { segwitType: 'p2sh(p2wpkh)' });
-        console.log(signature.toString('base64'));
+        this.log(signature.toString('base64'));
     };
     TestFunctions.prototype.testBitcoinMessageJS = function () {
         var privateKeyWid = 'L3qEYQGUWwhFvkR13DCdqahwSfc4BJHXJamNKXGB2wm45JJjzJ58';
@@ -204,12 +221,12 @@ var TestFunctions = /** @class */ (function () {
         var keyPair = bitcoin.ECPair.fromWIF(privateKeyWid);
         var privateKey = keyPair.privateKey;
         var signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
-        console.log('signature: ', signature.toString('base64'));
+        this.log('signature: ', signature.toString('base64'));
         //var publicKey = keyPair.publicKey.toString('hex');
         //var signature = bitcoinMessage.
-        //console.log(signature.toString('base64'))
+        //this.log(signature.toString('base64'))
         var verifyResult = bitcoinMessage.verify(message, address, signature);
-        console.log('verifyResult = ', verifyResult);
+        this.log('verifyResult = ', verifyResult);
         chai_1.expect(verifyResult).to.be.equal(true);
     };
     TestFunctions.prototype.getBitcoinSignedMessageMagic = function (message) {
@@ -249,11 +266,11 @@ var TestFunctions = /** @class */ (function () {
                     case 0:
                         message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
                         hash = '0x' + bitcoinMessage.magicHash(message).toString('hex');
-                        console.log('Bitcoin Hash: ', hash);
+                        this.log('Bitcoin Hash: ', hash);
                         return [4 /*yield*/, this.instance.methods.getHashForClaimMessage(message, true).call()];
                     case 1:
                         hashFromSolidity = _a.sent();
-                        console.log('hashFromSolidity', hashFromSolidity);
+                        this.log('hashFromSolidity', hashFromSolidity);
                         chai_1.expect(hash).to.be.equal(hashFromSolidity);
                         return [2 /*return*/];
                 }
@@ -312,8 +329,8 @@ var TestFunctions = /** @class */ (function () {
                         return [4 /*yield*/, this.cryptoSol.getEthAddressFromSignature(message, true, '0x1c', rs.r, rs.s)];
                     case 3:
                         recoveredETHAddress2 = _a.sent();
-                        console.log('recovered: ', recoveredETHAddress);
-                        console.log('recovered: ', recoveredETHAddress2);
+                        this.log('recovered: ', recoveredETHAddress);
+                        this.log('recovered: ', recoveredETHAddress2);
                         chai_1.expect(expectedEthAddress).to.be.oneOf([recoveredETHAddress, recoveredETHAddress2]); // on equal(expectedEthAddress);
                         _a.label = 4;
                     case 4:
@@ -353,7 +370,7 @@ var TestFunctions = /** @class */ (function () {
                         signatureBase64 = this.getTestSignatures()[0];
                         key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
                         rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
-                        console.log('got public key X from signature:', key.x);
+                        this.log('got public key X from signature:', key.x);
                         return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 1:
                         txResult1 = _a.sent();
