@@ -58,10 +58,6 @@ export class ClaimContract extends Contract {
       _s: string | number[]
     ): TransactionObject<boolean>;
 
-    isValid(): TransactionObject<boolean>;
-
-    testECRecover(): TransactionObject<string>;
-
     checkSignature(
       _hash: string | number[],
       _r: string | number[],
