@@ -78,7 +78,6 @@ var TestFunctions = /** @class */ (function () {
             params[_i - 1] = arguments[_i];
         }
         if (this.logDebug) {
-            console.error('fucking log is false!!');
             console.log.apply(console, __spreadArrays([message], params));
         }
     };
@@ -301,11 +300,11 @@ var TestFunctions = /** @class */ (function () {
                         x = pubPoint.getX().toBuffer();
                         y = pubPoint.getY().toBuffer();
                         publicKey = Buffer.concat([x, y]);
-                        console.log("pub key::" + publicKey.toString('hex'));
+                        this.log("pub key::" + publicKey.toString('hex'));
                         return [4 /*yield*/, this.cryptoSol.pubKeyToEthAddress(x, y)];
                     case 1:
                         result = _a.sent();
-                        console.log('pubKeyToEthAddress:', result);
+                        this.log('pubKeyToEthAddress:', result);
                         chai_1.assert.equal(expectedAddress, result);
                         return [2 /*return*/];
                 }

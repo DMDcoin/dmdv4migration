@@ -39,7 +39,6 @@ export class TestFunctions {
 
   private log(message: string, ...params: any[]) {
     if (this.logDebug) {
-      console.error('fucking log is false!!');
       console.log(message, ...params);
     }
   }
@@ -358,10 +357,10 @@ export class TestFunctions {
     var x = pubPoint.getX().toBuffer(); //32 bit x co-ordinate of public point 
     var y = pubPoint.getY().toBuffer(); //32 bit y co-ordinate of public point 
     var publicKey =Buffer.concat([x,y])
-    console.log("pub key::"+publicKey.toString('hex'))
+    this.log("pub key::"+publicKey.toString('hex'))
   
     const result = await this.cryptoSol.pubKeyToEthAddress(x, y);
-    console.log('pubKeyToEthAddress:', result);
+    this.log('pubKeyToEthAddress:', result);
     assert.equal(expectedAddress, result);
   }
 
