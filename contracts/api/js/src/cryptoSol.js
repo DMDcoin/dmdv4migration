@@ -35,6 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 var cryptoHelpers_1 = require("./cryptoHelpers");
 var cryptoJS_1 = require("./cryptoJS");
@@ -46,11 +53,25 @@ var CryptoSol = /** @class */ (function () {
         this.web3Instance = web3Instance;
         this.instance = instance;
         this.cryptoJS = new cryptoJS_1.CryptoJS();
+        this.logDebug = false;
         if (instance === undefined || instance === null) {
             throw Error("Claim contract must be defined!!");
         }
-        console.log('constructed!');
+        this.log('constructed!');
     }
+    CryptoSol.prototype.setLogDebug = function (value) {
+        this.logDebug = value;
+        this.cryptoJS.setLogDebug(value);
+    };
+    CryptoSol.prototype.log = function (message) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        if (this.logDebug) {
+            console.log.apply(console, __spreadArrays([message], params));
+        }
+    };
     CryptoSol.prototype.addressToHashToSign = function (address) {
     };
     /**
@@ -66,8 +87,8 @@ var CryptoSol = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.instance.methods.createClaimMessage(address, true).call()];
                     case 1:
                         claimMessage = _a.sent();
-                        console.log('Claim Message:');
-                        console.log(claimMessage);
+                        this.log('Claim Message:');
+                        this.log(claimMessage);
                         return [2 /*return*/, claimMessage];
                 }
             });
@@ -83,8 +104,8 @@ var CryptoSol = /** @class */ (function () {
                         return [4 /*yield*/, this.instance.methods.calcHash256(buffer.toString('hex')).call()];
                     case 1:
                         hash = _a.sent();
-                        console.log('messageToHash');
-                        console.log(hash);
+                        this.log('messageToHash');
+                        this.log(hash);
                         return [2 /*return*/, hash];
                 }
             });
@@ -98,7 +119,7 @@ var CryptoSol = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(pubkeyX), cryptoHelpers_1.ensure0x(pubkeyY), cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
                     case 1:
                         result = _a.sent();
-                        console.log('Claim Result: ', result);
+                        this.log('Claim Result: ', result);
                         return [2 /*return*/, result];
                 }
             });
@@ -136,6 +157,13 @@ var CryptoSol = /** @class */ (function () {
                         essentialPart = _a.sent();
                         return [2 /*return*/, this.cryptoJS.bitcoinAddressEssentialToFullQualifiedAddress(essentialPart, addressPrefix)];
                 }
+            });
+        });
+    };
+    CryptoSol.prototype.pubKeyToEthAddress = function (x, y) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.instance.methods.pubKeyToEthAddress(x, y).call()];
             });
         });
     };

@@ -35,6 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -56,7 +63,20 @@ var SEGWIT_TYPES = {
  */
 var CryptoJS = /** @class */ (function () {
     function CryptoJS() {
+        this.logDebug = false;
     }
+    CryptoJS.prototype.setLogDebug = function (value) {
+        this.logDebug = value;
+    };
+    CryptoJS.prototype.log = function (message) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        if (this.logDebug) {
+            console.log.apply(console, __spreadArrays([message], params));
+        }
+    };
     CryptoJS.prototype.messageToHash = function (messageString) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -70,9 +90,9 @@ var CryptoJS = /** @class */ (function () {
      * @return Buffer with the significant bytes of the public key, not including the version number prefix, or the checksum postfix.
      */
     CryptoJS.prototype.dmdAddressToRipeResult = function (address) {
-        console.log('address:', address);
+        this.log('address:', address);
         var decoded = base58check_1["default"].decode(address);
-        console.log('decoded:', decoded);
+        this.log('decoded:', decoded);
         return decoded.data;
     };
     CryptoJS.prototype.signatureBase64ToRSV = function (signatureBase64) {
@@ -82,33 +102,32 @@ var CryptoJS = /** @class */ (function () {
         // const rr = signature.r.toBuffer();
         // const ss = signature.s.toBuffer();
         // const vv = signature.recoveryParam;
-        // console.log(`r: ${rr.toString('hex')}`);
-        // console.log(`s: ${ss.toString('hex')}`);
-        // console.log(`v: ${vv}`);
+        // this.log(`r: ${rr.toString('hex')}`);
+        // this.log(`s: ${ss.toString('hex')}`);
+        // this.log(`v: ${vv}`);
         // return { r: rr, s: ss, v: vv};
         // where is the encoding of the signature documented ?
         //is that DER encoding ? Or the Significant part of DER ?
         var sig = Buffer.from(signatureBase64, 'base64');
-        console.log('sigBuffer:');
-        console.log(sig);
-        console.log(sig.toString('hex'));
+        this.log('sigBuffer:');
+        this.log(sig.toString('hex'));
         //thesis: 
         // 20 is a header, and v is not included in the signature ?
         var sizeOfRComponent = sig[0];
-        console.log('sizeOfR:', sizeOfRComponent);
+        this.log('sizeOfR:', sizeOfRComponent);
         var rStart = 1; // r Start is always one (1).
         var sStart = 1 + sizeOfRComponent;
         var sizeOfSComponent = sig.length - sStart;
-        console.log('sizeOfS:', sizeOfSComponent);
+        this.log('sizeOfS:', sizeOfSComponent);
         if (sizeOfRComponent > sig.length) {
             throw new Error('sizeOfRComponent is too Big!!');
         }
         var r = sig.subarray(rStart, rStart + sizeOfRComponent);
         var s = sig.subarray(sStart, 65);
         var v = 0; //sig[64];
-        console.log("r: " + r.toString('hex'));
-        console.log("s: " + s.toString('hex'));
-        console.log("v: " + v);
+        this.log("r: " + r.toString('hex'));
+        this.log("s: " + s.toString('hex'));
+        this.log("v: " + v);
         return { r: r, s: s, v: v };
     };
     CryptoJS.prototype.decodeSignature = function (buffer) {
@@ -134,19 +153,19 @@ var CryptoJS = /** @class */ (function () {
         //const address = "";
         var signature = Buffer.from(signatureBase64, 'base64');
         var parsed = this.decodeSignature(signature);
-        console.log('parsed Signature:', parsed);
+        this.log('parsed Signature:', parsed);
         var hash = bitcoinMessage.magicHash(messageContent);
         var publicKey = secp256k1.recover(hash, parsed.signature, parsed.recovery, parsed.compressed);
         //we now have the public key
         //public key is the X Value with a prefix.
         //it's 02 or 03 prefix, depending if y is ODD or not.
-        console.log("publicKey: ", publicKey.toString('hex'));
+        this.log("publicKey: ", publicKey.toString('hex'));
         var x = publicKey.slice(1).toString('hex');
-        console.log("x: " + x);
+        this.log("x: " + x);
         var ec = new elliptic_1["default"].ec('secp256k1');
         var key = ec.keyFromPublic(publicKey);
         var y = key.getPublic().getY().toString('hex');
-        console.log("y: " + y);
+        this.log("y: " + y);
         return { publicKey: publicKey.toString('hex'), x: x, y: y };
     };
     CryptoJS.prototype.getXYfromPublicKeyHex = function (publicKeyHex) {
@@ -154,17 +173,17 @@ var CryptoJS = /** @class */ (function () {
         var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
         var x = publicKey.getX();
         var y = publicKey.getY();
-        //console.log("pub key:" + publicKey.toString('hex'));
-        //console.log("x :" + x.toString('hex'));
-        //console.log("y :" + y.toString('hex'));
+        //this.log("pub key:" + publicKey.toString('hex'));
+        //this.log("x :" + x.toString('hex'));
+        //this.log("y :" + y.toString('hex'));
         return { x: x, y: y };
     };
     CryptoJS.prototype.bitcoinAddressEssentialToFullQualifiedAddress = function (essentialPart, addressPrefix) {
         if (addressPrefix === void 0) { addressPrefix = '00'; }
-        // console.log('PublicKeyToBitcoinAddress:', essentialPart);
+        // this.log('PublicKeyToBitcoinAddress:', essentialPart);
         var result = cryptoHelpers_1.hexToBuf(essentialPart);
         result = cryptoHelpers_1.prefixBuf(result, addressPrefix);
-        //console.log('with prefix: ' + result.toString('hex'));
+        //this.log('with prefix: ' + result.toString('hex'));
         var bs58Result = bs58check.encode(result);
         return bs58Result;
     };

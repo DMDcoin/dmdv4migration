@@ -7,7 +7,7 @@ import varuint from'varuint-bitcoin';
 import { CryptoJS } from '../src/cryptoJS';
 import EC from 'elliptic';
 import { CryptoSol } from '../src/cryptoSol';
-
+import BN = require('bn.js');
 
 const bitcoin = require('bitcoinjs-lib');
 const bitcoinMessage = require('bitcoinjs-message');
@@ -18,7 +18,7 @@ export class TestFunctions {
   public cryptoJS = new CryptoJS();
   public cryptoSol : CryptoSol;
 
-  public logDebug: boolean = false; 
+  private logDebug: boolean = false; 
 
   public constructor(public web3Instance: Web3, public instance : ClaimContract.ClaimContract) {
     
@@ -29,8 +29,13 @@ export class TestFunctions {
     this.cryptoSol = new CryptoSol(web3Instance, instance);
   }
 
-  private log(message: string, ...params: any[]) {
+  public setLogDebug(value: boolean) {
+    this.logDebug = value;
+    this.cryptoSol.setLogDebug(value);
+    this.cryptoJS.setLogDebug(value);
+  }
 
+  private log(message: string, ...params: any[]) {
     if (this.logDebug) {
       console.log(message, ...params);
     }
@@ -303,14 +308,38 @@ export class TestFunctions {
     return buffer;
   }
 
-  public async testMessageMagicHexIsCorrect()
-  {
+  public async testMessageMagicHexIsCorrect() {
     //compares the result of a JS implementation with the Solidity implementation
     //of handling the raw message with the magic values around it.
     const address = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
     const resultJS = '0x' + this.getBitcoinSignedMessageMagic(address).toString('hex');
     const resultSol = await this.cryptoSol.addressToClaimMessage(address);
     expect(resultSol).to.be.equal(resultJS);
+  }
+
+  public async testPubKeyToEthAddress() {
+
+    // BIP39 Mnemonic: hello slim hope
+    // address 0: 0x7af37454aCaB6dB76c11bd33C94ED7C0b7A60B2a
+    // Public:    0x03ff2e6a372d6beec3b02556971bfc87b9fb2d7e27fe99398c11693571080310d8
+    // Private:   0xc99dd56045c449952e16388925455cc32e4eb180f2a9c3d2afd587aaf1cceda5
+    
+    const expectedAddress = '0x7af37454aCaB6dB76c11bd33C94ED7C0b7A60B2a';
+    const inputPrivateKey = 'c99dd56045c449952e16388925455cc32e4eb180f2a9c3d2afd587aaf1cceda5';
+
+    var ec = new EC.ec('secp256k1');
+    var G = ec.g; // Generator point
+    var pk = new BN(inputPrivateKey, 'hex'); // private key as big number
+    var pubPoint=G.mul(pk); // EC multiplication to determine public point 
+
+    var x = pubPoint.getX().toBuffer(); //32 bit x co-ordinate of public point 
+    var y = pubPoint.getY().toBuffer(); //32 bit y co-ordinate of public point 
+    var publicKey =Buffer.concat([x,y])
+    console.log("pub key::"+publicKey.toString('hex'))
+  
+    const result = await this.cryptoSol.pubKeyToEthAddress(x, y);
+    console.log('pubKeyToEthAddress:', result);
+    assert.equal(expectedAddress, result);
   }
 
   public async testMessageHashIsCorrect() {

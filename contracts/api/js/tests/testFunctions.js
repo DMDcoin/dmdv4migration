@@ -52,6 +52,7 @@ var varuint_bitcoin_1 = __importDefault(require("varuint-bitcoin"));
 var cryptoJS_1 = require("../src/cryptoJS");
 var elliptic_1 = __importDefault(require("elliptic"));
 var cryptoSol_1 = require("../src/cryptoSol");
+var BN = require("bn.js");
 var bitcoin = require('bitcoinjs-lib');
 var bitcoinMessage = require('bitcoinjs-message');
 var TestFunctions = /** @class */ (function () {
@@ -65,6 +66,11 @@ var TestFunctions = /** @class */ (function () {
         }
         this.cryptoSol = new cryptoSol_1.CryptoSol(web3Instance, instance);
     }
+    TestFunctions.prototype.setLogDebug = function (value) {
+        this.logDebug = value;
+        this.cryptoSol.setLogDebug(value);
+        this.cryptoJS.setLogDebug(value);
+    };
     TestFunctions.prototype.log = function (message) {
         var params = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -253,6 +259,32 @@ var TestFunctions = /** @class */ (function () {
                     case 1:
                         resultSol = _a.sent();
                         chai_1.expect(resultSol).to.be.equal(resultJS);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    TestFunctions.prototype.testPubKeyToEthAddress = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var expectedAddress, inputPrivateKey, ec, G, pk, pubPoint, x, y, publicKey, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        expectedAddress = '0x7af37454aCaB6dB76c11bd33C94ED7C0b7A60B2a';
+                        inputPrivateKey = 'c99dd56045c449952e16388925455cc32e4eb180f2a9c3d2afd587aaf1cceda5';
+                        ec = new elliptic_1["default"].ec('secp256k1');
+                        G = ec.g;
+                        pk = new BN(inputPrivateKey, 'hex');
+                        pubPoint = G.mul(pk);
+                        x = pubPoint.getX().toBuffer();
+                        y = pubPoint.getY().toBuffer();
+                        publicKey = Buffer.concat([x, y]);
+                        console.log("pub key::" + publicKey.toString('hex'));
+                        return [4 /*yield*/, this.cryptoSol.pubKeyToEthAddress(x, y)];
+                    case 1:
+                        result = _a.sent();
+                        console.log('pubKeyToEthAddress:', result);
+                        chai_1.assert.equal(expectedAddress, result);
                         return [2 /*return*/];
                 }
             });

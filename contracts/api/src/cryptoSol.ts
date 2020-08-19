@@ -10,6 +10,9 @@ import { CryptoJS } from './cryptoJS';
 export class CryptoSol {
 
   public cryptoJS = new CryptoJS();
+  
+  private logDebug: boolean = false; 
+
 
   public constructor(public web3Instance: Web3, public instance : ClaimContract.ClaimContract) {
     
@@ -17,8 +20,20 @@ export class CryptoSol {
       throw Error("Claim contract must be defined!!");
     }
 
-    console.log('constructed!');
+    this.log('constructed!');
   }
+
+  public setLogDebug(value: boolean) {
+    this.logDebug = value;
+    this.cryptoJS.setLogDebug(value);
+  }
+
+  private log(message: string, ...params: any[]) {
+    if (this.logDebug) {
+      console.log(message, ...params);
+    }
+  }
+
 
   public addressToHashToSign(address: string) {
 
@@ -32,8 +47,8 @@ export class CryptoSol {
   public async addressToClaimMessage(address: string) : Promise<string> {
 
     const claimMessage =  await this.instance.methods.createClaimMessage(address, true).call();
-    console.log('Claim Message:');
-    console.log(claimMessage);
+    this.log('Claim Message:');
+    this.log(claimMessage);
     return claimMessage;
   }
 
@@ -41,8 +56,8 @@ export class CryptoSol {
 
     const buffer = Buffer.from(messageString, 'utf-8');
     const hash =  await this.instance.methods.calcHash256(buffer.toString('hex')).call();
-    console.log('messageToHash');
-    console.log(hash);
+    this.log('messageToHash');
+    this.log(hash);
     return hash;
   }
 
@@ -66,7 +81,7 @@ export class CryptoSol {
           ensure0x(sigV),
           ensure0x(sigR), 
           ensure0x(sigS)).call();
-      console.log('Claim Result: ', result);
+      this.log('Claim Result: ', result);
       return result;
     }
 
@@ -103,5 +118,9 @@ export class CryptoSol {
     async publicKeyToBitcoinAddress(x: BN, y: BN, addressPrefix: string) {
       const essentialPart = await this.publicKeyToBitcoinAddressEssential(x, y);
       return this.cryptoJS.bitcoinAddressEssentialToFullQualifiedAddress(essentialPart, addressPrefix);
+    }
+
+    public async pubKeyToEthAddress(x: string, y: string) {
+      return this.instance.methods.pubKeyToEthAddress(x, y).call();
     }
 }
