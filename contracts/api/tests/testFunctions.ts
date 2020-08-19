@@ -8,6 +8,8 @@ import { CryptoJS } from '../src/cryptoJS';
 import EC from 'elliptic';
 import { CryptoSol } from '../src/cryptoSol';
 import BN = require('bn.js');
+import { remove0x } from '../src/cryptoHelpers';
+
 
 const bitcoin = require('bitcoinjs-lib');
 const bitcoinMessage = require('bitcoinjs-message');
@@ -37,6 +39,7 @@ export class TestFunctions {
 
   private log(message: string, ...params: any[]) {
     if (this.logDebug) {
+      console.error('fucking log is false!!');
       console.log(message, ...params);
     }
   }
@@ -62,6 +65,26 @@ export class TestFunctions {
         "HxqyFxgt2+wWQB0hi5vt2yW7+3Qly+Rf7gNQIF8Ui+Zbj5JCalRrCcrJn2680QJuRBbIA9uc68wWS2J00LENRR8="
       ];
       return signaturesBase64;
+  }
+
+  public async testAddressChecksum() {
+
+    const address = '0xfec7b00dc0192319dda0c777a9f04e47dc49bd18';
+    const addressWithChecksum = '0xfEc7B00DC0192319DdA0c777A9F04E47Dc49bD18';
+
+    //claimContract.contract.functions
+
+    //function calculateAddressString(address addr, bool includeAddrChecksum)
+    const calcAddressResult = await this.cryptoSol.instance.methods.calculateAddressString(address, true).call();
+    //0x66456337423030444330313932333139446441306337373741394630344534374463343962443138
+    //this.log('calcAddressResult' + calcAddressResult);
+
+    const buffer = Buffer.from(remove0x(calcAddressResult), 'hex');
+    //this.log('buffer:' + buffer);
+    const calcResult = buffer.toString('utf8');
+
+    //this.log('calcResult:', calcResult);
+    assert.equal(calcResult, addressWithChecksum, 'checksum must be calculated in a correct ways.');
   }
 
   public messageToHashToSign(message: string) : Buffer {

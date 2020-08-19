@@ -53,6 +53,7 @@ var cryptoJS_1 = require("../src/cryptoJS");
 var elliptic_1 = __importDefault(require("elliptic"));
 var cryptoSol_1 = require("../src/cryptoSol");
 var BN = require("bn.js");
+var cryptoHelpers_1 = require("../src/cryptoHelpers");
 var bitcoin = require('bitcoinjs-lib');
 var bitcoinMessage = require('bitcoinjs-message');
 var TestFunctions = /** @class */ (function () {
@@ -77,6 +78,7 @@ var TestFunctions = /** @class */ (function () {
             params[_i - 1] = arguments[_i];
         }
         if (this.logDebug) {
+            console.error('fucking log is false!!');
             console.log.apply(console, __spreadArrays([message], params));
         }
     };
@@ -99,6 +101,26 @@ var TestFunctions = /** @class */ (function () {
             "HxqyFxgt2+wWQB0hi5vt2yW7+3Qly+Rf7gNQIF8Ui+Zbj5JCalRrCcrJn2680QJuRBbIA9uc68wWS2J00LENRR8="
         ];
         return signaturesBase64;
+    };
+    TestFunctions.prototype.testAddressChecksum = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var address, addressWithChecksum, calcAddressResult, buffer, calcResult;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        address = '0xfec7b00dc0192319dda0c777a9f04e47dc49bd18';
+                        addressWithChecksum = '0xfEc7B00DC0192319DdA0c777A9F04E47Dc49bD18';
+                        return [4 /*yield*/, this.cryptoSol.instance.methods.calculateAddressString(address, true).call()];
+                    case 1:
+                        calcAddressResult = _a.sent();
+                        buffer = Buffer.from(cryptoHelpers_1.remove0x(calcAddressResult), 'hex');
+                        calcResult = buffer.toString('utf8');
+                        //this.log('calcResult:', calcResult);
+                        chai_1.assert.equal(calcResult, addressWithChecksum, 'checksum must be calculated in a correct ways.');
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     TestFunctions.prototype.messageToHashToSign = function (message) {
         // https://bitcoin.stackexchange.com/questions/36838/why-does-the-standard-bitcoin-message-signature-include-a-magic-prefix
