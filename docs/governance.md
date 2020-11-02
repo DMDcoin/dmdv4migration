@@ -37,16 +37,22 @@ Does a concept like event subscription exist ?
 ### Public transparency
 All votings are public visible, transparent and comprehensible.
 
-### Lock In
-Validators are able to vote once, but they are not able to change their decision.
-This enables delegators to switch to a validator that represent their opinion in time.
-It also encourages validators to do their decision early, in order to attract further delegator.
+### Voting
+
+Validators are encouraged to vote early in order to display their opinion by voting for an option in a proposal.
+Delegaters are encouraged to stake their funds on active validators,
+that vote in their favor.
+It is possible and welcomed to change this decision during the 14 day voting period,
+but it is also very welcomed to explain why.
+Validators are trusted by their delegators.
+Delegators that feel betrayed by the promise of their Validators,
+will switch to another validator.
 
 ### Timing
 
 The system alternates between 2 phases:
-* proposal
-* voting
+* proposal phase
+* voting phase
 
 Both take 14 days.  
 During the proposal phase, new ballots can be created.  
