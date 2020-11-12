@@ -24,7 +24,9 @@
 const fs = require('fs');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
-const testmnemonic = fs.readFileSync(".mnemonic").toString().trim();
+function getTestMnemonic() {
+  return fs.readFileSync(".mnemonic").toString().trim();
+} 
 
 module.exports = {
   /**
@@ -51,10 +53,7 @@ module.exports = {
     // },
 
     // Another network with more advanced options...
-    // advanced: {
-      // port: 8777,             // Custom port
-      // network_id: 1342,       // Custom network
-      // gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
+    // advanced: {testmnemonicsent with each transaction (default: ~6700000)
       // gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
       // from: <address>,        // Account to send txs from (default: accounts[0])
       // websockets: true        // Enable EventEmitter interface for web3 (default: false)
@@ -79,7 +78,7 @@ module.exports = {
     // }
 
     local: {
-      provider: () => new HDWalletProvider(testmnemonic, `http://127.0.0.1:8545`),
+      provider: () => new HDWalletProvider(getTestMnemonic(), `http://127.0.0.1:8545`),
       //host: "116.203.118.82",     // Localhost (default: none)
       //host: "127.0.0.1",
       //port: 8545,            
