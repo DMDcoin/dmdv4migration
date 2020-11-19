@@ -14,10 +14,18 @@ contract ClaimContract {
   uint8 internal constant BITCOIN_SIG_PREFIX_LEN = 24;
   bytes24 internal constant BITCOIN_SIG_PREFIX_STR = "Bitcoin Signed Message:\n";
 
+  uint constant YEAR_IN_SECONDS = 31536000;
+  uint constant LEAP_YEAR_IN_SECONDS = 31622400;
+  uint constant DAY_IN_SECONDS = 86400;
+
+
   mapping (bytes20 => uint256)  public balances;
+
+  uint public deploymentTimestamp;
 
   constructor() public {
     //balances[""] = 1000000000000;
+    deploymentTimestamp = block.timestamp;
   }
 
 
@@ -362,4 +370,5 @@ contract ClaimContract {
       /* Verify the public key */
       return ecrecover(messageHash, _v, _r, _s) == pubKeyEthAddr;
   }
+
 }
