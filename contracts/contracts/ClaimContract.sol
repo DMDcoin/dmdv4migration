@@ -371,4 +371,27 @@ contract ClaimContract {
       return ecrecover(messageHash, _v, _r, _s) == pubKeyEthAddr;
   }
 
+  function getCurrentDilutedClaimFactor()
+  public
+  view
+  returns (uint256 nominator, uint256 denominator)
+  {
+      if (block.timestamp <= deploymentTimestamp + (DAY_IN_SECONDS * 2 * 31) + DAY_IN_SECONDS * 30) 
+      {
+        return (1, 1);
+      }
+      else if (block.timestamp <= deploymentTimestamp + (DAY_IN_SECONDS * 3 * 31) + (DAY_IN_SECONDS * 3 * 30))
+      {
+        return (3, 4);
+      }
+      else if (block.timestamp <= deploymentTimestamp + (YEAR_IN_SECONDS * 4) + LEAP_YEAR_IN_SECONDS)
+      {
+        return (1, 2);
+      }
+      else
+      {
+        return (0, 1);
+      }
+  }
+
 }
