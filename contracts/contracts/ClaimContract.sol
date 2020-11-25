@@ -20,12 +20,30 @@ contract ClaimContract {
 
 
   mapping (bytes20 => uint256)  public balances;
+  mapping (bytes20 => uint256)  public diluted;
+
+  // tracks if dilution for 75% was executed
+  bool public dilution_s1_75_executed;
+
+  // tracks if dilution for 50% was executed
+  bool public dilution_s2_50_executed;
+
+  // tracks if dilution for 0% was executed
+  bool public dilution_s3_0_executed;
+
+  bytes20[] public allOldAdresses;
 
   uint public deploymentTimestamp;
 
-  constructor() public {
+  address lateClaimBeneficorAddress;
+  address owner;
+
+  
+
+  constructor(address _lateClaimBeneficorAddress) public {
     //balances[""] = 1000000000000;
     deploymentTimestamp = block.timestamp;
+    lateClaimBeneficorAddress = _lateClaimBeneficorAddress;
   }
 
 
@@ -110,9 +128,7 @@ contract ClaimContract {
         uint8 _v,
         bytes32 _r,
         bytes32 _s,
-        address _address
-    ) public pure returns (bool)
-    {
+        address _addressdiluted
         return ecrecover(
             _hash,
             _v,
@@ -392,6 +408,62 @@ contract ClaimContract {
       {
         return (0, 1);
       }
+  }
+
+//   function transferDilutedFundsToBeneficor()
+//   public
+//   {
+//   }
+
+  
+
+  function addBalance(bytes20 oldAddress)
+  payable
+  public
+  {
+    require(balances[oldAddress] == 0, "There is already a balance defined for this old address");
+    require(diluted[oldAddress] == 0, "There was already a balance defined for this old address");
+    balances[oldAddress] = msg.value;
+    allOldAdresses.push(oldAddress);
+  }
+
+  function executeDillutions()
+  {
+      for (uint i = 0; i < allOldAdresses.length; i++) 
+      {
+
+      }
+  }
+
+  function claim(bytes20 oldAddress, address payable targetAdress)
+  public
+  {
+    //if already claimed, it just returns.
+    uint256 currentBalance = balances[oldAddress];
+    if ( currentBalance == 0)
+    {
+        return;
+    }
+
+    (uint256 nominator, uint256 denominator) = getCurrentDilutedClaimFactor();
+
+    // the nominator is 0 if the claim period passed.
+    if (nominator == 0) 
+    {
+        return;
+    }
+
+    uint256 claimBalance = (currentBalance * nominator) / denominator;
+    
+    // remember that the funds are going to get claimed, hard protection about reentrancy attacks.
+    balances[oldAddress] = 0;
+
+    targetAdress.transfer(claimBalance);
+    if (claimBalance < currentBalance)
+    {
+        uint256 lateClaimDillution = currentBalance - claimBalance;
+        lateClaimBeneficorAddress.transfer(lateClaimDillution);
+    }
   }
 
 }
