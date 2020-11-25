@@ -31,16 +31,15 @@ contract ClaimContract {
   // tracks if dilution for 0% was executed
   bool public dilution_s3_0_executed;
 
-  bytes20[] public allOldAdresses;
-
   uint public deploymentTimestamp;
 
-  address lateClaimBeneficorAddress;
-  address owner;
-
+  address payable public lateClaimBeneficorAddress;
   
+  //address owner;
 
-  constructor(address _lateClaimBeneficorAddress) public {
+  constructor(address payable _lateClaimBeneficorAddress)
+  public 
+  {
     //balances[""] = 1000000000000;
     deploymentTimestamp = block.timestamp;
     lateClaimBeneficorAddress = _lateClaimBeneficorAddress;
@@ -128,7 +127,9 @@ contract ClaimContract {
         uint8 _v,
         bytes32 _r,
         bytes32 _s,
-        address _addressdiluted
+        address _address
+    ) public pure returns (bool)
+    {
         return ecrecover(
             _hash,
             _v,
@@ -387,20 +388,116 @@ contract ClaimContract {
       return ecrecover(messageHash, _v, _r, _s) == pubKeyEthAddr;
   }
 
+  function getDilutionTimestamp1()
+  public
+  view
+  returns (uint256)
+  {
+    return deploymentTimestamp + (DAY_IN_SECONDS * 2 * 31) + DAY_IN_SECONDS * 30;
+  }
+
+
+  function getDilutionTimestamp2()
+  public
+  view
+  returns (uint256)
+  {
+    return deploymentTimestamp + (DAY_IN_SECONDS * 3 * 31) + (DAY_IN_SECONDS * 3 * 30);
+  }
+
+
+  function getDilutionTimestamp3()
+  public
+  view
+  returns (uint256)
+  {
+    return deploymentTimestamp + (YEAR_IN_SECONDS * 4) + LEAP_YEAR_IN_SECONDS;
+  }
+
+   /**
+  * @dev dilutes the entitlement after a certain time passed away and sends it to the beneficor (reinsert pot)
+  * @return amount of DMD that got send to the beneficor.
+  */
+  function dilute1()
+  public
+  returns (uint)
+  {
+    require(block.timestamp > getDilutionTimestamp1(), "dilute1 can only get called after the treshold timestamp got reached.");
+    require(dilution_s1_75_executed == false, "dilute1 event did already happen!");
+
+    dilution_s1_75_executed = true;
+    // in dilute 1: after 3 months 25% of the total coins get diluted.
+
+    uint totalBalance = (payable(address(this))).balance;
+    uint dilutionBalance = totalBalance / 4;
+    lateClaimBeneficorAddress.transfer(dilutionBalance);
+    return dilutionBalance;
+  }
+
+  /**
+  * @dev dilutes the entitlement after a certain time passed away and sends it to the beneficor (reinsert pot)
+  * @return amount of DMD that got send to the beneficor.
+  */
+  function dilute2()
+  public
+  returns (uint)
+  {
+    require(block.timestamp > getDilutionTimestamp2(), "dilute2 can only get called after the treshold timestamp got reached.");
+    require(dilution_s1_75_executed == true, "dilute2 can't get processed unless dilute1 has already been processed.");
+    require(dilution_s2_50_executed == false, "dilute2 event did already happen!");
+
+    dilution_s2_50_executed = true;
+    // in dilute 1: after 3 months 25% of the total coins get diluted.
+
+    uint totalBalance = (payable(address(this))).balance;
+    
+    // during dilute2, 
+    // 25% from dilute1 are already counted away from totalBalance.
+    // means 3/4 of the value is still there and we need to get it to 2/4.
+    // we can do this by dilluting another 1 / 3.
+
+    uint dilutionBalance = totalBalance / 3;
+    lateClaimBeneficorAddress.transfer(dilutionBalance);
+    return dilutionBalance;
+  }
+
+   /**
+  * @dev dilutes the entitlement after a certain time passed away and sends it to the beneficor (reinsert pot)
+  * @return amount of DMD that got send to the beneficor.
+  */
+  function dilute3()
+  public
+  returns (uint)
+  {
+    require(block.timestamp > getDilutionTimestamp3(), "dilute2 can only get called after the treshold timestamp got reached.");
+    require(dilution_s1_75_executed == true, "dilute3 can't get processed unless dilute1 has already been processed.");
+    require(dilution_s2_50_executed == true, "dilute3 can't get processed unless dilute2 has already been processed.");
+    require(dilution_s3_0_executed == false, "dilute3 event did already happen!");
+
+    dilution_s1_75_executed = true;
+    // in dilute 1: after 3 months 25% of the total coins get diluted.
+
+    uint totalBalance = (payable(address(this))).balance;
+    
+    // 50% got already diluted. this is the last phase, we dilute the rest.
+    lateClaimBeneficorAddress.transfer(totalBalance);
+    return totalBalance;
+  }
+
   function getCurrentDilutedClaimFactor()
   public
   view
   returns (uint256 nominator, uint256 denominator)
   {
-      if (block.timestamp <= deploymentTimestamp + (DAY_IN_SECONDS * 2 * 31) + DAY_IN_SECONDS * 30) 
+      if (!dilution_s1_75_executed)
       {
         return (1, 1);
       }
-      else if (block.timestamp <= deploymentTimestamp + (DAY_IN_SECONDS * 3 * 31) + (DAY_IN_SECONDS * 3 * 30))
+      else if (!dilution_s2_50_executed)
       {
         return (3, 4);
       }
-      else if (block.timestamp <= deploymentTimestamp + (YEAR_IN_SECONDS * 4) + LEAP_YEAR_IN_SECONDS)
+      else if (!dilution_s3_0_executed)
       {
         return (1, 2);
       }
@@ -424,15 +521,7 @@ contract ClaimContract {
     require(balances[oldAddress] == 0, "There is already a balance defined for this old address");
     require(diluted[oldAddress] == 0, "There was already a balance defined for this old address");
     balances[oldAddress] = msg.value;
-    allOldAdresses.push(oldAddress);
-  }
-
-  function executeDillutions()
-  {
-      for (uint i = 0; i < allOldAdresses.length; i++) 
-      {
-
-      }
+    // allOldAdresses.push(oldAddress);
   }
 
   function claim(bytes20 oldAddress, address payable targetAdress)
@@ -457,13 +546,7 @@ contract ClaimContract {
     
     // remember that the funds are going to get claimed, hard protection about reentrancy attacks.
     balances[oldAddress] = 0;
-
     targetAdress.transfer(claimBalance);
-    if (claimBalance < currentBalance)
-    {
-        uint256 lateClaimDillution = currentBalance - claimBalance;
-        lateClaimBeneficorAddress.transfer(lateClaimDillution);
-    }
   }
 
 }
