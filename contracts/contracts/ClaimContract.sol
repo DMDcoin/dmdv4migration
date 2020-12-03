@@ -469,7 +469,7 @@ contract ClaimContract {
   public
   returns (uint)
   {
-    require(block.timestamp > getDilutionTimestamp3(), "dilute2 can only get called after the treshold timestamp got reached.");
+    require(block.timestamp > getDilutionTimestamp3(), "dilute3 can only get called after the treshold timestamp got reached.");
     require(dilution_s1_75_executed == true, "dilute3 can't get processed unless dilute1 has already been processed.");
     require(dilution_s2_50_executed == true, "dilute3 can't get processed unless dilute2 has already been processed.");
     require(dilution_s3_0_executed == false, "dilute3 event did already happen!");
