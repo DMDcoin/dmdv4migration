@@ -29,19 +29,20 @@
     "@types/mocha": "^8.0.4",
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
+    "truffle": "^5.1.56",
     "ts-node": "^8.10.2"
   },
   "scripts": {
     "test": "npm run buildNTest",
     "typechain": "typechain --target web3-v1 --outDir api/contracts './build/contracts/*.json'",
     "ganache": "ganache-cli -m \"$(cat testmnemonic)\"",
-    "deploy-local": "truffle deploy --network=local",
-    "compile": "truffle compile",
+    "deploy-local": "./node_modules/.bin/truffle  deploy --network=local",
+    "compile": "./node_modules/.bin/truffle compile",
     "tsc": "tsc",
     "testApi": "ts-node ./api/tests/testFunctions.ts",
     "testVerify": "ts-node ./api/tests/testVerify.ts",
     "build": "npm run compile && npm run typechain && npm run tsc",
-    "buildNTest": "npm run build && truffle test"
+    "buildNTest": "npm run build && ./node_modules/.bin/truffle  test"
   },
   "author": "thomas.haller@lab10.coop",
   "license": "GPLv3"
