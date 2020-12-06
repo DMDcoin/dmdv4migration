@@ -43,7 +43,7 @@ contract('ClaimContract', (accounts) => {
   let cryptoJS = new CryptoJS.CryptoJS();
 
   it('deploying a new claim contract', async () => {
-    claimContract = await ClaimContract.new(accounts[0], callParams);
+    claimContract = await ClaimContract.new(accounts[0], '0x', callParams);
     testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
     cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
   })

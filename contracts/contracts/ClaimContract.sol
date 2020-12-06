@@ -35,14 +35,16 @@ contract ClaimContract {
 
   address payable public lateClaimBeneficorAddress;
   
+  bytes prefixStr;
   //address owner;
 
-  constructor(address payable _lateClaimBeneficorAddress)
+  constructor(address payable _lateClaimBeneficorAddress, bytes memory _prefixStr)
   public 
   {
     //balances[""] = 1000000000000;
     deploymentTimestamp = block.timestamp;
     lateClaimBeneficorAddress = _lateClaimBeneficorAddress;
+    prefixStr = _prefixStr;
   }
 
 
@@ -155,7 +157,7 @@ contract ClaimContract {
         uint8 _v,
         bytes32 _r,
         bytes32 _s
-    ) public pure returns (bool)
+    ) public view returns (bool)
     {
         bytes memory addressAsHex = createClaimMessage(_addressClaiming, true);
 
@@ -289,11 +291,9 @@ contract ClaimContract {
   */
   function createClaimMessage(address _claimToAddr, bool _claimAddrChecksum)
         public
-        pure
+        view
         returns (bytes memory)
     {
-        bytes memory prefixStr = "";
-
         //TODO: pass this as an argument. evaluate in JS before includeAddrChecksum is used or not.
         //now for testing, we assume Yes.
 
@@ -318,7 +318,7 @@ contract ClaimContract {
     address _claimToAddr,
     bool  _claimAddrChecksum)
     public
-    pure
+    view
     returns (bytes32)
   {
     return calcHash256(
@@ -343,7 +343,7 @@ contract ClaimContract {
     bytes32 _s
   )
   public
-  pure
+  view
   returns (address)
   {
     //require(_v >= 27 && _v <= 30, "v invalid");
@@ -366,7 +366,7 @@ contract ClaimContract {
     bytes32 _s
   )
     public
-    pure
+    view
     returns (bool)
   {
       require(_v >= 27 && _v <= 30, "v invalid");
