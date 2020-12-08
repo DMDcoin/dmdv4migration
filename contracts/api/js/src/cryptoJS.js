@@ -46,6 +46,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
+exports.CryptoJS = void 0;
 var base58check_1 = __importDefault(require("base58check"));
 var elliptic_1 = __importDefault(require("elliptic"));
 var cryptoHelpers_1 = require("./cryptoHelpers");

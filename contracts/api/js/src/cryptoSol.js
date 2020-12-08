@@ -43,6 +43,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 exports.__esModule = true;
+exports.CryptoSol = void 0;
 var cryptoHelpers_1 = require("./cryptoHelpers");
 var cryptoJS_1 = require("./cryptoJS");
 /**
@@ -111,12 +112,12 @@ var CryptoSol = /** @class */ (function () {
             });
         });
     };
-    CryptoSol.prototype.claimMessageMatchesSignature = function (claimToAddress, addressContainsChecksum, pubkeyX, pubkeyY, sigV, sigR, sigS) {
+    CryptoSol.prototype.claimMessageMatchesSignature = function (claimToAddress, addressContainsChecksum, pubkeyX, pubkeyY, sigV, sigR, sigS, bitcoinCompatibility) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(pubkeyX), cryptoHelpers_1.ensure0x(pubkeyY), cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
+                    case 0: return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(pubkeyX), cryptoHelpers_1.ensure0x(pubkeyY), cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS), bitcoinCompatibility).call()];
                     case 1:
                         result = _a.sent();
                         this.log('Claim Result: ', result);

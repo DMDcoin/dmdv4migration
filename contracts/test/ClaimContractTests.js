@@ -1,8 +1,13 @@
 
 
-var TestFunctions = require('../api/js/tests/testFunctions');
-var CryptoSol = require('../api/js/src/cryptoSol');
-var CryptoJS = require('../api/js/src/cryptoJS');
+const TestFunctions = require('../api/js/tests/testFunctions');
+const CryptoSol = require('../api/js/src/cryptoSol');
+const CryptoJS = require('../api/js/src/cryptoJS');
+
+
+const cryptoHelpers = require('../api/js/src/cryptoHelpers');
+
+const stringToUTF8Hex = cryptoHelpers.stringToUTF8Hex;
 
 var EC = require('elliptic').ec;
 var BN = require('bn.js');
@@ -14,15 +19,6 @@ var ec = new EC('secp256k1');
 const ClaimContract = artifacts.require('ClaimContract');
 
 
-function hexToBuf(input) {
-  return Buffer.from(remove0x(input), 'hex');
-}
-
-// appends a prefix to inputBuffer.
-function prefixBuf(inputBuffer, prefixHexString) {
-  const prefix = hexToBuf(prefixHexString);
-  return Buffer.concat([prefix, inputBuffer]);
-}
 
 contract('ClaimContract', (accounts) => {
   console.log(`Accounts: ${accounts}`);
@@ -47,12 +43,6 @@ contract('ClaimContract', (accounts) => {
     testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
     cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
   })
-
-  // it('Verify address', async () => {
-  //   let isValid = await claimContract.isValid.call(callParams);
-  //   assert.isOk(isValid, "ERC Recover failed");
-  //   //console.log('address: ' + address);
-  // })
 
   it('correct Address checksum.', async() => {
     testFunctions.testAddressChecksum();
@@ -127,6 +117,24 @@ contract('ClaimContract', (accounts) => {
 
   it('Validating signature in solidity', async() => {
     await testFunctions.testSignatureVerificationInContract();
+  })
+
+
+  it('deploying a new claim contract with claim to defined prefix', async () => {
+
+    //const prefix  = stringToUTF8Hex('claim to ');
+
+    //console.log('stringToUTF8Hex', prefix);
+
+    claimContract = await ClaimContract.new(accounts[0], '0x', callParams);
+    testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
+    cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
+  })
+    
+
+  it('Validating signature in solidity', async() => {
+
+    await testFunctions.testSignatureVerificationInContractDMD();
   })
   
 

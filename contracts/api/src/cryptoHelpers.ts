@@ -29,3 +29,10 @@ export function prefixBuf(inputBuffer: Buffer, prefixHexString: string) {
   const prefix = hexToBuf(prefixHexString);
   return Buffer.concat([prefix, inputBuffer]);
 }
+
+
+export function stringToUTF8Hex(input: string) : string {
+
+  return ensure0x(Buffer.from(input, 'utf8'));
+  
+}

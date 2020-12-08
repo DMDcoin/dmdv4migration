@@ -23,6 +23,18 @@ export class ClaimContract extends Contract {
   methods: {
     balances(arg0: string | number[]): TransactionObject<string>;
 
+    deploymentTimestamp(): TransactionObject<string>;
+
+    diluted(arg0: string | number[]): TransactionObject<string>;
+
+    dilution_s1_75_executed(): TransactionObject<boolean>;
+
+    dilution_s2_50_executed(): TransactionObject<boolean>;
+
+    dilution_s3_0_executed(): TransactionObject<boolean>;
+
+    lateClaimBeneficorAddress(): TransactionObject<string>;
+
     getPublicKeyFromBitcoinSignature(
       hashValue: string | number[],
       r: string | number[],
@@ -82,9 +94,15 @@ export class ClaimContract extends Contract {
       _claimAddrChecksum: boolean
     ): TransactionObject<string>;
 
-    getHashForClaimMessage(
+    createClaimMessageDMD(
       _claimToAddr: string,
       _claimAddrChecksum: boolean
+    ): TransactionObject<string>;
+
+    getHashForClaimMessage(
+      _claimToAddr: string,
+      _claimAddrChecksum: boolean,
+      _bitcoinCompatibility: boolean
     ): TransactionObject<string>;
 
     getEthAddressFromSignature(
@@ -102,8 +120,42 @@ export class ClaimContract extends Contract {
       _pubKeyY: string | number[],
       _v: number | string,
       _r: string | number[],
-      _s: string | number[]
+      _s: string | number[],
+      _bitcoinCompatibilityMode: boolean
     ): TransactionObject<boolean>;
+
+    getDilutionTimestamp1(): TransactionObject<string>;
+
+    getDilutionTimestamp2(): TransactionObject<string>;
+
+    getDilutionTimestamp3(): TransactionObject<string>;
+
+    dilute1(): TransactionObject<string>;
+
+    dilute2(): TransactionObject<string>;
+
+    dilute3(): TransactionObject<string>;
+
+    getCurrentDilutedClaimFactor(): TransactionObject<{
+      nominator: string;
+      denominator: string;
+      0: string;
+      1: string;
+    }>;
+
+    addBalance(oldAddress: string | number[]): TransactionObject<void>;
+
+    claim(
+      _oldAddress: string | number[],
+      _targetAdress: string,
+      _claimAddrChecksum: boolean,
+      _pubKeyX: string | number[],
+      _pubKeyY: string | number[],
+      _v: number | string,
+      _r: string | number[],
+      _s: string | number[],
+      _bitcoinCompatibilityMode: boolean
+    ): TransactionObject<void>;
   };
   events: {
     allEvents: (

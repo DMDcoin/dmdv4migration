@@ -11,8 +11,13 @@ contract ClaimContract {
   uint8 internal constant ETH_ADDRESS_HEX_LEN = ETH_ADDRESS_BYTE_LEN * 2;
   uint8 internal constant CLAIM_PARAM_HASH_BYTE_LEN = 12;
   uint8 internal constant CLAIM_PARAM_HASH_HEX_LEN = CLAIM_PARAM_HASH_BYTE_LEN * 2;
+
   uint8 internal constant BITCOIN_SIG_PREFIX_LEN = 24;
   bytes24 internal constant BITCOIN_SIG_PREFIX_STR = "Bitcoin Signed Message:\n";
+
+  uint8 internal constant DIAMOND_SIG_PREFIX_LEN = 24;
+  bytes24 internal constant DIAMOND_SIG_PREFIX_STR = "Diamond Signed Message:\n";
+  
 
   uint constant YEAR_IN_SECONDS = 31536000;
   uint constant LEAP_YEAR_IN_SECONDS = 31622400;
@@ -214,21 +219,21 @@ contract ClaimContract {
       return sha256(abi.encodePacked(sha256(data)));
   }
 
-      function _hexStringFromData(bytes memory hexStr, bytes32 data, uint256 startOffset, uint256 dataLen)
-        private
-        pure
-    {
-        uint256 offset = startOffset;
+  function _hexStringFromData(bytes memory hexStr, bytes32 data, uint256 startOffset, uint256 dataLen)
+    private
+    pure
+  {
+      uint256 offset = startOffset;
 
 
 
-        for (uint256 i = 0; i < dataLen; i++) {
-            uint8 b = uint8(data[i]);
+      for (uint256 i = 0; i < dataLen; i++) {
+          uint8 b = uint8(data[i]);
 
-            hexStr[offset++] = HEX_DIGITS[b >> 4];
-            hexStr[offset++] = HEX_DIGITS[b & 0x0f];
-        }
-    }
+          hexStr[offset++] = HEX_DIGITS[b >> 4];
+          hexStr[offset++] = HEX_DIGITS[b & 0x0f];
+      }
+  }
 
     function _addressStringChecksumChar(bytes memory addrStr, uint256 offset, uint8 hashNybble)
     private
@@ -287,7 +292,7 @@ contract ClaimContract {
   * @dev returns the hash for the provided claim target address.
   * @param _claimToAddr address target address for the claim.
   * @param _claimAddrChecksum bool target address was signed using the Ethereum checksum (EIP-55)
-  * @return bytes32 DMD style hash of the claim message.
+  * @return bytes32 Bitcoin hash of the claim message.
   */
   function createClaimMessage(address _claimToAddr, bool _claimAddrChecksum)
         public
@@ -308,22 +313,54 @@ contract ClaimContract {
             );
     }
 
+      /**
+  * @dev returns the hash for the provided claim target address.
+  * @param _claimToAddr address target address for the claim.
+  * @param _claimAddrChecksum bool target address was signed using the Ethereum checksum (EIP-55)
+  * @return bytes32 Diamond hash of the claim message.
+  */
+  function createClaimMessageDMD(address _claimToAddr, bool _claimAddrChecksum)
+        public
+        view
+        returns (bytes memory)
+    {
+        //TODO: pass this as an argument. evaluate in JS before includeAddrChecksum is used or not.
+        //now for testing, we assume Yes.
+
+        bytes memory addrStr = calculateAddressString(_claimToAddr, _claimAddrChecksum);
+
+        return abi.encodePacked(
+                DIAMOND_SIG_PREFIX_LEN,
+                DIAMOND_SIG_PREFIX_STR,
+                prefixStr,
+                addrStr
+            );
+    }
+
   /**
   * @dev returns the hash for the provided claim target address.
   * @param _claimToAddr address target address for the claim.
   * @param _claimAddrChecksum bool target address was signed using the Ethereum checksum (EIP-55)
+  * @param _bitcoinCompatibility bool define if bitcoin compatibility hash function of diamond hash functions has to be used.
   * @return bytes32 DMD style hash of the claim message.
   */
   function getHashForClaimMessage(
     address _claimToAddr,
-    bool  _claimAddrChecksum)
+    bool  _claimAddrChecksum,
+    bool _bitcoinCompatibility)
     public
     view
     returns (bytes32)
   {
-    return calcHash256(
+    if (_bitcoinCompatibility) {
+      return calcHash256(
           createClaimMessage(_claimToAddr, _claimAddrChecksum)
       );
+    } else {
+      return calcHash256(
+          createClaimMessageDMD(_claimToAddr, _claimAddrChecksum)
+      );
+    }
   }
 
   /**
@@ -363,7 +400,8 @@ contract ClaimContract {
     bytes32 _pubKeyY,
     uint8 _v,
     bytes32 _r,
-    bytes32 _s
+    bytes32 _s,
+    bool _bitcoinCompatibilityMode
   )
     public
     view
@@ -380,9 +418,7 @@ contract ClaimContract {
       //we need to check if X and Y corresponds to R and S.
 
       /* Create and hash the claim message text */
-      bytes32 messageHash = calcHash256(
-          createClaimMessage(_claimToAddr, _claimAddrChecksum)
-      );
+      bytes32 messageHash = getHashForClaimMessage(_claimToAddr, _claimAddrChecksum, _bitcoinCompatibilityMode);
 
       /* Verify the public key */
       return ecrecover(messageHash, _v, _r, _s) == pubKeyEthAddr;
@@ -524,15 +560,36 @@ contract ClaimContract {
     // allOldAdresses.push(oldAddress);
   }
 
-  function claim(bytes20 oldAddress, address payable targetAdress)
+  function claim(
+    bytes20 _oldAddress, 
+    address payable _targetAdress,
+    bool    _claimAddrChecksum,
+    bytes32 _pubKeyX,
+    bytes32 _pubKeyY,
+    uint8 _v,
+    bytes32 _r,
+    bytes32 _s,
+    bool _bitcoinCompatibilityMode
+  )
   public
   {
     //if already claimed, it just returns.
-    uint256 currentBalance = balances[oldAddress];
+    uint256 currentBalance = balances[_oldAddress];
     if ( currentBalance == 0)
     {
         return;
     }
+
+    require(claimMessageMatchesSignature(
+        _targetAdress,
+        _claimAddrChecksum,
+        _pubKeyX,
+        _pubKeyY,
+        _v,
+        _r,
+        _s,
+        _bitcoinCompatibilityMode),
+      'Signature does not match for this claiming procedure.');
 
     (uint256 nominator, uint256 denominator) = getCurrentDilutedClaimFactor();
 
@@ -545,8 +602,8 @@ contract ClaimContract {
     uint256 claimBalance = (currentBalance * nominator) / denominator;
     
     // remember that the funds are going to get claimed, hard protection about reentrancy attacks.
-    balances[oldAddress] = 0;
-    targetAdress.transfer(claimBalance);
+    balances[_oldAddress] = 0;
+    _targetAdress.transfer(claimBalance);
   }
 
 }
