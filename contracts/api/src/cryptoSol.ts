@@ -69,8 +69,7 @@ export class CryptoSol {
     pubkeyY: string,
     sigV: string,
     sigR: string,
-    sigS: string,
-    bitcoinCompatibility: boolean) :
+    sigS: string) :
     Promise<boolean>
     {
       const result = 
@@ -81,8 +80,7 @@ export class CryptoSol {
           ensure0x(pubkeyY), 
           ensure0x(sigV),
           ensure0x(sigR), 
-          ensure0x(sigS),
-          bitcoinCompatibility).call();
+          ensure0x(sigS)).call();
       this.log('Claim Result: ', result);
       return result;
     }

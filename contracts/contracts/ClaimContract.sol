@@ -341,26 +341,18 @@ contract ClaimContract {
   * @dev returns the hash for the provided claim target address.
   * @param _claimToAddr address target address for the claim.
   * @param _claimAddrChecksum bool target address was signed using the Ethereum checksum (EIP-55)
-  * @param _bitcoinCompatibility bool define if bitcoin compatibility hash function of diamond hash functions has to be used.
   * @return bytes32 DMD style hash of the claim message.
   */
   function getHashForClaimMessage(
     address _claimToAddr,
-    bool  _claimAddrChecksum,
-    bool _bitcoinCompatibility)
+    bool  _claimAddrChecksum)
     public
     view
     returns (bytes32)
   {
-    if (_bitcoinCompatibility) {
-      return calcHash256(
-          createClaimMessage(_claimToAddr, _claimAddrChecksum)
-      );
-    } else {
-      return calcHash256(
-          createClaimMessageDMD(_claimToAddr, _claimAddrChecksum)
-      );
-    }
+    return calcHash256(
+      createClaimMessage(_claimToAddr, _claimAddrChecksum)
+    );
   }
 
   /**
@@ -400,8 +392,7 @@ contract ClaimContract {
     bytes32 _pubKeyY,
     uint8 _v,
     bytes32 _r,
-    bytes32 _s,
-    bool _bitcoinCompatibilityMode
+    bytes32 _s
   )
     public
     view
@@ -418,7 +409,7 @@ contract ClaimContract {
       //we need to check if X and Y corresponds to R and S.
 
       /* Create and hash the claim message text */
-      bytes32 messageHash = getHashForClaimMessage(_claimToAddr, _claimAddrChecksum, _bitcoinCompatibilityMode);
+      bytes32 messageHash = getHashForClaimMessage(_claimToAddr, _claimAddrChecksum);
 
       /* Verify the public key */
       return ecrecover(messageHash, _v, _r, _s) == pubKeyEthAddr;
@@ -568,8 +559,7 @@ contract ClaimContract {
     bytes32 _pubKeyY,
     uint8 _v,
     bytes32 _r,
-    bytes32 _s,
-    bool _bitcoinCompatibilityMode
+    bytes32 _s
   )
   public
   {
@@ -587,8 +577,7 @@ contract ClaimContract {
         _pubKeyY,
         _v,
         _r,
-        _s,
-        _bitcoinCompatibilityMode),
+        _s),
       'Signature does not match for this claiming procedure.');
 
     (uint256 nominator, uint256 denominator) = getCurrentDilutedClaimFactor();

@@ -101,8 +101,7 @@ export class ClaimContract extends Contract {
 
     getHashForClaimMessage(
       _claimToAddr: string,
-      _claimAddrChecksum: boolean,
-      _bitcoinCompatibility: boolean
+      _claimAddrChecksum: boolean
     ): TransactionObject<string>;
 
     getEthAddressFromSignature(
@@ -120,8 +119,7 @@ export class ClaimContract extends Contract {
       _pubKeyY: string | number[],
       _v: number | string,
       _r: string | number[],
-      _s: string | number[],
-      _bitcoinCompatibilityMode: boolean
+      _s: string | number[]
     ): TransactionObject<boolean>;
 
     getDilutionTimestamp1(): TransactionObject<string>;
@@ -153,8 +151,7 @@ export class ClaimContract extends Contract {
       _pubKeyY: string | number[],
       _v: number | string,
       _r: string | number[],
-      _s: string | number[],
-      _bitcoinCompatibilityMode: boolean
+      _s: string | number[]
     ): TransactionObject<void>;
   };
   events: {

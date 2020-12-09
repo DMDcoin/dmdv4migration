@@ -268,8 +268,8 @@ export class TestFunctions {
     this.log('xy27: ', xy27);
     this.log('xy28: ', xy28);
 
-    const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex, true).call();
-    const result28 = await this.instance.methods.claimMessageMatchesSignature(message,true, xy28.x, xy28.y, 28, rHex, sHex, true).call();
+    const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call();
+    const result28 = await this.instance.methods.claimMessageMatchesSignature(message,true, xy28.x, xy28.y, 28, rHex, sHex).call();
 
     this.log('result27: ', result27);
     this.log('result28: ', result28);
@@ -366,7 +366,7 @@ export class TestFunctions {
     const message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
     var hash = '0x' + bitcoinMessage.magicHash(message).toString('hex');
     this.log('Bitcoin Hash: ', hash);
-    const hashFromSolidity = await this.instance.methods.getHashForClaimMessage(message, true, true).call();
+    const hashFromSolidity = await this.instance.methods.getHashForClaimMessage(message, true).call();
     this.log('hashFromSolidity', hashFromSolidity);
     expect(hash).to.be.equal(hashFromSolidity);
   }
@@ -483,8 +483,8 @@ export class TestFunctions {
 
     this.log('got public key X from signature:', key.x);
 
-    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'), true);
-    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'), true);
+    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
 
     expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
     //this.log('Soldity Result: ', txResult);
@@ -508,8 +508,8 @@ export class TestFunctions {
 
     this.log('got public key X from signature:', key.x);
 
-    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'), true);
-    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'), true);
+    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
 
     expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
     //this.log('Soldity Result: ', txResult);
