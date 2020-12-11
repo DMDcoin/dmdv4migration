@@ -4,6 +4,8 @@ contract ClaimContract {
 
   enum AddressType { LegacyUncompressed, LegacyCompressed, SegwitUncompressed, SegwitCompressed }
 
+  event Claim(bytes20 indexed _from, address _to, uint amount, uint _nominator, uint _denominator);
+
   bytes16 internal constant HEX_DIGITS = "0123456789abcdef";
 
   /* Constants for preparing the claim message text */
@@ -73,36 +75,36 @@ contract ClaimContract {
   }
 
     /// @dev returns the essential part of a Bitcoin-style address associated with an ECDSA public key
-    /// @param a_publicKeyX X coordinate of the ECDSA public key
-    /// @param a_publicKeyY Y coordinate of the ECDSA public key
-    /// @param a_nAddressType Whether DMD is Legacy or Segwit address and if it was compressed
+    /// @param _publicKeyX X coordinate of the ECDSA public key
+    /// @param _publicKeyY Y coordinate of the ECDSA public key
+    /// @param _addressType Whether DMD is Legacy or Segwit address and if it was compressed
     /// @return Raw parts of the Bitcoin Style address
-    function PublicKeyToBitcoinAddress(
-        bytes32 a_publicKeyX,
-        bytes32 a_publicKeyY,
-        AddressType a_nAddressType
+    function publicKeyToBitcoinAddress(
+        bytes32 _publicKeyX,
+        bytes32 _publicKeyY,
+        AddressType _addressType
     ) public pure returns (bytes20)
     {
         bytes20 publicKey;
         uint8 initialByte;
-        if(a_nAddressType == AddressType.LegacyCompressed || a_nAddressType == AddressType.SegwitCompressed)
+        if(_addressType == AddressType.LegacyCompressed || _addressType == AddressType.SegwitCompressed)
         {
             //Hash the compressed format
-            initialByte = (uint256(a_publicKeyY) & 1) == 0 ? 0x02 : 0x03;
-            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, a_publicKeyX))));
+            initialByte = (uint256(_publicKeyY) & 1) == 0 ? 0x02 : 0x03;
+            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, _publicKeyX))));
         }
         else
         {
             //Hash the uncompressed format
             initialByte = 0x04;
-            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, a_publicKeyX, a_publicKeyY))));
+            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, _publicKeyX, _publicKeyY))));
         }
 
-        if(a_nAddressType == AddressType.LegacyUncompressed || a_nAddressType == AddressType.LegacyCompressed)
+        if(_addressType == AddressType.LegacyUncompressed || _addressType == AddressType.LegacyCompressed)
         {
             return publicKey;
         }
-        else if(a_nAddressType == AddressType.SegwitUncompressed || a_nAddressType == AddressType.SegwitCompressed)
+        else if(_addressType == AddressType.SegwitUncompressed || _addressType == AddressType.SegwitCompressed)
         {
             return ripemd160(abi.encodePacked(sha256(abi.encodePacked(hex"0014", publicKey))));
         }
@@ -110,15 +112,15 @@ contract ClaimContract {
 
 
     /// @dev Convert an uncompressed ECDSA public key into an Ethereum address
-    /// @param a_publicKeyX X parameter of uncompressed ECDSA public key
-    /// @param a_publicKeyY Y parameter of uncompressed ECDSA public key
+    /// @param _publicKeyX X parameter of uncompressed ECDSA public key
+    /// @param _publicKeyY Y parameter of uncompressed ECDSA public key
     /// @return Ethereum address generated from the ECDSA public key
-    function PublicKeyToEthereumAddress(
-        bytes32 a_publicKeyX,
-        bytes32 a_publicKeyY
+    function publicKeyToEthereumAddress(
+        bytes32 _publicKeyX,
+        bytes32 _publicKeyY
     ) public pure returns (address)
     {
-        bytes32 hash = keccak256(abi.encodePacked(a_publicKeyX, a_publicKeyY));
+        bytes32 hash = keccak256(abi.encodePacked(_publicKeyX, _publicKeyY));
         return address(uint160(uint256((hash))));
     }
 
@@ -173,7 +175,7 @@ contract ClaimContract {
             _v,
             _r,
             _s,
-            PublicKeyToEthereumAddress(_publicKeyX, _publicKeyY)
+            publicKeyToEthereumAddress(_publicKeyX, _publicKeyY)
         );
     }
 
@@ -552,7 +554,6 @@ contract ClaimContract {
   }
 
   function claim(
-    bytes20 _oldAddress, 
     address payable _targetAdress,
     bool    _claimAddrChecksum,
     bytes32 _pubKeyX,
@@ -563,13 +564,14 @@ contract ClaimContract {
   )
   public
   {
-    //if already claimed, it just returns.
-    uint256 currentBalance = balances[_oldAddress];
-    if ( currentBalance == 0)
-    {
-        return;
-    }
+    //retrieve the oldAddress out of public and private key.
+    bytes20 oldAddress = publicKeyToBitcoinAddress(_pubKeyX, _pubKeyY, AddressType.LegacyCompressed);
 
+    //if already claimed, it just returns.
+    uint256 currentBalance = balances[oldAddress];
+    require(currentBalance > 0, 'provided address does not have a balance.');
+
+    // verify if the signature matches to the provided pubKey here.
     require(claimMessageMatchesSignature(
         _targetAdress,
         _claimAddrChecksum,
@@ -583,16 +585,15 @@ contract ClaimContract {
     (uint256 nominator, uint256 denominator) = getCurrentDilutedClaimFactor();
 
     // the nominator is 0 if the claim period passed.
-    if (nominator == 0) 
-    {
-        return;
-    }
+    require(nominator > 0, 'claiming period has already passed.');
 
     uint256 claimBalance = (currentBalance * nominator) / denominator;
     
     // remember that the funds are going to get claimed, hard protection about reentrancy attacks.
-    balances[_oldAddress] = 0;
+    balances[oldAddress] = 0;
     _targetAdress.transfer(claimBalance);
+
+    emit Claim(oldAddress, _targetAdress, claimBalance, nominator, denominator);
   }
 
 }

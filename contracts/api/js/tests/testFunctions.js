@@ -444,7 +444,7 @@ var TestFunctions = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         claimToAddress = "0xA8aA9df9c03505B8d10C344365aDa258d8a61d0b";
-                        signatureBase64 = "IORJE5NrWNbfQOmfPjdOryNCbOrUZFtlgcclydZXLQq9XvGKKChM2YGoitnl7Cn3I+SAdOTQwpDoxcnQ7huEoUc=";
+                        signatureBase64 = "IM6rfcjDPwJJLhsbRPYm+whTQ0FA0u8cSPPW40LnGCmbU0yNfix+EjM70wwlkfQ56rMx3k4Vm8xuMBaVRPOtnMU=";
                         key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
                         rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
                         this.log('got public key X from signature:', key.x);

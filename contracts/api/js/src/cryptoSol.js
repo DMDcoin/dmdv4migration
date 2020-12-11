@@ -144,7 +144,7 @@ var CryptoSol = /** @class */ (function () {
             var legacyCompressedEnumValue;
             return __generator(this, function (_a) {
                 legacyCompressedEnumValue = 1;
-                return [2 /*return*/, this.instance.methods.PublicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call()];
+                return [2 /*return*/, this.instance.methods.publicKeyToBitcoinAddress('0x' + x.toString('hex'), '0x' + y.toString('hex'), legacyCompressedEnumValue).call()];
             });
         });
     };

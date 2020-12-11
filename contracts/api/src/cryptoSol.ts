@@ -110,7 +110,7 @@ export class CryptoSol {
      */
     async publicKeyToBitcoinAddressEssential(x: BN, y: BN) : Promise<string> {
       const legacyCompressedEnumValue = 1;
-      return this.instance.methods.PublicKeyToBitcoinAddress(
+      return this.instance.methods.publicKeyToBitcoinAddress(
         '0x' + x.toString('hex'),
         '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
     }

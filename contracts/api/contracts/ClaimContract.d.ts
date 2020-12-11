@@ -42,15 +42,15 @@ export class ClaimContract extends Contract {
       v: number | string
     ): TransactionObject<string>;
 
-    PublicKeyToBitcoinAddress(
-      a_publicKeyX: string | number[],
-      a_publicKeyY: string | number[],
-      a_nAddressType: number | string
+    publicKeyToBitcoinAddress(
+      _publicKeyX: string | number[],
+      _publicKeyY: string | number[],
+      _addressType: number | string
     ): TransactionObject<string>;
 
-    PublicKeyToEthereumAddress(
-      a_publicKeyX: string | number[],
-      a_publicKeyY: string | number[]
+    publicKeyToEthereumAddress(
+      _publicKeyX: string | number[],
+      _publicKeyY: string | number[]
     ): TransactionObject<string>;
 
     ValidateSignature(
@@ -144,7 +144,6 @@ export class ClaimContract extends Contract {
     addBalance(oldAddress: string | number[]): TransactionObject<void>;
 
     claim(
-      _oldAddress: string | number[],
       _targetAdress: string,
       _claimAddrChecksum: boolean,
       _pubKeyX: string | number[],
@@ -155,6 +154,18 @@ export class ClaimContract extends Contract {
     ): TransactionObject<void>;
   };
   events: {
+    Claim: ContractEvent<{
+      _from: string;
+      _to: string;
+      amount: string;
+      _nominator: string;
+      _denominator: string;
+      0: string;
+      1: string;
+      2: string;
+      3: string;
+      4: string;
+    }>;
     allEvents: (
       options?: EventOptions,
       cb?: Callback<EventLog>
