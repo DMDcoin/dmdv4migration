@@ -25,8 +25,6 @@ export class ClaimContract extends Contract {
 
     deploymentTimestamp(): TransactionObject<string>;
 
-    diluted(arg0: string | number[]): TransactionObject<string>;
-
     dilution_s1_75_executed(): TransactionObject<boolean>;
 
     dilution_s2_50_executed(): TransactionObject<boolean>;

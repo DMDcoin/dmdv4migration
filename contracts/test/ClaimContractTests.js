@@ -7,7 +7,6 @@ const CryptoJS = require('../api/js/src/cryptoJS');
 
 const cryptoHelpers = require('../api/js/src/cryptoHelpers');
 
-const stringToUTF8Hex = cryptoHelpers.stringToUTF8Hex;
 
 var EC = require('elliptic').ec;
 var BN = require('bn.js');
@@ -39,7 +38,7 @@ contract('ClaimContract', (accounts) => {
   let cryptoJS = new CryptoJS.CryptoJS();
 
   it('deploying a new claim contract', async () => {
-    claimContract = await ClaimContract.new(accounts[0], '0x', callParams);
+    claimContract = await ClaimContract.new(accounts[0], accounts[1], '0x', callParams);
     testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
     cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
   })
@@ -122,11 +121,7 @@ contract('ClaimContract', (accounts) => {
 
   it('deploying a new claim contract with claim to defined prefix', async () => {
 
-    //const prefix  = stringToUTF8Hex('claim to ');
-
-    //console.log('stringToUTF8Hex', prefix);
-
-    claimContract = await ClaimContract.new(accounts[0], '0x', callParams);
+    claimContract = await ClaimContract.new(accounts[0], accounts[1], '0x', callParams);
     testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
     cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
   })

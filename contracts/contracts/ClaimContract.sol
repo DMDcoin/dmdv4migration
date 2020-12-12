@@ -27,7 +27,6 @@ contract ClaimContract {
 
 
   mapping (bytes20 => uint256)  public balances;
-  mapping (bytes20 => uint256)  public diluted;
 
   // tracks if dilution for 75% was executed
   bool public dilution_s1_75_executed;
@@ -40,20 +39,34 @@ contract ClaimContract {
 
   uint public deploymentTimestamp;
 
-  address payable public lateClaimBeneficorAddress;
+  address payable public lateClaimBeneficorAddressReinsertPot;
+  address payable public lateClaimBeneficorAddressDAO;
+
   
   bytes prefixStr;
   //address owner;
 
-  constructor(address payable _lateClaimBeneficorAddress, bytes memory _prefixStr)
+  constructor(address payable _lateClaimBeneficorAddressReinsertPot, address payable _lateClaimBeneficorAddressDAO, bytes memory _prefixStr)
   public 
   {
-    //balances[""] = 1000000000000;
     deploymentTimestamp = block.timestamp;
-    lateClaimBeneficorAddress = _lateClaimBeneficorAddress;
+    lateClaimBeneficorAddressReinsertPot = _lateClaimBeneficorAddressReinsertPot;
+    lateClaimBeneficorAddressDAO = _lateClaimBeneficorAddressDAO;
     prefixStr = _prefixStr;
   }
 
+  function _sendDilutedAmounts(uint amount)
+  internal
+  {
+    //diluted amounts are split 50/50 to DAO and ReinsertPot.
+    uint transferForResinsertPot = amount / 2;
+    uint transferForDAO = amount - transferForResinsertPot;
+
+    (bool success, ) =  lateClaimBeneficorAddressReinsertPot.call{value: transferForResinsertPot}("");
+    require(success, 'Transfer to reinsert failed.');
+    (success, ) = lateClaimBeneficorAddressDAO.call{value: transferForDAO}("");
+    require(success, 'Transfer to DAO failed.');
+  }
 
   function getPublicKeyFromBitcoinSignature(bytes32 hashValue, bytes32 r, bytes32 s, uint8 v)
   public
@@ -443,6 +456,9 @@ contract ClaimContract {
     return deploymentTimestamp + (YEAR_IN_SECONDS * 4) + LEAP_YEAR_IN_SECONDS;
   }
 
+
+
+
    /**
   * @dev dilutes the entitlement after a certain time passed away and sends it to the beneficor (reinsert pot)
   * @return amount of DMD that got send to the beneficor.
@@ -459,7 +475,9 @@ contract ClaimContract {
 
     uint totalBalance = (payable(address(this))).balance;
     uint dilutionBalance = totalBalance / 4;
-    lateClaimBeneficorAddress.transfer(dilutionBalance);
+
+    _sendDilutedAmounts(dilutionBalance);
+
     return dilutionBalance;
   }
 
@@ -486,11 +504,13 @@ contract ClaimContract {
     // we can do this by dilluting another 1 / 3.
 
     uint dilutionBalance = totalBalance / 3;
-    lateClaimBeneficorAddress.transfer(dilutionBalance);
+
+    _sendDilutedAmounts(dilutionBalance);
+
     return dilutionBalance;
   }
 
-   /**
+  /**
   * @dev dilutes the entitlement after a certain time passed away and sends it to the beneficor (reinsert pot)
   * @return amount of DMD that got send to the beneficor.
   */
@@ -509,7 +529,8 @@ contract ClaimContract {
     uint totalBalance = (payable(address(this))).balance;
     
     // 50% got already diluted. this is the last phase, we dilute the rest.
-    lateClaimBeneficorAddress.transfer(totalBalance);
+    _sendDilutedAmounts(totalBalance);
+
     return totalBalance;
   }
 
@@ -535,12 +556,6 @@ contract ClaimContract {
         return (0, 1);
       }
   }
-
-//   function transferDilutedFundsToBeneficor()
-//   public
-//   {
-//   }
-
   
 
   function addBalance(bytes20 oldAddress)
@@ -548,7 +563,6 @@ contract ClaimContract {
   public
   {
     require(balances[oldAddress] == 0, "There is already a balance defined for this old address");
-    require(diluted[oldAddress] == 0, "There was already a balance defined for this old address");
     balances[oldAddress] = msg.value;
     // allOldAdresses.push(oldAddress);
   }
