@@ -121,13 +121,13 @@ contract('ClaimContract', (accounts) => {
 
   it('deploying a new claim contract with claim to defined prefix', async () => {
 
-    claimContract = await ClaimContract.new(accounts[0], accounts[1], '0x', callParams);
+    const claimToString = cryptoHelpers.stringToUTF8Hex('claim to ');
+    claimContract = await ClaimContract.new(accounts[0], accounts[1], claimToString, callParams);
     testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
     cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
   })
-    
 
-  it('Validating signature in solidity', async() => {
+  it('Validating signature in solidity with defined prefix.', async() => {
 
     await testFunctions.testSignatureVerificationInContractDMD();
   })

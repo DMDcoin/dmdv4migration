@@ -46,6 +46,7 @@ exports.__esModule = true;
 exports.CryptoSol = void 0;
 var cryptoHelpers_1 = require("./cryptoHelpers");
 var cryptoJS_1 = require("./cryptoJS");
+var cryptoHelpers_2 = require("./cryptoHelpers");
 /**
  * Crypto functions used in this project implemented in Soldity.
  */
@@ -165,6 +166,20 @@ var CryptoSol = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.instance.methods.pubKeyToEthAddress(x, y).call()];
+            });
+        });
+    };
+    CryptoSol.prototype.prefixString = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var bytes, buffer;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.instance.methods.prefixStr().call()];
+                    case 1:
+                        bytes = _a.sent();
+                        buffer = cryptoHelpers_2.hexToBuf(bytes);
+                        return [2 /*return*/, new TextDecoder("utf-8").decode(buffer)];
+                }
             });
         });
     };

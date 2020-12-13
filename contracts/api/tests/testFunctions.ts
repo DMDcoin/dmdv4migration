@@ -494,20 +494,14 @@ export class TestFunctions {
 
     // const address = "dWmsChLpWQQTVw9Ah2y2h8M53ZqWuxHd3F";
     // const claimToAddress = "0x43B79745bdB4dA8449f28Caf1a8a5E5661949518";
-    //const signatureBase64 = "HyflLtBPKPOYrDKMA3lknM+fwb85WctNfaItPQXz7jE9LFwoF2zbR5IN4zHYIFPUffbaMElGO7IlcTZZ3aLDx2g="
 
-    const claimToAddress = "0xA8aA9df9c03505B8d10C344365aDa258d8a61d0b";
-    //const address = "dceCTudsSHMmWMswUNezkYVhTSskG7rnYh";
-    
-    //const signatureBase64 = "IDuuajA4vgGuu77fdoE0tntWP5TMGPLDO2VduTqE6wPKR2+fnF+JFD3LErn8vtqk81fL3qfjJChcrUnG5eTv/tQ="; 
+    const claimToAddress = "0x9edD67cCFd52211d769A7A09b989d148749B1d10";    
+    const signatureBase64 = "IDuuajA4vgGuu77fdoE0tntWP5TMGPLDO2VduTqE6wPKR2+fnF+JFD3LErn8vtqk81fL3qfjJChcrUnG5eTv/tQ=";
+  
 
-    //const signatureBase64 = "IORJE5NrWNbfQOmfPjdOryNCbOrUZFtlgcclydZXLQq9XvGKKChM2YGoitnl7Cn3I+SAdOTQwpDoxcnQ7huEoUc=";
+    const prefixString = await this.cryptoSol.prefixString();
 
-    //const signatureBase64 = "HyflLtBPKPOYrDKMA3lknM+fwb85WctNfaItPQXz7jE9LFwoF2zbR5IN4zHYIFPUffbaMElGO7IlcTZZ3aLDx2g="; 
-
-    const signatureBase64 = "IM6rfcjDPwJJLhsbRPYm+whTQ0FA0u8cSPPW40LnGCmbU0yNfix+EjM70wwlkfQ56rMx3k4Vm8xuMBaVRPOtnMU=";
-
-    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
+    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress);
     const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
 
     this.log('got public key X from signature:', key.x);

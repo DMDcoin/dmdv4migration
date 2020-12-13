@@ -31,7 +31,11 @@ export class ClaimContract extends Contract {
 
     dilution_s3_0_executed(): TransactionObject<boolean>;
 
-    lateClaimBeneficorAddress(): TransactionObject<string>;
+    lateClaimBeneficorAddressDAO(): TransactionObject<string>;
+
+    lateClaimBeneficorAddressReinsertPot(): TransactionObject<string>;
+
+    prefixStr(): TransactionObject<string>;
 
     getPublicKeyFromBitcoinSignature(
       hashValue: string | number[],
@@ -88,11 +92,6 @@ export class ClaimContract extends Contract {
     ): TransactionObject<string>;
 
     createClaimMessage(
-      _claimToAddr: string,
-      _claimAddrChecksum: boolean
-    ): TransactionObject<string>;
-
-    createClaimMessageDMD(
       _claimToAddr: string,
       _claimAddrChecksum: boolean
     ): TransactionObject<string>;

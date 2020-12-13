@@ -439,20 +439,23 @@ var TestFunctions = /** @class */ (function () {
     };
     TestFunctions.prototype.testSignatureVerificationInContractDMD = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var claimToAddress, signatureBase64, key, rs, txResult1, txResult2;
+            var claimToAddress, signatureBase64, prefixString, key, rs, txResult1, txResult2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        claimToAddress = "0xA8aA9df9c03505B8d10C344365aDa258d8a61d0b";
-                        signatureBase64 = "IM6rfcjDPwJJLhsbRPYm+whTQ0FA0u8cSPPW40LnGCmbU0yNfix+EjM70wwlkfQ56rMx3k4Vm8xuMBaVRPOtnMU=";
-                        key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
+                        claimToAddress = "0x9edD67cCFd52211d769A7A09b989d148749B1d10";
+                        signatureBase64 = "IDuuajA4vgGuu77fdoE0tntWP5TMGPLDO2VduTqE6wPKR2+fnF+JFD3LErn8vtqk81fL3qfjJChcrUnG5eTv/tQ=";
+                        return [4 /*yield*/, this.cryptoSol.prefixString()];
+                    case 1:
+                        prefixString = _a.sent();
+                        key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress);
                         rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
                         this.log('got public key X from signature:', key.x);
                         return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
-                    case 1:
+                    case 2:
                         txResult1 = _a.sent();
                         return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
-                    case 2:
+                    case 3:
                         txResult2 = _a.sent();
                         chai_1.expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
                         return [2 /*return*/];

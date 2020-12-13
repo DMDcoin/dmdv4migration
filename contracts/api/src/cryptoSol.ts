@@ -1,14 +1,16 @@
 
 import Web3 from 'web3';
 import ClaimContract from '../contracts/ClaimContract';
-import { ensure0x } from './cryptoHelpers';
+import { ensure0x, stringToUTF8Hex } from './cryptoHelpers';
 import { BN } from 'ethereumjs-util';
 import { CryptoJS } from './cryptoJS';
+import { hexToBuf } from './cryptoHelpers';
+
 /**
  * Crypto functions used in this project implemented in Soldity.
  */
 export class CryptoSol {
-
+  
   public cryptoJS = new CryptoJS();
   
   private logDebug: boolean = false; 
@@ -123,4 +125,14 @@ export class CryptoSol {
     public async pubKeyToEthAddress(x: string, y: string) {
       return this.instance.methods.pubKeyToEthAddress(x, y).call();
     }
+
+    public async prefixString() {
+
+      const bytes = await this.instance.methods.prefixStr().call();
+      const buffer = hexToBuf(bytes);
+      return new TextDecoder("utf-8").decode(buffer);
+
+      //return stringToUTF8Hex
+    }
+  
 }

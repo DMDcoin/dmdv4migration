@@ -40,11 +40,15 @@ contract ClaimContract {
   uint public deploymentTimestamp;
 
   address payable public lateClaimBeneficorAddressReinsertPot;
+  
   address payable public lateClaimBeneficorAddressDAO;
 
+  /// @dev the prefix for the signing message.
+  /// A Prefix for the signing message can be used to separate different message between different contracts/networks
+  /// e.g.: "claim to testnet" for indicating that this is only a testnet message.
+  /// using another prefix makes old signatures invalid.
+  bytes public prefixStr;
   
-  bytes prefixStr;
-  //address owner;
 
   constructor(address payable _lateClaimBeneficorAddressReinsertPot, address payable _lateClaimBeneficorAddressDAO, bytes memory _prefixStr)
   public 
@@ -323,30 +327,6 @@ contract ClaimContract {
                 BITCOIN_SIG_PREFIX_LEN,
                 BITCOIN_SIG_PREFIX_STR,
                 uint8(prefixStr.length) + ETH_ADDRESS_HEX_LEN + 2,
-                prefixStr,
-                addrStr
-            );
-    }
-
-      /**
-  * @dev returns the hash for the provided claim target address.
-  * @param _claimToAddr address target address for the claim.
-  * @param _claimAddrChecksum bool target address was signed using the Ethereum checksum (EIP-55)
-  * @return bytes32 Diamond hash of the claim message.
-  */
-  function createClaimMessageDMD(address _claimToAddr, bool _claimAddrChecksum)
-        public
-        view
-        returns (bytes memory)
-    {
-        //TODO: pass this as an argument. evaluate in JS before includeAddrChecksum is used or not.
-        //now for testing, we assume Yes.
-
-        bytes memory addrStr = calculateAddressString(_claimToAddr, _claimAddrChecksum);
-
-        return abi.encodePacked(
-                DIAMOND_SIG_PREFIX_LEN,
-                DIAMOND_SIG_PREFIX_STR,
                 prefixStr,
                 addrStr
             );
