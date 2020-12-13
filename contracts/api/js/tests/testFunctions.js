@@ -196,7 +196,7 @@ var TestFunctions = /** @class */ (function () {
                         message = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
                         btcAddressbase58check = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
                         signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
-                        return [4 /*yield*/, this.instance.methods.createClaimMessage(message, true).call()];
+                        return [4 /*yield*/, this.instance.methods.createClaimMessage(message, true, '0x').call()];
                     case 1:
                         claimMessage = _a.sent();
                         this.log('Claim Message:');
@@ -220,10 +220,10 @@ var TestFunctions = /** @class */ (function () {
                         xy28 = this.recoveryToXY(recoverResult28);
                         this.log('xy27: ', xy27);
                         this.log('xy28: ', xy28);
-                        return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call()];
+                        return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, '', xy27.x, xy27.y, 27, rHex, sHex).call()];
                     case 3:
                         result27 = _a.sent();
-                        return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, xy28.x, xy28.y, 28, rHex, sHex).call()];
+                        return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(message, true, '', xy28.x, xy28.y, 28, rHex, sHex).call()];
                     case 4:
                         result28 = _a.sent();
                         this.log('result27: ', result27);
@@ -321,7 +321,7 @@ var TestFunctions = /** @class */ (function () {
                         message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
                         hash = '0x' + bitcoinMessage.magicHash(message).toString('hex');
                         this.log('Bitcoin Hash: ', hash);
-                        return [4 /*yield*/, this.instance.methods.getHashForClaimMessage(message, true).call()];
+                        return [4 /*yield*/, this.instance.methods.getHashForClaimMessage(message, true, []).call()];
                     case 1:
                         hashFromSolidity = _a.sent();
                         this.log('hashFromSolidity', hashFromSolidity);
@@ -377,10 +377,10 @@ var TestFunctions = /** @class */ (function () {
                         if (!(index < signaturesBase64.length)) return [3 /*break*/, 5];
                         signatureBase64 = this.getTestSignatures()[0];
                         rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
-                        return [4 /*yield*/, this.cryptoSol.getEthAddressFromSignature(message, true, '0x1b', rs.r, rs.s)];
+                        return [4 /*yield*/, this.cryptoSol.getEthAddressFromSignature(message, true, '', '0x1b', rs.r, rs.s)];
                     case 2:
                         recoveredETHAddress = _a.sent();
-                        return [4 /*yield*/, this.cryptoSol.getEthAddressFromSignature(message, true, '0x1c', rs.r, rs.s)];
+                        return [4 /*yield*/, this.cryptoSol.getEthAddressFromSignature(message, true, '', '0x1c', rs.r, rs.s)];
                     case 3:
                         recoveredETHAddress2 = _a.sent();
                         this.log('recovered: ', recoveredETHAddress);
@@ -425,10 +425,10 @@ var TestFunctions = /** @class */ (function () {
                         key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
                         rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
                         this.log('got public key X from signature:', key.x);
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 1:
                         txResult1 = _a.sent();
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 2:
                         txResult2 = _a.sent();
                         chai_1.expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
@@ -451,10 +451,10 @@ var TestFunctions = /** @class */ (function () {
                         key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress);
                         rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
                         this.log('got public key X from signature:', key.x);
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 2:
                         txResult1 = _a.sent();
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 3:
                         txResult2 = _a.sent();
                         chai_1.expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");

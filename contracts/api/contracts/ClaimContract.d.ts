@@ -55,30 +55,6 @@ export class ClaimContract extends Contract {
       _publicKeyY: string | number[]
     ): TransactionObject<string>;
 
-    ValidateSignature(
-      _hash: string | number[],
-      _v: number | string,
-      _r: string | number[],
-      _s: string | number[],
-      _address: string
-    ): TransactionObject<boolean>;
-
-    ECDSAVerify(
-      _addressClaiming: string,
-      _publicKeyX: string | number[],
-      _publicKeyY: string | number[],
-      _v: number | string,
-      _r: string | number[],
-      _s: string | number[]
-    ): TransactionObject<boolean>;
-
-    checkSignature(
-      _hash: string | number[],
-      _r: string | number[],
-      _s: string | number[],
-      _v: number | string
-    ): TransactionObject<string>;
-
     pubKeyToEthAddress(
       pubKeyX: string | number[],
       pubKeyY: string | number[]
@@ -93,17 +69,20 @@ export class ClaimContract extends Contract {
 
     createClaimMessage(
       _claimToAddr: string,
-      _claimAddrChecksum: boolean
+      _claimAddrChecksum: boolean,
+      _postfix: string | number[]
     ): TransactionObject<string>;
 
     getHashForClaimMessage(
       _claimToAddr: string,
-      _claimAddrChecksum: boolean
+      _claimAddrChecksum: boolean,
+      _postfix: string | number[]
     ): TransactionObject<string>;
 
     getEthAddressFromSignature(
       _claimToAddr: string,
       _claimAddrChecksum: boolean,
+      _postfix: string | number[],
       _v: number | string,
       _r: string | number[],
       _s: string | number[]
@@ -112,6 +91,7 @@ export class ClaimContract extends Contract {
     claimMessageMatchesSignature(
       _claimToAddr: string,
       _claimAddrChecksum: boolean,
+      _postFix: string | number[],
       _pubKeyX: string | number[],
       _pubKeyY: string | number[],
       _v: number | string,
@@ -143,6 +123,7 @@ export class ClaimContract extends Contract {
     claim(
       _targetAdress: string,
       _claimAddrChecksum: boolean,
+      _postfix: string | number[],
       _pubKeyX: string | number[],
       _pubKeyY: string | number[],
       _v: number | string,

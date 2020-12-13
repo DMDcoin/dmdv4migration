@@ -81,12 +81,15 @@ var CryptoSol = /** @class */ (function () {
      * see also: https://bitcoin.stackexchange.com/questions/77324/how-are-bitcoin-signed-messages-generated
      * @param address Ethereum style address, include checksum information.
      */
-    CryptoSol.prototype.addressToClaimMessage = function (address) {
+    CryptoSol.prototype.addressToClaimMessage = function (address, postfix) {
+        if (postfix === void 0) { postfix = ''; }
         return __awaiter(this, void 0, void 0, function () {
-            var claimMessage;
+            var postfixHex, claimMessage;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.instance.methods.createClaimMessage(address, true).call()];
+                    case 0:
+                        postfixHex = cryptoHelpers_1.stringToUTF8Hex(postfix);
+                        return [4 /*yield*/, this.instance.methods.createClaimMessage(address, true, postfixHex).call()];
                     case 1:
                         claimMessage = _a.sent();
                         this.log('Claim Message:');
@@ -113,12 +116,12 @@ var CryptoSol = /** @class */ (function () {
             });
         });
     };
-    CryptoSol.prototype.claimMessageMatchesSignature = function (claimToAddress, addressContainsChecksum, pubkeyX, pubkeyY, sigV, sigR, sigS) {
+    CryptoSol.prototype.claimMessageMatchesSignature = function (claimToAddress, addressContainsChecksum, postfix, pubkeyX, pubkeyY, sigV, sigR, sigS) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(pubkeyX), cryptoHelpers_1.ensure0x(pubkeyY), cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
+                    case 0: return [4 /*yield*/, this.instance.methods.claimMessageMatchesSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.stringToUTF8Hex(postfix), cryptoHelpers_1.ensure0x(pubkeyX), cryptoHelpers_1.ensure0x(pubkeyY), cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
                     case 1:
                         result = _a.sent();
                         this.log('Claim Result: ', result);
@@ -127,10 +130,10 @@ var CryptoSol = /** @class */ (function () {
             });
         });
     };
-    CryptoSol.prototype.getEthAddressFromSignature = function (claimToAddress, addressContainsChecksum, sigV, sigR, sigS) {
+    CryptoSol.prototype.getEthAddressFromSignature = function (claimToAddress, addressContainsChecksum, postfix, sigV, sigR, sigS) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.instance.methods.getEthAddressFromSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
+                return [2 /*return*/, this.instance.methods.getEthAddressFromSignature(claimToAddress, addressContainsChecksum, cryptoHelpers_1.stringToUTF8Hex(postfix), cryptoHelpers_1.ensure0x(sigV), cryptoHelpers_1.ensure0x(sigR), cryptoHelpers_1.ensure0x(sigS)).call()];
             });
         });
     };

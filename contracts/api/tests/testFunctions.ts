@@ -202,7 +202,7 @@ export class TestFunctions {
     // PublicU: 04bee3163c5ba877f4205ab447fb42373bb1f77e898d0d649dc7c691a483551a378036be868fa5ec97c61b08073630c793ec550b77b28d96561ef9e89914b1e3a4
 
 
-    const claimMessage =  await this.instance.methods.createClaimMessage(message, true).call();
+    const claimMessage = await this.instance.methods.createClaimMessage(message, true, '0x').call();
     this.log('Claim Message:');
     this.log(claimMessage);
 
@@ -268,8 +268,8 @@ export class TestFunctions {
     this.log('xy27: ', xy27);
     this.log('xy28: ', xy28);
 
-    const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call();
-    const result28 = await this.instance.methods.claimMessageMatchesSignature(message,true, xy28.x, xy28.y, 28, rHex, sHex).call();
+    const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, '', xy27.x, xy27.y, 27, rHex, sHex).call();
+    const result28 = await this.instance.methods.claimMessageMatchesSignature(message, true, '', xy28.x, xy28.y, 28, rHex, sHex).call();
 
     this.log('result27: ', result27);
     this.log('result28: ', result28);
@@ -366,7 +366,7 @@ export class TestFunctions {
     const message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
     var hash = '0x' + bitcoinMessage.magicHash(message).toString('hex');
     this.log('Bitcoin Hash: ', hash);
-    const hashFromSolidity = await this.instance.methods.getHashForClaimMessage(message, true).call();
+    const hashFromSolidity = await this.instance.methods.getHashForClaimMessage(message, true, []).call();
     this.log('hashFromSolidity', hashFromSolidity);
     expect(hash).to.be.equal(hashFromSolidity);
   }
@@ -446,8 +446,8 @@ export class TestFunctions {
 
       const signatureBase64 = this.getTestSignatures()[0];
       const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
-      const recoveredETHAddress = await this.cryptoSol.getEthAddressFromSignature(message, true, '0x1b', rs.r, rs.s);
-      const recoveredETHAddress2 = await this.cryptoSol.getEthAddressFromSignature(message, true, '0x1c', rs.r, rs.s);
+      const recoveredETHAddress = await this.cryptoSol.getEthAddressFromSignature(message, true, '', '0x1b', rs.r, rs.s);
+      const recoveredETHAddress2 = await this.cryptoSol.getEthAddressFromSignature(message, true, '', '0x1c', rs.r, rs.s);
 
       this.log('recovered: ', recoveredETHAddress);
       this.log('recovered: ', recoveredETHAddress2);
@@ -483,8 +483,8 @@ export class TestFunctions {
 
     this.log('got public key X from signature:', key.x);
 
-    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
-    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
 
     expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
     //this.log('Soldity Result: ', txResult);
@@ -506,8 +506,8 @@ export class TestFunctions {
 
     this.log('got public key X from signature:', key.x);
 
-    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
-    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
 
     expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
     //this.log('Soldity Result: ', txResult);

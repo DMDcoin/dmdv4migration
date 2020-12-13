@@ -40,7 +40,7 @@ contract ClaimContract {
   uint public deploymentTimestamp;
 
   address payable public lateClaimBeneficorAddressReinsertPot;
-  
+
   address payable public lateClaimBeneficorAddressDAO;
 
   /// @dev the prefix for the signing message.
@@ -140,74 +140,6 @@ contract ClaimContract {
         bytes32 hash = keccak256(abi.encodePacked(_publicKeyX, _publicKeyY));
         return address(uint160(uint256((hash))));
     }
-
-    /// @dev Validate ECSDA signature was signed by the specified address
-    /// @param _hash Hash of signed data
-    /// @param _v v parameter of ECDSA signature
-    /// @param _r r parameter of ECDSA signature
-    /// @param _s s parameter of ECDSA signature
-    /// @param _address Ethereum address matching the signature
-    /// @return Boolean on if the signature is valid
-    function ValidateSignature(
-        bytes32 _hash,
-        uint8 _v,
-        bytes32 _r,
-        bytes32 _s,
-        address _address
-    ) public pure returns (bool)
-    {
-        return ecrecover(
-            _hash,
-            _v,
-            _r,
-            _s
-        ) == _address;
-    }
-
-
-    /// @dev Validate the ECDSA parameters of signed message
-    /// ECDSA public key associated with the specified Ethereum address
-    /// @param _addressClaiming Address within signed message
-    /// @param _publicKeyX X parameter of uncompressed ECDSA public key
-    /// @param _publicKeyY Y parameter of uncompressed ECDSA public key
-    /// @param _v v parameter of ECDSA signature
-    /// @param _r r parameter of ECDSA signature
-    /// @param _s s parameter of ECDSA signature
-    /// @return Boolean on if the signature is valid
-    function ECDSAVerify(
-        address _addressClaiming,
-        bytes32 _publicKeyX,
-        bytes32 _publicKeyY,
-        uint8 _v,
-        bytes32 _r,
-        bytes32 _s
-    ) public view returns (bool)
-    {
-        bytes memory addressAsHex = createClaimMessage(_addressClaiming, true);
-
-        bytes32 hHash = sha256(abi.encodePacked(sha256(abi.encodePacked(addressAsHex))));
-
-        return ValidateSignature(
-            hHash,
-            _v,
-            _r,
-            _s,
-            publicKeyToEthereumAddress(_publicKeyX, _publicKeyY)
-        );
-    }
-
-  function checkSignature(bytes32 _hash, bytes32 _r, bytes32 _s, uint8 _v)
-  public
-  pure
-  returns(address)
-  {
-    return ecrecover(
-      _hash,
-      _v,
-      _r,
-      _s
-      );
-  }
 
   /**
     * @dev PUBLIC FACING: Derive an Ethereum address from an ECDSA public key
@@ -313,7 +245,7 @@ contract ClaimContract {
   * @param _claimAddrChecksum bool target address was signed using the Ethereum checksum (EIP-55)
   * @return bytes32 Bitcoin hash of the claim message.
   */
-  function createClaimMessage(address _claimToAddr, bool _claimAddrChecksum)
+  function createClaimMessage(address _claimToAddr, bool _claimAddrChecksum, bytes memory _postfix)
         public
         view
         returns (bytes memory)
@@ -326,9 +258,10 @@ contract ClaimContract {
         return abi.encodePacked(
                 BITCOIN_SIG_PREFIX_LEN,
                 BITCOIN_SIG_PREFIX_STR,
-                uint8(prefixStr.length) + ETH_ADDRESS_HEX_LEN + 2,
+                uint8(prefixStr.length) + ETH_ADDRESS_HEX_LEN + 2 + uint8(_postfix.length),
                 prefixStr,
-                addrStr
+                addrStr,
+                _postfix
             );
     }
 
@@ -340,13 +273,14 @@ contract ClaimContract {
   */
   function getHashForClaimMessage(
     address _claimToAddr,
-    bool  _claimAddrChecksum)
+    bool  _claimAddrChecksum,
+    bytes memory _postfix)
     public
     view
     returns (bytes32)
   {
     return calcHash256(
-      createClaimMessage(_claimToAddr, _claimAddrChecksum)
+      createClaimMessage(_claimToAddr, _claimAddrChecksum, _postfix)
     );
   }
 
@@ -362,6 +296,7 @@ contract ClaimContract {
   function getEthAddressFromSignature(
     address _claimToAddr,
     bool    _claimAddrChecksum,
+    bytes memory _postfix,
     uint8 _v,
     bytes32 _r,
     bytes32 _s
@@ -372,10 +307,10 @@ contract ClaimContract {
   {
     //require(_v >= 27 && _v <= 30, "v invalid");
 
-     /* Create and hash the claim message text */
-      bytes32 messageHash = calcHash256(
-          createClaimMessage(_claimToAddr, _claimAddrChecksum)
-      );
+    /* Create and hash the claim message text */
+    bytes32 messageHash = calcHash256(
+        createClaimMessage(_claimToAddr, _claimAddrChecksum, _postfix)
+    );
 
     return ecrecover(messageHash, _v, _r, _s);
   }
@@ -383,6 +318,7 @@ contract ClaimContract {
   function claimMessageMatchesSignature(
     address _claimToAddr,
     bool    _claimAddrChecksum,
+    bytes memory _postFix,
     bytes32 _pubKeyX,
     bytes32 _pubKeyY,
     uint8 _v,
@@ -404,7 +340,7 @@ contract ClaimContract {
       //we need to check if X and Y corresponds to R and S.
 
       /* Create and hash the claim message text */
-      bytes32 messageHash = getHashForClaimMessage(_claimToAddr, _claimAddrChecksum);
+      bytes32 messageHash = getHashForClaimMessage(_claimToAddr, _claimAddrChecksum, _postFix);
 
       /* Verify the public key */
       return ecrecover(messageHash, _v, _r, _s) == pubKeyEthAddr;
@@ -550,6 +486,7 @@ contract ClaimContract {
   function claim(
     address payable _targetAdress,
     bool    _claimAddrChecksum,
+    bytes memory _postfix,
     bytes32 _pubKeyX,
     bytes32 _pubKeyY,
     uint8 _v,
@@ -569,6 +506,7 @@ contract ClaimContract {
     require(claimMessageMatchesSignature(
         _targetAdress,
         _claimAddrChecksum,
+        _postfix,
         _pubKeyX,
         _pubKeyY,
         _v,

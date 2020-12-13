@@ -46,9 +46,10 @@ export class CryptoSol {
    * see also: https://bitcoin.stackexchange.com/questions/77324/how-are-bitcoin-signed-messages-generated
    * @param address Ethereum style address, include checksum information.
    */
-  public async addressToClaimMessage(address: string) : Promise<string> {
+  public async addressToClaimMessage(address: string, postfix: string = '') : Promise<string> {
 
-    const claimMessage =  await this.instance.methods.createClaimMessage(address, true).call();
+    const postfixHex = stringToUTF8Hex(postfix);
+    const claimMessage =  await this.instance.methods.createClaimMessage(address, true, postfixHex).call();
     this.log('Claim Message:');
     this.log(claimMessage);
     return claimMessage;
@@ -67,6 +68,7 @@ export class CryptoSol {
   public async claimMessageMatchesSignature(
     claimToAddress: string,
     addressContainsChecksum: boolean,
+    postfix: string,
     pubkeyX: string,
     pubkeyY: string,
     sigV: string,
@@ -77,11 +79,12 @@ export class CryptoSol {
       const result = 
         await this.instance.methods.claimMessageMatchesSignature(
           claimToAddress, 
-          addressContainsChecksum, 
-          ensure0x(pubkeyX), 
-          ensure0x(pubkeyY), 
+          addressContainsChecksum,
+          stringToUTF8Hex(postfix),
+          ensure0x(pubkeyX),
+          ensure0x(pubkeyY),
           ensure0x(sigV),
-          ensure0x(sigR), 
+          ensure0x(sigR),
           ensure0x(sigS)).call();
       this.log('Claim Result: ', result);
       return result;
@@ -90,6 +93,7 @@ export class CryptoSol {
     public async getEthAddressFromSignature(
       claimToAddress: string,
       addressContainsChecksum: boolean,
+      postfix: string,
       sigV: string,
       sigR: string | Buffer,
       sigS: string | Buffer) 
@@ -98,6 +102,7 @@ export class CryptoSol {
       return this.instance.methods.getEthAddressFromSignature(
         claimToAddress, 
         addressContainsChecksum,
+        stringToUTF8Hex(postfix),
         ensure0x(sigV),
         ensure0x(sigR), 
         ensure0x(sigS)
