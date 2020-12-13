@@ -474,7 +474,6 @@ export class TestFunctions {
   private async testSignature(claimToAddress: string, signatureBase64: string, postfix : string = '') {
 
     const prefixString = await this.cryptoSol.prefixString();
-    console.log(prefixString);
     const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress + postfix);
     const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
 
