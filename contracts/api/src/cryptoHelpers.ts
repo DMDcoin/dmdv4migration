@@ -21,6 +21,9 @@ export function ensure0x(input: string | Buffer) {
 
 
 export function hexToBuf(input: string) : Buffer {
+  if (input == null) {
+    return Buffer.alloc(0);
+  }
   return Buffer.from(remove0x(input), 'hex');
 }
 

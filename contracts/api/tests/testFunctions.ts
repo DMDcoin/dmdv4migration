@@ -471,46 +471,47 @@ export class TestFunctions {
 
   }
 
-  public async testSignatureVerificationInContract() {
+  private async testSignature(claimToAddress: string, signatureBase64: string, postfix : string = '') {
 
-    const address = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
-    const claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-    //const signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
-    const signatureBase64 = this.getTestSignatures()[0];
-
-    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
+    const prefixString = await this.cryptoSol.prefixString();
+    console.log(prefixString);
+    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress + postfix);
     const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
 
     this.log('got public key X from signature:', key.x);
 
-    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
-    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, postfix, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, postfix, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
 
     expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
-    //this.log('Soldity Result: ', txResult);
+  }
+
+  public async testSignatureVerificationInContract() {
+
+    // "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
+    const claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+    const signatureBase64 = this.getTestSignatures()[0];
+
+    await this.testSignature(claimToAddress, signatureBase64);
   }
 
   public async testSignatureVerificationInContractDMD() {
 
-    // const address = "dWmsChLpWQQTVw9Ah2y2h8M53ZqWuxHd3F";
-    // const claimToAddress = "0x43B79745bdB4dA8449f28Caf1a8a5E5661949518";
-
     const claimToAddress = "0x9edD67cCFd52211d769A7A09b989d148749B1d10";    
     const signatureBase64 = "IDuuajA4vgGuu77fdoE0tntWP5TMGPLDO2VduTqE6wPKR2+fnF+JFD3LErn8vtqk81fL3qfjJChcrUnG5eTv/tQ=";
   
+    await this.testSignature(claimToAddress, signatureBase64);
+  }
 
-    const prefixString = await this.cryptoSol.prefixString();
+  public async testSignatureVerificationInContractPostfix() {
+    
+    const claimToAddress = "0x9edD67cCFd52211d769A7A09b989d148749B1d10";    
+    const signatureBase64 = "IIQYAZ+4Tf7bdw9UX72adTvH80vz2igEABRnwElSy1ZvZGICcqX8bYw6e9LZ+QPrKW4VIJrA9cZJhR3cSCt8BAc=";
+  
+    const suffixString = ' test suffix 123';
 
-    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress);
-    const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
+    await this.testSignature(claimToAddress, signatureBase64, suffixString);
 
-    this.log('got public key X from signature:', key.x);
-
-    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
-    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
-
-    expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
-    //this.log('Soldity Result: ', txResult);
   }
 
 }

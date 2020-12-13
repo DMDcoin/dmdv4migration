@@ -19,6 +19,9 @@ function ensure0x(input) {
 }
 exports.ensure0x = ensure0x;
 function hexToBuf(input) {
+    if (input == null) {
+        return Buffer.alloc(0);
+    }
     return Buffer.from(remove0x(input), 'hex');
 }
 exports.hexToBuf = hexToBuf;

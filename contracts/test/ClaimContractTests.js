@@ -131,6 +131,13 @@ contract('ClaimContract', (accounts) => {
 
     await testFunctions.testSignatureVerificationInContractDMD();
   })
+
+
+  it('Validating signature in solidity with defined prefix and postfix', async() => {
+
+    await testFunctions.testSignatureVerificationInContractPostfix();
+  })
+  
   
 
 })

@@ -413,23 +413,24 @@ var TestFunctions = /** @class */ (function () {
             });
         });
     };
-    TestFunctions.prototype.testSignatureVerificationInContract = function () {
+    TestFunctions.prototype.testSignature = function (claimToAddress, signatureBase64, postfix) {
+        if (postfix === void 0) { postfix = ''; }
         return __awaiter(this, void 0, void 0, function () {
-            var address, claimToAddress, signatureBase64, key, rs, txResult1, txResult2;
+            var prefixString, key, rs, txResult1, txResult2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        address = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
-                        claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-                        signatureBase64 = this.getTestSignatures()[0];
-                        key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
+                    case 0: return [4 /*yield*/, this.cryptoSol.prefixString()];
+                    case 1:
+                        prefixString = _a.sent();
+                        console.log(prefixString);
+                        key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress + postfix);
                         rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
                         this.log('got public key X from signature:', key.x);
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
-                    case 1:
-                        txResult1 = _a.sent();
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, postfix, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
                     case 2:
+                        txResult1 = _a.sent();
+                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, postfix, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
+                    case 3:
                         txResult2 = _a.sent();
                         chai_1.expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
                         return [2 /*return*/];
@@ -437,27 +438,50 @@ var TestFunctions = /** @class */ (function () {
             });
         });
     };
+    TestFunctions.prototype.testSignatureVerificationInContract = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var claimToAddress, signatureBase64;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+                        signatureBase64 = this.getTestSignatures()[0];
+                        return [4 /*yield*/, this.testSignature(claimToAddress, signatureBase64)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     TestFunctions.prototype.testSignatureVerificationInContractDMD = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var claimToAddress, signatureBase64, prefixString, key, rs, txResult1, txResult2;
+            var claimToAddress, signatureBase64;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         claimToAddress = "0x9edD67cCFd52211d769A7A09b989d148749B1d10";
                         signatureBase64 = "IDuuajA4vgGuu77fdoE0tntWP5TMGPLDO2VduTqE6wPKR2+fnF+JFD3LErn8vtqk81fL3qfjJChcrUnG5eTv/tQ=";
-                        return [4 /*yield*/, this.cryptoSol.prefixString()];
+                        return [4 /*yield*/, this.testSignature(claimToAddress, signatureBase64)];
                     case 1:
-                        prefixString = _a.sent();
-                        key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress);
-                        rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
-                        this.log('got public key X from signature:', key.x);
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'))];
-                    case 2:
-                        txResult1 = _a.sent();
-                        return [4 /*yield*/, this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, '', key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'))];
-                    case 3:
-                        txResult2 = _a.sent();
-                        chai_1.expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    TestFunctions.prototype.testSignatureVerificationInContractPostfix = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var claimToAddress, signatureBase64, suffixString;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        claimToAddress = "0x9edD67cCFd52211d769A7A09b989d148749B1d10";
+                        signatureBase64 = "IIQYAZ+4Tf7bdw9UX72adTvH80vz2igEABRnwElSy1ZvZGICcqX8bYw6e9LZ+QPrKW4VIJrA9cZJhR3cSCt8BAc=";
+                        suffixString = ' test suffix 123';
+                        return [4 /*yield*/, this.testSignature(claimToAddress, signatureBase64, suffixString)];
+                    case 1:
+                        _a.sent();
                         return [2 /*return*/];
                 }
             });
