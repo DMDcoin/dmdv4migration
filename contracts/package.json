@@ -30,7 +30,8 @@
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "truffle": "^5.1.56",
-    "ts-node": "^8.10.2"
+    "ts-node": "^8.10.2",
+    "solhint": "^3.3.2"
   },
   "scripts": {
     "test": "npm run buildNTest",
@@ -42,7 +43,8 @@
     "testApi": "ts-node ./api/tests/testFunctions.ts",
     "testVerify": "ts-node ./api/tests/testVerify.ts",
     "build": "npm run compile && npm run typechain && npm run tsc",
-    "buildNTest": "npm run build && ./node_modules/.bin/truffle  test"
+    "buildNTest": "npm run build && ./node_modules/.bin/truffle  test",
+    "solhint": "node_modules/.bin/solhint \"contracts/**/*.sol\""
   },
   "author": "thomas.haller@lab10.coop",
   "license": "GPLv3"

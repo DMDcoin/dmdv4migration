@@ -50,7 +50,10 @@ contract ClaimContract {
   bytes public prefixStr;
   
 
-  constructor(address payable _lateClaimBeneficorAddressReinsertPot, address payable _lateClaimBeneficorAddressDAO, bytes memory _prefixStr)
+  constructor(
+    address payable _lateClaimBeneficorAddressReinsertPot,
+    address payable _lateClaimBeneficorAddressDAO,
+    bytes memory _prefixStr)
   public 
   {
     deploymentTimestamp = block.timestamp;
@@ -85,7 +88,8 @@ contract ClaimContract {
 
     return ecrecover(
         hashValue,
-        v - 4, //bitcoin signature use v that is +4 see reddit comment https://www.reddit.com/r/ethereum/comments/3gmbkx/how_do_i_verify_a_bitcoinsigned_message_in_an/ctzopoz
+        v - 4, //bitcoin signature use v that is +4 see reddit comment 
+               //https://www.reddit.com/r/ethereum/comments/3gmbkx/how_do_i_verify_a_bitcoinsigned_message_in_an/ctzopoz
         r,
         s
     );
@@ -291,7 +295,8 @@ contract ClaimContract {
   * @param _v uint8 v component of the signature.
   * @param _r bytes32 r component of the signature.
   * @param _s bytes32 s component of the signautre.
-  * @return address DMD pseudo address of the signer. (what would be the address if the same Private Key would have been used on an DMDv3 than in DMDv4)
+  * @return address DMD pseudo address of the signer. 
+  * (what would be the address if the same Private Key would have been used on an DMDv3 than in DMDv4)
   */
   function getEthAddressFromSignature(
     address _claimToAddr,
@@ -383,7 +388,8 @@ contract ClaimContract {
   public
   returns (uint)
   {
-    require(block.timestamp > getDilutionTimestamp1(), "dilute1 can only get called after the treshold timestamp got reached.");
+    require(block.timestamp > getDilutionTimestamp1(), 
+      "dilute1 can only get called after the treshold timestamp got reached.");
     require(dilution_s1_75_executed == false, "dilute1 event did already happen!");
 
     dilution_s1_75_executed = true;
@@ -405,7 +411,8 @@ contract ClaimContract {
   public
   returns (uint)
   {
-    require(block.timestamp > getDilutionTimestamp2(), "dilute2 can only get called after the treshold timestamp got reached.");
+    require(block.timestamp > getDilutionTimestamp2(),
+      "dilute2 can only get called after the treshold timestamp got reached.");
     require(dilution_s1_75_executed == true, "dilute2 can't get processed unless dilute1 has already been processed.");
     require(dilution_s2_50_executed == false, "dilute2 event did already happen!");
 
@@ -434,7 +441,8 @@ contract ClaimContract {
   public
   returns (uint)
   {
-    require(block.timestamp > getDilutionTimestamp3(), "dilute3 can only get called after the treshold timestamp got reached.");
+    require(block.timestamp > getDilutionTimestamp3(),
+      "dilute3 can only get called after the treshold timestamp got reached.");
     require(dilution_s1_75_executed == true, "dilute3 can't get processed unless dilute1 has already been processed.");
     require(dilution_s2_50_executed == true, "dilute3 can't get processed unless dilute2 has already been processed.");
     require(dilution_s3_0_executed == false, "dilute3 event did already happen!");
