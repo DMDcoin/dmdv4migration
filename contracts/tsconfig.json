@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "outDir": "api/js",
+    "outDir": "build/api/js",
     "sourceMap": true
   },
   "files": [

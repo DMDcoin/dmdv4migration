@@ -1,11 +1,9 @@
 
 
-const TestFunctions = require('../api/js/tests/testFunctions');
-const CryptoSol = require('../api/js/src/cryptoSol');
-const CryptoJS = require('../api/js/src/cryptoJS');
-
-
-const cryptoHelpers = require('../api/js/src/cryptoHelpers');
+const TestFunctions = require('../build/api/js/tests/testFunctions');
+const CryptoSol = require('../build/api/js/src/cryptoSol');
+const CryptoJS = require('../build/api/js/src/cryptoJS');
+const cryptoHelpers = require('../build/api/js/src/cryptoHelpers');
 
 
 var EC = require('elliptic').ec;
