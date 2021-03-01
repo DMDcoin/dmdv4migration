@@ -1,7 +1,6 @@
-pragma solidity >=0.6.2 <0.7.0;
+pragma solidity >=0.8.1 <0.9.0;
 
 contract ClaimContract {
-
   enum AddressType { LegacyUncompressed, LegacyCompressed, SegwitUncompressed, SegwitCompressed }
 
   event Claim(bytes20 indexed _from, address _to, uint amount, uint _nominator, uint _denominator);
@@ -70,9 +69,9 @@ contract ClaimContract {
     uint transferForDAO = amount - transferForResinsertPot;
 
     (bool success, ) =  lateClaimBeneficorAddressReinsertPot.call{value: transferForResinsertPot}("");
-    require(success, 'Transfer to reinsert failed.');
+    require(success, "Transfer to reinsert pool failed.");
     (success, ) = lateClaimBeneficorAddressDAO.call{value: transferForDAO}("");
-    require(success, 'Transfer to DAO failed.');
+    require(success, "Transfer to DAO failed.");
   }
 
   function getPublicKeyFromBitcoinSignature(bytes32 hashValue, bytes32 r, bytes32 s, uint8 v)
@@ -80,7 +79,7 @@ contract ClaimContract {
   pure
   returns(address)
   {
-    require(v >= 4, 'Bitcoin adds a constant 4 to the v value. this signature seems to be invalid.');
+    require(v >= 4, "Bitcoin adds a constant 4 to the v value. this signature seems to be invalid.");
     //#1: decode bitcoin signature.
     //# get R, S, V and Hash of Signature.
     //# do ecrecover on it.
@@ -233,8 +232,8 @@ contract ClaimContract {
 
       addrStr = new bytes(ETH_ADDRESS_HEX_LEN + 2);
 
-      addrStr[0] = '0';
-      addrStr[1] = 'x';
+      addrStr[0] = "0";
+      addrStr[1] = "x";
 
       for (uint256 i = 0; i < ETH_ADDRESS_HEX_LEN; i++) {
           addrStr[i+2] = tmp[i];
@@ -508,7 +507,7 @@ contract ClaimContract {
 
     //if already claimed, it just returns.
     uint256 currentBalance = balances[oldAddress];
-    require(currentBalance > 0, 'provided address does not have a balance.');
+    require(currentBalance > 0, "provided address does not have a balance.");
 
     // verify if the signature matches to the provided pubKey here.
     require(claimMessageMatchesSignature(
@@ -520,12 +519,12 @@ contract ClaimContract {
         _v,
         _r,
         _s),
-      'Signature does not match for this claiming procedure.');
+      "Signature does not match for this claiming procedure.");
 
     (uint256 nominator, uint256 denominator) = getCurrentDilutedClaimFactor();
 
     // the nominator is 0 if the claim period passed.
-    require(nominator > 0, 'claiming period has already passed.');
+    require(nominator > 0, "claiming period has already passed.");
 
     uint256 claimBalance = (currentBalance * nominator) / denominator;
     
