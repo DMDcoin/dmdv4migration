@@ -3,13 +3,7 @@ pragma solidity >=0.8.1 <0.9.0;
 contract ClaimContract {
     enum AddressType {LegacyUncompressed, LegacyCompressed, SegwitUncompressed, SegwitCompressed}
 
-    event Claim(
-        bytes20 indexed _from,
-        address _to,
-        uint256 amount,
-        uint256 _nominator,
-        uint256 _denominator
-    );
+    event Claim(bytes20 indexed _from, address _to, uint256 amount, uint256 _nominator, uint256 _denominator);
 
     bytes16 internal constant HEX_DIGITS = "0123456789abcdef";
 
@@ -68,8 +62,7 @@ contract ClaimContract {
         uint256 transferForResinsertPot = amount / 2;
         uint256 transferForDAO = amount - transferForResinsertPot;
 
-        (bool success, ) =
-            lateClaimBeneficorAddressReinsertPot.call{value: transferForResinsertPot}("");
+        (bool success, ) = lateClaimBeneficorAddressReinsertPot.call{value: transferForResinsertPot}("");
         require(success, "Transfer to reinsert pool failed.");
         (success, ) = lateClaimBeneficorAddressDAO.call{value: transferForDAO}("");
         require(success, "Transfer to DAO failed.");
@@ -81,10 +74,7 @@ contract ClaimContract {
         bytes32 s,
         uint8 v
     ) public pure returns (address) {
-        require(
-            v >= 4,
-            "Bitcoin adds a constant 4 to the v value. this signature seems to be invalid."
-        );
+        require(v >= 4, "Bitcoin adds a constant 4 to the v value. this signature seems to be invalid.");
         //#1: decode bitcoin signature.
         //# get R, S, V and Hash of Signature.
         //# do ecrecover on it.
@@ -112,32 +102,19 @@ contract ClaimContract {
     ) public pure returns (bytes20) {
         bytes20 publicKey;
         uint8 initialByte;
-        if (
-            _addressType == AddressType.LegacyCompressed ||
-            _addressType == AddressType.SegwitCompressed
-        ) {
+        if (_addressType == AddressType.LegacyCompressed || _addressType == AddressType.SegwitCompressed) {
             //Hash the compressed format
             initialByte = (uint256(_publicKeyY) & 1) == 0 ? 0x02 : 0x03;
-            publicKey = ripemd160(
-                abi.encodePacked(sha256(abi.encodePacked(initialByte, _publicKeyX)))
-            );
+            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, _publicKeyX))));
         } else {
             //Hash the uncompressed format
             initialByte = 0x04;
-            publicKey = ripemd160(
-                abi.encodePacked(sha256(abi.encodePacked(initialByte, _publicKeyX, _publicKeyY)))
-            );
+            publicKey = ripemd160(abi.encodePacked(sha256(abi.encodePacked(initialByte, _publicKeyX, _publicKeyY))));
         }
 
-        if (
-            _addressType == AddressType.LegacyUncompressed ||
-            _addressType == AddressType.LegacyCompressed
-        ) {
+        if (_addressType == AddressType.LegacyUncompressed || _addressType == AddressType.LegacyCompressed) {
             return publicKey;
-        } else if (
-            _addressType == AddressType.SegwitUncompressed ||
-            _addressType == AddressType.SegwitCompressed
-        ) {
+        } else if (_addressType == AddressType.SegwitUncompressed || _addressType == AddressType.SegwitCompressed) {
             return ripemd160(abi.encodePacked(sha256(abi.encodePacked(hex"0014", publicKey))));
         }
     }
@@ -146,11 +123,7 @@ contract ClaimContract {
     /// @param _publicKeyX X parameter of uncompressed ECDSA public key
     /// @param _publicKeyY Y parameter of uncompressed ECDSA public key
     /// @return Ethereum address generated from the ECDSA public key
-    function publicKeyToEthereumAddress(bytes32 _publicKeyX, bytes32 _publicKeyY)
-        public
-        pure
-        returns (address)
-    {
+    function publicKeyToEthereumAddress(bytes32 _publicKeyX, bytes32 _publicKeyY) public pure returns (address) {
         bytes32 hash = keccak256(abi.encodePacked(_publicKeyX, _publicKeyY));
         return address(uint160(uint256((hash))));
     }
@@ -308,8 +281,7 @@ contract ClaimContract {
         //require(_v >= 27 && _v <= 30, "v invalid");
 
         /* Create and hash the claim message text */
-        bytes32 messageHash =
-            calcHash256(createClaimMessage(_claimToAddr, _claimAddrChecksum, _postfix));
+        bytes32 messageHash = calcHash256(createClaimMessage(_claimToAddr, _claimAddrChecksum, _postfix));
 
         return ecrecover(messageHash, _v, _r, _s);
     }
@@ -437,11 +409,7 @@ contract ClaimContract {
         return totalBalance;
     }
 
-    function getCurrentDilutedClaimFactor()
-        public
-        view
-        returns (uint256 nominator, uint256 denominator)
-    {
+    function getCurrentDilutedClaimFactor() public view returns (uint256 nominator, uint256 denominator) {
         if (!dilution_s1_75_executed) {
             return (1, 1);
         } else if (!dilution_s2_50_executed) {
@@ -454,10 +422,7 @@ contract ClaimContract {
     }
 
     function addBalance(bytes20 oldAddress) public payable {
-        require(
-            balances[oldAddress] == 0,
-            "There is already a balance defined for this old address"
-        );
+        require(balances[oldAddress] == 0, "There is already a balance defined for this old address");
         balances[oldAddress] = msg.value;
         // allOldAdresses.push(oldAddress);
     }
@@ -473,8 +438,7 @@ contract ClaimContract {
         bytes32 _s
     ) public {
         //retrieve the oldAddress out of public and private key.
-        bytes20 oldAddress =
-            publicKeyToBitcoinAddress(_pubKeyX, _pubKeyY, AddressType.LegacyCompressed);
+        bytes20 oldAddress = publicKeyToBitcoinAddress(_pubKeyX, _pubKeyY, AddressType.LegacyCompressed);
 
         //if already claimed, it just returns.
         uint256 currentBalance = balances[oldAddress];
@@ -482,16 +446,7 @@ contract ClaimContract {
 
         // verify if the signature matches to the provided pubKey here.
         require(
-            claimMessageMatchesSignature(
-                _targetAdress,
-                _claimAddrChecksum,
-                _postfix,
-                _pubKeyX,
-                _pubKeyY,
-                _v,
-                _r,
-                _s
-            ),
+            claimMessageMatchesSignature(_targetAdress, _claimAddrChecksum, _postfix, _pubKeyX, _pubKeyY, _v, _r, _s),
             "Signature does not match for this claiming procedure."
         );
 
