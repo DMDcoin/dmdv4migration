@@ -29,7 +29,10 @@
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "pify": "^5.0.0",
+    "prettier": "^2.2.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.5",
     "solhint": "^3.3.2",
+    "solhint-plugin-prettier": "0.0.5",
     "truffle": "^5.1.67",
     "ts-node": "^8.10.2",
     "typechain": "^4.0.2"
@@ -45,7 +48,8 @@
     "testVerify": "ts-node ./api/tests/testVerify.ts",
     "build": "npm run compile && npm run typechain && npm run tsc",
     "buildNTest": "npm run build && ./node_modules/.bin/truffle  test",
-    "solhint": "node_modules/.bin/solhint \"contracts/**/*.sol\""
+    "solhint": "node_modules/.bin/solhint \"contracts/**/*.sol\"",
+    "solhint-fix": "./node_modules/.bin/prettier --write contracts/**/*.sol"
   },
   "author": "thomas.haller@lab10.coop",
   "license": "GPLv3"
