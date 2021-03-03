@@ -135,7 +135,12 @@ contract('ClaimContract', (accounts) => {
 
     await testFunctions.testSignatureVerificationInContractPostfix();
   })
+
   
-  
+  it('adding balances', async() => {
+
+    await testFunctions.testAddBalances();
+  })
+
 
 })
