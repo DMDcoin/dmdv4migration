@@ -543,6 +543,9 @@ export class TestFunctions {
 
       await this.cryptoSol.addBalance(o.dmdv3Address, o.value);
       expectedTotalBalance = expectedTotalBalance.add(new BN(o.value));
+
+      const currentBalance = await this.cryptoSol.getBalance(o.dmdv3Address);
+      expect(currentBalance).to.be.equal(o.value, 'Balance of DMDv3 adress matches defined Balance.');
       //calculate the significant bytes of the DMDv3 address.
     }
 

@@ -147,6 +147,12 @@ export class CryptoSol {
       await this.instance.methods.addBalance(ensure0x(ripe)).send({ value: value, from: fromAccount});
     }
 
+    public async getBalance(dmdV3Address: string) {
+
+      const ripe = this.cryptoJS.dmdAddressToRipeResult(dmdV3Address);
+      return await this.instance.methods.balances(ensure0x(ripe)).call();
+    }
+
     public async getContractBalance() {
 
       return await this.web3Instance.eth.getBalance(this.instance.options.address);
