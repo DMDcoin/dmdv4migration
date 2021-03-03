@@ -144,16 +144,12 @@ export class CryptoSol {
       const accounts = await this.web3Instance.eth.getAccounts();
       const fromAccount = accounts[0];
       const ripe = this.cryptoJS.dmdAddressToRipeResult(dmdV3Address);
-      console.log('balance before:', await this.web3Instance.eth.getBalance(fromAccount));
       await this.instance.methods.addBalance(ensure0x(ripe)).send({ value: value, from: fromAccount});
-      console.log('balance after:', await this.web3Instance.eth.getBalance(fromAccount));
     }
 
     public async getContractBalance() {
 
-      const balance = await this.web3Instance.eth.getBalance(this.instance.options.address);
-      console.log(balance);
-      return balance;
+      return await this.web3Instance.eth.getBalance(this.instance.options.address);
     }
   
 }

@@ -534,24 +534,25 @@ export class TestFunctions {
   public async testAddBalances() {
 
     //this.setLogDebug(true);
-
+    
     let expectedTotalBalance = new BN('0');
 
     for(let i = 0; i < this.testBalances.length; i++) {
       let o = this.testBalances[i];
       this.log(`adding balance for ${o.dmdv3Address}`, o.value);
 
-      this.cryptoSol.addBalance(o.dmdv3Address, o.value);
-
+      await this.cryptoSol.addBalance(o.dmdv3Address, o.value);
       expectedTotalBalance = expectedTotalBalance.add(new BN(o.value));
       //calculate the significant bytes of the DMDv3 address.
     }
 
     this.log('address:', this.cryptoSol.instance.options.address);
     const balance = await this.cryptoSol.getContractBalance();
-    console.log('balance:', balance);
+    this.log('balance:', balance);
+    this.log('expectedTotalBalance:', expectedTotalBalance.toString());
 
-    //expect(expectedTotalBalance.toString())
+    expect(balance).to.be.equal(expectedTotalBalance.toString(), 'Balance of contract should be the total of all added funds.');
+
   }
 
 }
