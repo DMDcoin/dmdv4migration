@@ -23,6 +23,11 @@ export class ClaimContract extends Contract {
   methods: {
     balances(arg0: string | number[]): TransactionObject<string>;
 
+    fill(
+      _accounts: (string | number[])[],
+      _balances: (number | string)[]
+    ): TransactionObject<void>;
+
     getPublicKeyFromBitcoinSignature(
       hashValue: string | number[],
       r: string | number[],
