@@ -54,7 +54,7 @@ contract ClaimContract {
         address payable _lateClaimBeneficorAddressReinsertPot,
         address payable _lateClaimBeneficorAddressDAO,
         bytes memory _prefixStr
-    ) public {
+    ) {
         deploymentTimestamp = block.timestamp;
         lateClaimBeneficorAddressReinsertPot = _lateClaimBeneficorAddressReinsertPot;
         lateClaimBeneficorAddressDAO = _lateClaimBeneficorAddressDAO;
@@ -122,12 +122,12 @@ contract ClaimContract {
     /// @param _publicKeyX X coordinate of the ECDSA public key
     /// @param _publicKeyY Y coordinate of the ECDSA public key
     /// @param _addressType Whether DMD is Legacy or Segwit address and if it was compressed
-    /// @return Raw parts of the Bitcoin Style address
+    /// @return rawBtcAddress Raw parts of the Bitcoin Style address
     function publicKeyToBitcoinAddress(
         bytes32 _publicKeyX,
         bytes32 _publicKeyY,
         AddressType _addressType
-    ) public pure returns (bytes20) {
+    ) public pure returns (bytes20 rawBtcAddress) {
         bytes20 publicKey;
         uint8 initialByte;
         if (_addressType == AddressType.LegacyCompressed || _addressType == AddressType.SegwitCompressed) {

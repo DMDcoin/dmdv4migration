@@ -42,6 +42,12 @@ export interface ClaimContract extends BaseContract {
   ): ClaimContract;
   clone(): ClaimContract;
   methods: {
+    DAY_IN_SECONDS(): NonPayableTransactionObject<string>;
+
+    LEAP_YEAR_IN_SECONDS(): NonPayableTransactionObject<string>;
+
+    YEAR_IN_SECONDS(): NonPayableTransactionObject<string>;
+
     balances(arg0: string | number[]): NonPayableTransactionObject<string>;
 
     deploymentTimestamp(): NonPayableTransactionObject<string>;
@@ -60,8 +66,8 @@ export interface ClaimContract extends BaseContract {
 
     fill(
       _accounts: (string | number[])[],
-      _balances: (number | string)[]
-    ): TransactionObject<void>;
+      _balances: (number | string | BN)[]
+    ): PayableTransactionObject<void>;
 
     getPublicKeyFromBitcoinSignature(
       hashValue: string | number[],
