@@ -66,10 +66,8 @@ contract ClaimContract {
         uint256 transferForResinsertPot = amount / 2;
         uint256 transferForDAO = amount - transferForResinsertPot;
 
-        (bool success, ) = lateClaimBeneficorAddressReinsertPot.call{value: transferForResinsertPot}("");
-        require(success, "Transfer to reinsert pool failed.");
-        (success, ) = lateClaimBeneficorAddressDAO.call{value: transferForDAO}("");
-        require(success, "Transfer to DAO failed.");
+        lateClaimBeneficorAddressReinsertPot.transfer(transferForResinsertPot);
+        lateClaimBeneficorAddressDAO.transfer(transferForDAO);
     }
 
     function getPublicKeyFromBitcoinSignature(
@@ -415,13 +413,13 @@ contract ClaimContract {
 
     function getCurrentDilutedClaimFactor() public view returns (uint256 nominator, uint256 denominator) {
         if (!dilution_s1_75_executed) {
-            return (1, 1);
+            return (4, 4);
         } else if (!dilution_s2_50_executed) {
             return (3, 4);
         } else if (!dilution_s3_0_executed) {
-            return (1, 2);
+            return (2, 4);
         } else {
-            return (0, 1);
+            return (0, 4);
         }
     }
 
