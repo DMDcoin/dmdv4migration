@@ -61,6 +61,32 @@ contract ClaimContract {
         prefixStr = _prefixStr;
     }
 
+    function fill(bytes20[] memory _accounts, uint256[] memory _balances) public payable {
+        //for simplification we only support a one-shot initialisation.
+        require(
+            address(this).balance == 0,
+            "The Claim contract is already filled and cannot get filled a second time."
+        );
+        require(msg.value > 0, "there must be a value to fill up the ClaimContract");
+        require(_accounts.length == _balances.length, "number of accounts need to match number of balances.");
+
+        // we verify if the transfered amount that get added to the sum up to the total amount added.
+        uint256 totalBalanceAdded = 0;
+
+        for (uint256 i = 0; i < _accounts.length; i++) {
+            require(_accounts[i] != bytes20(0x0000000000000000000000000000000000000000), "Account cannot be 0x0!");
+            require(_balances[i] != 0, "Balance cannot be 0!");
+            require(balances[_accounts[i]] == 0, "Balance is defined multiple times for an account.");
+            totalBalanceAdded += _balances[i];
+            balances[_accounts[i]] = _balances[i];
+        }
+
+        require(
+            msg.value == totalBalanceAdded,
+            "The payment for this function must be equal to the sum of all balances."
+        );
+    }
+
     function _sendDilutedAmounts(uint256 amount) internal {
         //diluted amounts are split 50/50 to DAO and ReinsertPot.
         uint256 transferForResinsertPot = amount / 2;

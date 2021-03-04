@@ -58,6 +58,11 @@ export interface ClaimContract extends BaseContract {
 
     prefixStr(): NonPayableTransactionObject<string>;
 
+    fill(
+      _accounts: (string | number[])[],
+      _balances: (number | string)[]
+    ): TransactionObject<void>;
+
     getPublicKeyFromBitcoinSignature(
       hashValue: string | number[],
       r: string | number[],
