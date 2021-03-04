@@ -7,6 +7,7 @@
     "function-max-lines": "off",
     "max-states-count": "off",
     "compiler-version": "off",
-    "reason-string": ["warn",{"maxLength":64}]
+    "not-rely-on-time": "off",
+    "reason-string": ["warn",{"maxLength":128}]
   }
 }

@@ -19,11 +19,13 @@ contract ClaimContract {
     uint8 internal constant DIAMOND_SIG_PREFIX_LEN = 24;
     bytes24 internal constant DIAMOND_SIG_PREFIX_STR = "Diamond Signed Message:\n";
 
-    uint256 constant YEAR_IN_SECONDS = 31536000;
-    uint256 constant LEAP_YEAR_IN_SECONDS = 31622400;
-    uint256 constant DAY_IN_SECONDS = 86400;
+    uint256 public constant YEAR_IN_SECONDS = 31536000;
+    uint256 public constant LEAP_YEAR_IN_SECONDS = 31622400;
+    uint256 public constant DAY_IN_SECONDS = 86400;
 
     mapping(bytes20 => uint256) public balances;
+
+    /* solhint-disable var-name-mixedcase */
 
     // tracks if dilution for 75% was executed
     bool public dilution_s1_75_executed;
@@ -33,6 +35,8 @@ contract ClaimContract {
 
     // tracks if dilution for 0% was executed
     bool public dilution_s3_0_executed;
+
+    /* solhint-enable var-name-mixedcase */
 
     uint256 public deploymentTimestamp;
 
