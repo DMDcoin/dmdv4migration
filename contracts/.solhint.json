@@ -5,6 +5,7 @@
     "prettier/prettier": "error",
     "code-complexity": "off",
     "function-max-lines": "off",
+    "func-visibility": ["warn",{"ignoreConstructors":true}],
     "max-states-count": "off",
     "compiler-version": "off",
     "not-rely-on-time": "off",
