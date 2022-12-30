@@ -1,8 +1,10 @@
 
 
-var TestFunctions = require('../api/js/tests/testFunctions');
-var CryptoSol = require('../api/js/src/cryptoSol');
-var CryptoJS = require('../api/js/src/cryptoJS');
+const TestFunctions = require('../build/api/js/tests/testFunctions');
+const CryptoSol = require('../build/api/js/src/cryptoSol');
+const CryptoJS = require('../build/api/js/src/cryptoJS');
+const cryptoHelpers = require('../build/api/js/src/cryptoHelpers');
+
 
 var EC = require('elliptic').ec;
 var BN = require('bn.js');
@@ -14,15 +16,6 @@ var ec = new EC('secp256k1');
 const ClaimContract = artifacts.require('ClaimContract');
 
 
-function hexToBuf(input) {
-  return Buffer.from(remove0x(input), 'hex');
-}
-
-// appends a prefix to inputBuffer.
-function prefixBuf(inputBuffer, prefixHexString) {
-  const prefix = hexToBuf(prefixHexString);
-  return Buffer.concat([prefix, inputBuffer]);
-}
 
 contract('ClaimContract', (accounts) => {
   console.log(`Accounts: ${accounts}`);
@@ -43,16 +36,10 @@ contract('ClaimContract', (accounts) => {
   let cryptoJS = new CryptoJS.CryptoJS();
 
   it('deploying a new claim contract', async () => {
-    claimContract = await ClaimContract.new(callParams);
+    claimContract = await ClaimContract.new(accounts[0], accounts[1], '0x', callParams);
     testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
     cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
   })
-
-  // it('Verify address', async () => {
-  //   let isValid = await claimContract.isValid.call(callParams);
-  //   assert.isOk(isValid, "ERC Recover failed");
-  //   //console.log('address: ' + address);
-  // })
 
   it('correct Address checksum.', async() => {
     testFunctions.testAddressChecksum();
@@ -128,6 +115,32 @@ contract('ClaimContract', (accounts) => {
   it('Validating signature in solidity', async() => {
     await testFunctions.testSignatureVerificationInContract();
   })
+
+
+  it('deploying a new claim contract with claim to defined prefix', async () => {
+
+    const claimToString = cryptoHelpers.stringToUTF8Hex('claim to ');
+    claimContract = await ClaimContract.new(accounts[0], accounts[1], claimToString, callParams);
+    testFunctions = new TestFunctions.TestFunctions(web3, claimContract.contract);
+    cryptoSol = new CryptoSol.CryptoSol(web3, claimContract.contract);
+  })
+
+  it('Validating signature in solidity with defined prefix.', async() => {
+
+    await testFunctions.testSignatureVerificationInContractDMD();
+  })
+
+
+  it('Validating signature in solidity with defined prefix and postfix', async() => {
+
+    await testFunctions.testSignatureVerificationInContractPostfix();
+  })
+
   
+  it('adding balances', async() => {
+
+    await testFunctions.testAddBalances();
+  })
+
 
 })

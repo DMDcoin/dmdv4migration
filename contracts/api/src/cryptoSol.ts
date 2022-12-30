@@ -1,14 +1,16 @@
 
 import Web3 from 'web3';
 import ClaimContract from '../contracts/ClaimContract';
-import { ensure0x } from './cryptoHelpers';
+import { ensure0x, stringToUTF8Hex } from './cryptoHelpers';
 import { BN } from 'ethereumjs-util';
 import { CryptoJS } from './cryptoJS';
+import { hexToBuf } from './cryptoHelpers';
+import { bufferToHex } from 'ethereumjs-util';
 /**
  * Crypto functions used in this project implemented in Soldity.
  */
 export class CryptoSol {
-
+  
   public cryptoJS = new CryptoJS();
   
   private logDebug: boolean = false; 
@@ -20,7 +22,6 @@ export class CryptoSol {
       throw Error("Claim contract must be defined!!");
     }
 
-    this.log('constructed!');
   }
 
   public setLogDebug(value: boolean) {
@@ -44,9 +45,10 @@ export class CryptoSol {
    * see also: https://bitcoin.stackexchange.com/questions/77324/how-are-bitcoin-signed-messages-generated
    * @param address Ethereum style address, include checksum information.
    */
-  public async addressToClaimMessage(address: string) : Promise<string> {
+  public async addressToClaimMessage(address: string, postfix: string = '') : Promise<string> {
 
-    const claimMessage =  await this.instance.methods.createClaimMessage(address, true).call();
+    const postfixHex = stringToUTF8Hex(postfix);
+    const claimMessage =  await this.instance.methods.createClaimMessage(address, true, postfixHex).call();
     this.log('Claim Message:');
     this.log(claimMessage);
     return claimMessage;
@@ -65,6 +67,7 @@ export class CryptoSol {
   public async claimMessageMatchesSignature(
     claimToAddress: string,
     addressContainsChecksum: boolean,
+    postfix: string,
     pubkeyX: string,
     pubkeyY: string,
     sigV: string,
@@ -75,11 +78,12 @@ export class CryptoSol {
       const result = 
         await this.instance.methods.claimMessageMatchesSignature(
           claimToAddress, 
-          addressContainsChecksum, 
-          ensure0x(pubkeyX), 
-          ensure0x(pubkeyY), 
+          addressContainsChecksum,
+          stringToUTF8Hex(postfix),
+          ensure0x(pubkeyX),
+          ensure0x(pubkeyY),
           ensure0x(sigV),
-          ensure0x(sigR), 
+          ensure0x(sigR),
           ensure0x(sigS)).call();
       this.log('Claim Result: ', result);
       return result;
@@ -88,6 +92,7 @@ export class CryptoSol {
     public async getEthAddressFromSignature(
       claimToAddress: string,
       addressContainsChecksum: boolean,
+      postfix: string,
       sigV: string,
       sigR: string | Buffer,
       sigS: string | Buffer) 
@@ -96,6 +101,7 @@ export class CryptoSol {
       return this.instance.methods.getEthAddressFromSignature(
         claimToAddress, 
         addressContainsChecksum,
+        stringToUTF8Hex(postfix),
         ensure0x(sigV),
         ensure0x(sigR), 
         ensure0x(sigS)
@@ -110,7 +116,7 @@ export class CryptoSol {
      */
     async publicKeyToBitcoinAddressEssential(x: BN, y: BN) : Promise<string> {
       const legacyCompressedEnumValue = 1;
-      return this.instance.methods.PublicKeyToBitcoinAddress(
+      return this.instance.methods.publicKeyToBitcoinAddress(
         '0x' + x.toString('hex'),
         '0x' + y.toString('hex'), legacyCompressedEnumValue).call();
     }
@@ -123,4 +129,33 @@ export class CryptoSol {
     public async pubKeyToEthAddress(x: string, y: string) {
       return this.instance.methods.pubKeyToEthAddress(x, y).call();
     }
+
+    public async prefixString() {
+
+      const bytes = await this.instance.methods.prefixStr().call();
+      const buffer = hexToBuf(bytes);
+      return new TextDecoder("utf-8").decode(buffer);
+
+      //return stringToUTF8Hex
+    }
+
+    public async addBalance(dmdV3Address: string, value: string) {
+
+      const accounts = await this.web3Instance.eth.getAccounts();
+      const fromAccount = accounts[0];
+      const ripe = this.cryptoJS.dmdAddressToRipeResult(dmdV3Address);
+      await this.instance.methods.addBalance(ensure0x(ripe)).send({ value: value, from: fromAccount});
+    }
+
+    public async getBalance(dmdV3Address: string) {
+
+      const ripe = this.cryptoJS.dmdAddressToRipeResult(dmdV3Address);
+      return await this.instance.methods.balances(ensure0x(ripe)).call();
+    }
+
+    public async getContractBalance() {
+
+      return await this.web3Instance.eth.getBalance(this.instance.options.address);
+    }
+  
 }

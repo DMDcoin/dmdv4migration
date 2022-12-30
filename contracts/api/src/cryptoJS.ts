@@ -180,6 +180,7 @@ export class CryptoJS {
     var publicKey = ec.keyFromPublic(publicKeyHex.toLowerCase(), 'hex').getPublic();
     var x = publicKey.getX();
     var y = publicKey.getY();
+    
     //this.log("pub key:" + publicKey.toString('hex'));
     //this.log("x :" + x.toString('hex'));
     //this.log("y :" + y.toString('hex'));

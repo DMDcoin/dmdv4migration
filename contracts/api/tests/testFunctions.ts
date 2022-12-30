@@ -202,14 +202,11 @@ export class TestFunctions {
     // PublicU: 04bee3163c5ba877f4205ab447fb42373bb1f77e898d0d649dc7c691a483551a378036be868fa5ec97c61b08073630c793ec550b77b28d96561ef9e89914b1e3a4
 
 
-    //const hash = this.messageToHashToSign(message);
-    //const hash = this.messageToHashToSign(message);
-
-    const claimMessage =  await this.instance.methods.createClaimMessage(message, true).call();
+    const claimMessage = await this.instance.methods.createClaimMessage(message, true, '0x').call();
     this.log('Claim Message:');
     this.log(claimMessage);
 
-    //const hashResultSolidity = await this.instance.methods.getHashForClaimMessage(message, true).call();
+
     const hashResultSolidity = await this.instance.methods.calcHash256(claimMessage).call();
     this.log('hash Result Solidity:', hashResultSolidity);
 
@@ -271,8 +268,8 @@ export class TestFunctions {
     this.log('xy27: ', xy27);
     this.log('xy28: ', xy28);
 
-    const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, xy27.x, xy27.y, 27, rHex, sHex).call();
-    const result28 = await this.instance.methods.claimMessageMatchesSignature(message,true, xy28.x, xy28.y, 28, rHex, sHex).call();
+    const result27 = await this.instance.methods.claimMessageMatchesSignature(message, true, '', xy27.x, xy27.y, 27, rHex, sHex).call();
+    const result28 = await this.instance.methods.claimMessageMatchesSignature(message, true, '', xy28.x, xy28.y, 28, rHex, sHex).call();
 
     this.log('result27: ', result27);
     this.log('result28: ', result28);
@@ -369,7 +366,7 @@ export class TestFunctions {
     const message = '0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F';
     var hash = '0x' + bitcoinMessage.magicHash(message).toString('hex');
     this.log('Bitcoin Hash: ', hash);
-    const hashFromSolidity = await this.instance.methods.getHashForClaimMessage(message, true).call();
+    const hashFromSolidity = await this.instance.methods.getHashForClaimMessage(message, true, []).call();
     this.log('hashFromSolidity', hashFromSolidity);
     expect(hash).to.be.equal(hashFromSolidity);
   }
@@ -449,8 +446,8 @@ export class TestFunctions {
 
       const signatureBase64 = this.getTestSignatures()[0];
       const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
-      const recoveredETHAddress = await this.cryptoSol.getEthAddressFromSignature(message, true, '0x1b', rs.r, rs.s);
-      const recoveredETHAddress2 = await this.cryptoSol.getEthAddressFromSignature(message, true, '0x1c', rs.r, rs.s);
+      const recoveredETHAddress = await this.cryptoSol.getEthAddressFromSignature(message, true, '', '0x1b', rs.r, rs.s);
+      const recoveredETHAddress2 = await this.cryptoSol.getEthAddressFromSignature(message, true, '', '0x1c', rs.r, rs.s);
 
       this.log('recovered: ', recoveredETHAddress);
       this.log('recovered: ', recoveredETHAddress2);
@@ -474,22 +471,91 @@ export class TestFunctions {
 
   }
 
-  public async testSignatureVerificationInContract() {
+  private async testSignature(claimToAddress: string, signatureBase64: string, postfix : string = '') {
 
-    const address = "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
-    const claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
-    //const signatureBase64 = "IBHr8AT4TZrOQSohdQhZEJmv65ZYiPzHhkOxNaOpl1wKM/2FWpraeT8L9TaphHI1zt5bI3pkqxdWGcUoUw0/lTo=";
-    const signatureBase64 = this.getTestSignatures()[0];
-
-    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, claimToAddress);
+    const prefixString = await this.cryptoSol.prefixString();
+    const key = this.cryptoJS.getPublicKeyFromSignature(signatureBase64, prefixString + claimToAddress + postfix);
     const rs = this.cryptoJS.signatureBase64ToRSV(signatureBase64);
 
     this.log('got public key X from signature:', key.x);
 
-    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
-    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult1 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, postfix, key.x, key.y, '0x1b', rs.r.toString('hex'), rs.s.toString('hex'));
+    const txResult2 = await this.cryptoSol.claimMessageMatchesSignature(claimToAddress, true, postfix, key.x, key.y, '0x1c', rs.r.toString('hex'), rs.s.toString('hex'));
 
     expect(txResult1 || txResult2).to.be.equal(true, "Claim message did not match the signature");
-    //this.log('Soldity Result: ', txResult);
   }
+
+  public async testSignatureVerificationInContract() {
+
+    // "1Q9G4T5rLaf4Rz39WpkwGVM7e2jMxD2yRj";
+    const claimToAddress = "0x70A830C7EffF19c9Dd81Db87107f5Ea5804cbb3F";
+    const signatureBase64 = this.getTestSignatures()[0];
+
+    await this.testSignature(claimToAddress, signatureBase64);
+  }
+
+  public async testSignatureVerificationInContractDMD() {
+
+    const claimToAddress = "0x9edD67cCFd52211d769A7A09b989d148749B1d10";    
+    const signatureBase64 = "IDuuajA4vgGuu77fdoE0tntWP5TMGPLDO2VduTqE6wPKR2+fnF+JFD3LErn8vtqk81fL3qfjJChcrUnG5eTv/tQ=";
+  
+    await this.testSignature(claimToAddress, signatureBase64);
+  }
+
+  public async testSignatureVerificationInContractPostfix() {
+    
+    const claimToAddress = "0x9edD67cCFd52211d769A7A09b989d148749B1d10";    
+    const signatureBase64 = "IIQYAZ+4Tf7bdw9UX72adTvH80vz2igEABRnwElSy1ZvZGICcqX8bYw6e9LZ+QPrKW4VIJrA9cZJhR3cSCt8BAc=";
+  
+    const suffixString = ' test suffix 123';
+
+    await this.testSignature(claimToAddress, signatureBase64, suffixString);
+
+  }
+
+  
+  //interface ITestData {
+  //  dmdv3Address: string,
+  //  dmdv4Address: string,
+  //  value: string,
+  //  signature: string
+  //};
+
+  private testBalances = 
+  [
+    { dmdv3Address: 'dceCTudsSHMmWMswUNezkYVhTSskG7rnYh', dmdv4Address: '0x9edD67cCFd52211d769A7A09b989d148749B1d10', value: '10000', signature: 'IDuuajA4vgGuu77fdoE0tntWP5TMGPLDO2VduTqE6wPKR2+fnF+JFD3LErn8vtqk81fL3qfjJChcrUnG5eTv/tQ=' },
+    { dmdv3Address: 'dUcvB9CLL9BZAPU4hHG5LZAZbFmVdimXbV', dmdv4Address: '0xECDf6A57B12daB6aAb03bd93865dA0f24A5d95cd', value: '20000', signature: 'IO8kZpuH5Hpv9mMwCg8+Pw9JD/9MMal1CUEazFahs1LtKHgtspjWc2et7gIaSgmZLQArsCZIMPQ5hnBhp3pZpDs=' },
+    { dmdv3Address: 'dDg7wr5zTxwPHWRmhLjzth5HCcRgSwABds', dmdv4Address: '0xC7dd948F88862a8a1A38DBdF29240e53d9e4aB6E', value: '100000', signature: 'IOXn3BffyymPz5kcqRhZ77tDxEDeN0VISZc8B2sTPJ3UBOmyXdpZt2qOEq8nUrtJgJA0GBAk8DFP4aahwzDoNs0=' },
+    { dmdv3Address: 'dQQcrXm4888ffaf5AesQFeXFXTPPNRi7Wb', dmdv4Address: '0x30dF70ffd73e3C3d8406A79340dFB736c5533af3', value: '200000', signature: 'IBbRgp5wXepe9Rq8DX+psKx6C1IPoTX2Ibc13JcvkB72Fc7Um7LXd7vrdZrvjlNXLoqgXNH+h7EX4FMbNf6xuAM=' },
+    { dmdv3Address: 'dZLJVFgkA7jEbbTeHjfmKc2a7naSvFatRo', dmdv4Address: '0x6FF1abA0F4a4dEdd990D3af8b95D8e8ed8F14cf8', value: '300000', signature: 'IDBNw+B8vzIVVEfRhORDYJegzAOe11pJtTTs8/ZSnjW/TdqxvwAYrfV5IOhpfelYNQzSYwyJxbCWodtMvtG2TjM=' },
+    { dmdv3Address: 'dUuPsqEU5JqyKYSGRLhzQnYohiXDjMKEnQ', dmdv4Address: '0x03fC83270Ee8c65dAa39a87296Ec7685384F7Cb1', value: '400000', signature: 'H6+F5sUVxWbi329Eti/46/Z6CM1mH1tT0ptr4Hm5DVU6SfXyGejpwYJ1h4wQHtJDoj7UD3KeiJ+h9GyE/+lkepY=' },
+  ];
+
+  public async testAddBalances() {
+
+    //this.setLogDebug(true);
+    
+    let expectedTotalBalance = new BN('0');
+
+    for(let i = 0; i < this.testBalances.length; i++) {
+      let o = this.testBalances[i];
+      this.log(`adding balance for ${o.dmdv3Address}`, o.value);
+
+      await this.cryptoSol.addBalance(o.dmdv3Address, o.value);
+      expectedTotalBalance = expectedTotalBalance.add(new BN(o.value));
+
+      const currentBalance = await this.cryptoSol.getBalance(o.dmdv3Address);
+      expect(currentBalance).to.be.equal(o.value, 'Balance of DMDv3 adress matches defined Balance.');
+      //calculate the significant bytes of the DMDv3 address.
+    }
+
+    this.log('address:', this.cryptoSol.instance.options.address);
+    const balance = await this.cryptoSol.getContractBalance();
+    this.log('balance:', balance);
+    this.log('expectedTotalBalance:', expectedTotalBalance.toString());
+
+    expect(balance).to.be.equal(expectedTotalBalance.toString(), 'Balance of contract should be the total of all added funds.');
+
+  }
+
 }
