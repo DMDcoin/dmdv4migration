@@ -16,7 +16,7 @@ But this possibility is still good as an emergency fallback.
 
 ## DMD Governance
 The DMD Governance System is a [weighted voting](https://en.wikipedia.org/wiki/Weighted_voting) System that 
-allows validators to vote for system changes and for maintenance pool payouts.
+allows everyone to create proposals and validators to vote for system changes and governance pot payouts.
 Delegators will support the decisions of the validators by staking on them.
 
 ### Delegator Voting
@@ -25,14 +25,12 @@ A Delegator might change their Validator based on the likeness of their voting d
 
 ### Voting Weight
 The governance voting is a weighted voting process done by all validators.
-Their voting weight is valued by the stake of their nodes.
+Their voting weight is valued by the total stake of their nodes.
 This is an incentive for validators to attract more delegators on their nodes,
 while being active in voting processes, and doing good and reasonable decisions in the voting process
 is an incentive for delegators to give their voting power into the hands of validators,
 that are active contributors driving the ecosystem forward.
 The weight of the voting is determined at the end of the voting period.
-TODO TECH: Figure out what is required withing the HBBFT smart contracts to enable this calculation.
-Does a concept like event subscription exist ?
 
 ### Public transparency
 All votings are public visible, transparent and comprehensible.
@@ -45,7 +43,7 @@ that vote in their favor.
 It is possible and welcomed to change this decision during the 14 day voting period,
 but it is also very welcomed to explain why.
 Validators are trusted by their delegators.
-Delegators that feel betrayed by the promise of their Validators,
+Delegators that feel betrayed by the promise of their validators,
 will switch to another validator.
 
 ### Timing
@@ -57,17 +55,17 @@ The system alternates between 2 phases:
 Both take 14 days.  
 During the proposal phase, new ballots can be created.  
 During the voting phase, validators can vote for or against open proposals.  
-At the end of the voting phase, binding votes are executed in the order of their creation. All proposals are then considered as done, regardless of the voting outcome and of the the outcome of payout transactions.  
+At the end of the voting phase, binding votes are executed in the order of their creation. All proposals are then considered as done, regardless of the voting outcome.  
 The new proposal phase always starts with 0 open proposals.
 
 ### Ballots creation
 Voting Ballots are stored on the blockchain and contain a text,
-an optional payout address and an optional payout amount.
+an optional payout address and, an optional payout amount and an optional transaction text.
 Ballots with a zero amount, and a payout address can be used to trigger a smart contract function.
 
 There is no minimum amount of voters required to accept a proposal.
 Binding votes (those coming with a payout) require a majority of 2/3 in order to trigger the payment.
-In the case of non-binding votes, no concept of majority exists (the UI should just show the result).
+
 
 The Communication about the proposal will happen off-chain.
 
@@ -79,20 +77,28 @@ If a Pool Payout would be a value bigger then the value available in the pool,
 the Ballot stays unfinalized, and can be finalized when there is enough DMD in the pool.
 
 ### Proposal fee
+
 The reading and analyzing of a proposal requires time and effort
 from the validators. In order to protect the system from spam,
 it is required to pay a proposal fee that goes into the 
-maintenance pool.
-The creation of new proposals is not limited to validators.
+reinsert pot.
+The creation of generic new proposals is not limited to validators.
 Everyone who is willing to pay the proposal fee is allowed to do so.
 
-The value of the proposal fee has to be defined during the ongoing refinement process.
+The value of the initial proposal fee has to be defined during the ongoing refinement process.
 
 ### Voting System Upgrade
 
 Open Topic for now,
 need to get more insights in the POSDAO contracts.
 
+
+### Implementation Details
+
+There are 3 option how the execution of the voting could be done.
+- called by the epoch reward system at the end or the beginning of the epoch.
+- called by the system (node software implemation)
+- called by anyone
 
 ## Analysis of existing Solutions
 
